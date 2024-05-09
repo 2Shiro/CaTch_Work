@@ -17,14 +17,6 @@
 
 <body>
 <h2>CaTch 프로젝트</h2>
-<h2>CaTch 프로젝트</h2>
-<h2>CaTch 프로젝트</h2>
-<h2>CaTch 프로젝트</h2>
-<h2>CaTch 프로젝트</h2>
-<h2>CaTch 프로젝트</h2>
-<h2>CaTch 프로젝트</h2>
-<h2>CaTch 프로젝트</h2>
-<h2>CaTch 프로젝트</h2>
 
 </body>
 
