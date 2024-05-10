@@ -42,7 +42,7 @@
 			<c:forEach  var="ro" items="${resumeList}">
 				<div class="content1">
 					<div class="td1">${ro.num}</div>
-					<div class="td2"><a href="/Resume/View"> ${ro.title}</a></div>
+					<div class="td2"><a href="/Resume/View?resume_idx=${ro.resume_idx}"> ${ro.title}</a></div>
 					<div class="td3">${ro.created}</div>
 				</div>
 			</c:forEach>		

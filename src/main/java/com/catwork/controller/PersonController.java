@@ -90,7 +90,7 @@ public class PersonController {
 		
 		
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("/person/resume_writeForm");
+		mv.setViewName("/person/resume_WriteForm");
 		return mv;
 		
 	}
@@ -126,9 +126,49 @@ public class PersonController {
 		
 		ResumeVo vo = resumeMapper.getView(resumeVo);
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("vo", vo);
+		mv.setViewName("/person/resume_View");
 		return mv;
 	}
 	
+	@GetMapping("/Resume/UpdateForm")
+	public ModelAndView resumeUpdateForm(ResumeVo resumeVo) {
+		
+		ResumeVo vo = resumeMapper.getResumeDetailView(resumeVo);
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("vo",vo);
+		mv.setViewName("/person/resume_Update");
+		return mv;
+		
+	}
+	@GetMapping("/Resume/Update")
+	public ModelAndView resumeUpdate(ResumeVo resumeVo) {
+		
+		resumeMapper.updateResume(resumeVo);
+		
+//		System.out.println("이력서 스킬 넣는 중3333"+resumeSkillList);
+		List<Resume_SkillVo> resumeSkillList = new ArrayList<>();
+		String [] skillList = resumeVo.getSkill_idx().split(",");
+//		System.out.println("이력서 스킬 넣는 중12"+Arrays.toString(skillList));
+		for(String s_skill_idx : skillList ) {
+			
+			resumeSkillList.add(new Resume_SkillVo( Integer.parseInt(s_skill_idx)));			
+		}
+		System.out.println("이력서 스킬 넣는 중"+resumeSkillList);
+		resumeMapper.insertResumeSkill(resumeSkillList);
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/MyPage");
+		return mv;
+		
+	}
 	
-	
+	@GetMapping("/Resume/Delete")
+	public ModelAndView resumeDelete(ResumeVo resumeVo) {
+		
+		resumeMapper.resumeDelete(resumeVo);
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/MyPage");
+		return mv;
+		
+	}
 }

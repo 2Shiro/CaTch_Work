@@ -63,7 +63,7 @@
 	WHERE USER_IDX=(
 	    SELECT USER_IDX
 	    FROM   USER_TB U
-	    WHERE U.ID='user')
+	    WHERE U.ID='user3')
 
 
 </select>

@@ -41,19 +41,67 @@
    
    <select id="getView">
 		SELECT 
-			R.RESUME_IDX,
-			R.USER_IDX,
-			R.TITLE,
-			R.IMAGE,
-			R.LINK,
-			R.INTRO,
-			R.CREATED,
-			R.TYPE
-			S.
-		FROM RESUME_TB R JOIN RESUME_SKILL_TB S
-		ON   RESUME_	
+		    R.RESUME_IDX,
+		    R.USER_IDX,
+		    R.TITLE,
+		    R.IMAGE,
+		    R.LINK,
+		    R.INTRO,
+		    R.CREATED,
+		    R.TYPE,
+		    LISTAGG(L.NAME, ', ') WITHIN GROUP (ORDER BY L.NAME) AS SKILL_NAMES
+		FROM 
+		    RESUME_SKILL_TB S
+		RIGHT JOIN 
+		    RESUME_TB R ON R.RESUME_IDX = S.RESUME_IDX 
+		left JOIN 
+		    SKILL_TB L ON S.SKILL_IDX = L.SKILL_IDX
+		WHERE 
+		    R.RESUME_IDX = #{resume_idx}
+		GROUP BY
+		    R.RESUME_IDX,
+		    R.USER_IDX,
+		    R.TITLE,
+		    R.IMAGE,
+		    R.LINK,
+		    R.INTRO,
+		    R.CREATED,
+		    R.TYPE
    
    </select>
+   
+   <select id="getResumeDetailView">
+		SELECT 
+			R.RESUME_IDX,
+		    R.TITLE,
+		    R.IMAGE,
+		    R.LINK,
+		    R.INTRO,
+		    R.TYPE,
+		    P.NAME,
+		    P.PHONE
+		FROM RESUME_TB R JOIN PERSON_TB P
+		ON   R.USER_IDX = P.USER_IDX
+		WHERE R.RESUME_IDX = #{resume_idx}
+   
+   </select>
+   
+   <update id="updateResume">
+   		UPDATE RESUME_TB
+   			SET TITLE,
+   				IMAGE,
+   				LINK,
+   				INTRO,
+   				TYPE
+   		WHERE = #{resume_idx}		
+   
+   </update>
+   
+	<delete id="resumeDelete">
+		DELETE FROM RESUME_TB
+		WHERE  RESUME_IDX=#{resume_idx}
+	
+	</delete>
    
 
 

@@ -27,7 +27,11 @@
 	<input type="text"  name="image">
 	<input type="text"  name="link">
 	<textarea rows="3" name="intro"></textarea>
-	타입<input type="text"  name="type">
+	<input type="radio" id="option1" name="type" value="1" >
+    <label for="option1">공개</label><br>
+    <input type="radio" id="option2" name="type" value="0" >
+    <label for="option2">비공개</label><br>
+	
 	
 	<input type="checkbox" name="skill_idx"  value="1"/>Java 
 	<input type="checkbox" name="skill_idx"  value="8"/>JavaScript 

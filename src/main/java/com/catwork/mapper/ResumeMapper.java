@@ -21,6 +21,16 @@ public interface ResumeMapper {
 
 	ResumeVo getView(ResumeVo resumeVo);
 
+	ResumeVo getResumeUpdate(ResumeVo resumeVo);
+
+	ResumeVo getResumeDetailView(ResumeVo resumeVo);
+
+	void updateResume(ResumeVo resumeVo);
+
+
+
+	void resumeDelete(ResumeVo resumeVo);
+
 
 	 
 
