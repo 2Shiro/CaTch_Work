@@ -14,11 +14,12 @@
 </head>
 
 <body>
-<h2>마이페이지 입니다</h2>
-<h2>마이페이지 입니다</h2>
-<h2>마이페이지 입니다</h2>
-<h2>마이페이지 입니다</h2>
-
+${pvo.pre_idx} 
+${pvo.pre_} 
+${pvo.pre_idx} 
+${pvo.pre_idx} 
+${pvo.pre_idx} 
+${pvo.pre_idx} 
 </body>
 
 </html>

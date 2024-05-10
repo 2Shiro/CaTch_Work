@@ -17,7 +17,7 @@
 
 <body>
 <h2>CaTch 프로젝트</h2>
-
+<a href="/MyPage">개인 마이페이지</a>
 </body>
 
 </html>

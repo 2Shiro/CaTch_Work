@@ -5,14 +5,18 @@
 <select id="getPersonInfo">
 	SELECT 
 		PER_IDX,
-		USER_IDX,
+		P.USER_IDX,
 		NAME,
 		PHONE,
 		ZIP_CODE,
 		ADDRESS,
 		SOCIAL_NUM,
 		CREATED
-	FROM PERSON_TB
+	FROM PERSON_TB P
+    JOIN USER_TB U
+    ON P.USER_IDX = U.USER_IDX
+    WHERE U.USER_IDX = 1
+	
 		
 		
 

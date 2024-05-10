@@ -9,6 +9,7 @@
 		PWD,
 		TYPE
 	FROM USER_TB
+	WHERE USER_IDX =1
 		
 		
 
