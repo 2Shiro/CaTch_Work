@@ -14,6 +14,8 @@
 	
 	<%@include file="/WEB-INF/include/nav.jsp" %>
 	<section>
+	<h2>CaTch 프로젝트</h2>
+	<a href="/MyPage">개인 마이페이지</a>
 		<h1>메인 내용</h1>
 	</section>
 	<%@include file="/WEB-INF/include/footer.jsp" %>
