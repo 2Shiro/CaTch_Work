@@ -5,41 +5,69 @@
 <head>
 <meta charset="UTF-8">
 <title>구직자 이력서 보기</title>
+<link rel="stylesheet" href="/css/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<style>
+   #resume {
+      margin: 0 auto;
+   }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-	<%@include file="/WEB-INF/include/header.jsp" %>
+   <%@include file="/WEB-INF/include/header.jsp" %>
 
-	<%@include file="/WEB-INF/include/nav.jsp" %>
-	<section>
-		<h2>구직자 이력서</h2>
-		
-			<div id="resume">
-				<table class="table">
-				  <thead>
-				    <tr>
-				      <th scope="col">번호</th>
-				      <th scope="col">이력서</th>
-				      <th scope="col">이름</th>
-				      <th scope="col">기술 스택</th>
-				    </tr>
-				  </thead>
-				  <tbody>
-				  	<c:forEach var="i" begin="1" end="30">
-					    <tr>
-					      <th scope="row">1</th>
-					      <td><a href="#">이력서 이름</a></td>
-					      <td>이름</td>
-					      <td>기술들</td>
-					    </tr>
-				    </c:forEach>
-				  </tbody>
-				</table>
-			</div>
-		<div>
-			페이징
-		</div>
-	</section>
-	<%@include file="/WEB-INF/include/footer.jsp" %>
+   <%@include file="/WEB-INF/include/nav.jsp" %>
+   
+   <div class="container">
+      <h2>구직자 이력서</h2>
+      
+      <div id="resume">
+         <table class="table">
+           <thead>
+             <tr>
+               <th scope="col">번호</th>
+               <th scope="col">이력서</th>
+               <th scope="col">이름</th>
+               <th scope="col">기술 스택</th>
+             </tr>
+           </thead>
+           <tbody class="table-group-divider">
+           		<% int i = 0; %>
+              <c:forEach var="resumeList" items="${resumeList}">
+                <tr>
+                  <th scope="row">${resumeList.resume_idx}</th>
+                  <td></td>
+                  <td><a href="/Company/1/PersonResume">${resumeList.title}</a></td>
+                  <td>${resumeList.user_idx}</td>
+                  <td>${resumeList.user_idx}</td>
+                </tr>
+             </c:forEach>
+           </tbody>
+         </table>
+      </div>
+         
+      <div id="pagination">
+         <nav aria-label="Page navigation example">
+           <ul class="pagination">
+             <li class="page-item">
+               <a class="page-link" href="#" aria-label="Previous">
+                 <span aria-hidden="true">&laquo;</span>
+               </a>
+             </li>
+             <li class="page-item"><a class="page-link" href="#">1</a></li>
+             <li class="page-item"><a class="page-link" href="#">2</a></li>
+             <li class="page-item"><a class="page-link" href="#">3</a></li>
+             <li class="page-item">
+               <a class="page-link" href="#" aria-label="Next">
+                 <span aria-hidden="true">&raquo;</span>
+               </a>
+             </li>
+           </ul>
+         </nav>
+      </div>
+   </div>
+   
+   <%@include file="/WEB-INF/include/footer.jsp" %>
 </body>
 </html>
