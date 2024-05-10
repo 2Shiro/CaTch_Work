@@ -1,27 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.catwork.mapper.PersonMapper">  
-
 <select id="getPersonInfo">
-	SELECT 
-		PER_IDX,
+	SELECT
+		U.ID,
+		U.PWD,
+		U.TYPE, 
+		P.PER_IDX,
 		P.USER_IDX,
-		NAME,
-		PHONE,
-		ZIP_CODE,
-		ADDRESS,
-		SOCIAL_NUM,
-		CREATED
+		P.NAME,
+		P.PHONE,
+		P.ZIP_CODE,
+		P.ADDRESS,
+		P.SOCIAL_NUM,
+		P.CREATED
 	FROM PERSON_TB P
     JOIN USER_TB U
     ON P.USER_IDX = U.USER_IDX
-    WHERE U.USER_IDX = 1
-	
-		
-		
+    WHERE U.ID = 'id001'
 
 </select>
+<update id="updateMyInfo">
+	UPDATE USER_TB 
+		SET PWD = #{pwd}
+	WHERE  ID='id001'	
 
+</update>
+<update id="updateMyInfo2">
+	UPDATE PERSON_TB 
+		SET NAME=#{name},
+			PHONE=#{phone},
+			ZIP_CODE=#{zip_code},
+			ADDRESS=#{address}
+
+	WHERE  USER_IDX=(
+    SELECT USER_IDX
+    FROM   USER_TB U
+    WHERE U.ID='id001')
+
+</update>
+
+<delete id="personDelete">
+	DELETE FROM USER_TB
+	WHERE  ID='151515'
+
+</delete>
+
+
+
+<select id="getResumeList">
+	SELECT 
+	    ROW_NUMBER() OVER (ORDER BY RESUME_IDX) AS NUM,
+	    RESUME_IDX,
+	    USER_IDX,
+	    TITLE,
+	    IMAGE,
+	    LINK,
+	    INTRO,
+	    CREATED,
+	    TYPE
+	FROM RESUME_TB
+	WHERE USER_IDX=(
+	    SELECT USER_IDX
+	    FROM   USER_TB U
+	    WHERE U.ID='user3')
+
+
+</select>
 
 
 </mapper>

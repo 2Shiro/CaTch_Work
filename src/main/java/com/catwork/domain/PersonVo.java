@@ -17,6 +17,9 @@ public class PersonVo {
 	private String address;
 	private String social_num;
 	private String created;
+	private String id;
+	private String pwd;
+	private int type;
 	
 	
 }
