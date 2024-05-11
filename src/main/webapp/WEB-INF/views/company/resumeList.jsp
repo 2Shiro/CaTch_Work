@@ -33,14 +33,16 @@
              </tr>
            </thead>
            <tbody class="table-group-divider">
-           		<% int i = 0; %>
-              <c:forEach var="resumeList" items="${resumeList}">
+              <c:forEach var="resumeListInfo" items="${resumeListInfo}">
                 <tr>
-                  <th scope="row">${resumeList.resume_idx}</th>
-                  <td></td>
-                  <td><a href="/Company/1/PersonResume">${resumeList.title}</a></td>
-                  <td>${resumeList.user_idx}</td>
-                  <td>${resumeList.user_idx}</td>
+                  <th scope="row">${resumeListInfo.resumeno}</th>
+                  <td><a href="/Company/1/PersonResume">${resumeListInfo.title}</a></td>
+                  <td>${resumeListInfo.username}</td>
+                  <td>
+                  	<c:forEach var="skillList" items="${resumeListInfo.skillList}">
+                  		<button type="button" class="btn btn-primary">${skillList.name}</button>
+                  	</c:forEach>
+                  </td>
                 </tr>
              </c:forEach>
            </tbody>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.catwork.mapper.ResumeMapper">  
+
+<insert id="insertResume">
+	INSERT INTO RESUME_TB(
+		RESUME_IDX,
+		USER_IDX,
+		TITLE,
+		IMAGE,
+		LINK,
+		INTRO,
+		TYPE
+	)
+	VALUES(
+		(SELECT MAX(NVL(RESUME_IDX,0)+1)
+		FROM   RESUME_TB),
+		#{user_idx},
+		#{title},
+		#{image},
+		#{link},
+		#{intro},
+		#{type}
+	)
+</insert>
+
+	<insert id="insertResumeSkill">
+      <foreach collection="list" item="resumeSkill"
+           index      = "i"  
+           open       = "INSERT ALL"    
+           close      = "SELECT * FROM DUAL"
+           separator  = " " >
+           INTO  RESUME_SKILL_TB VALUES (
+                GET_FILENUM(),
+                (SELECT MAX(NVL(RESUME_IDX,0))FROM   RESUME_TB),
+                #{ resumeSkill.skill_idx  }
+           )
+      </foreach>
+   
+   </insert>
+   
+   <select id="getView">
+		SELECT 
+		    R.RESUME_IDX,
+		    R.USER_IDX,
+		    R.TITLE,
+		    R.IMAGE,
+		    R.LINK,
+		    R.INTRO,
+		    R.CREATED,
+		    R.TYPE,
+		    LISTAGG(L.NAME, ', ') WITHIN GROUP (ORDER BY L.NAME) AS SKILL_NAMES
+		FROM 
+		    RESUME_SKILL_TB S
+		RIGHT JOIN 
+		    RESUME_TB R ON R.RESUME_IDX = S.RESUME_IDX 
+		left JOIN 
+		    SKILL_TB L ON S.SKILL_IDX = L.SKILL_IDX
+		WHERE 
+		    R.RESUME_IDX = #{resume_idx}
+		GROUP BY
+		    R.RESUME_IDX,
+		    R.USER_IDX,
+		    R.TITLE,
+		    R.IMAGE,
+		    R.LINK,
+		    R.INTRO,
+		    R.CREATED,
+		    R.TYPE
+   
+   </select>
+   
+   <select id="getResumeDetailView">
+		SELECT 
+			R.RESUME_IDX,
+		    R.TITLE,
+		    R.IMAGE,
+		    R.LINK,
+		    R.INTRO,
+		    R.TYPE,
+		    P.NAME,
+		    P.PHONE
+		FROM RESUME_TB R JOIN PERSON_TB P
+		ON   R.USER_IDX = P.USER_IDX
+		WHERE R.RESUME_IDX = #{resume_idx}
+   
+   </select>
+   
+   <update id="updateResume">
+   		UPDATE RESUME_TB
+   			SET TITLE,
+   				IMAGE,
+   				LINK,
+   				INTRO,
+   				TYPE
+   		WHERE = #{resume_idx}		
+   
+   </update>
+   
+	<delete id="resumeDelete">
+		DELETE FROM RESUME_TB
+		WHERE  RESUME_IDX=#{resume_idx}
+	
+	</delete>
+   
+
+
+
+</mapper>

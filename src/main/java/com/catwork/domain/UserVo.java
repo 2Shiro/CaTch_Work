@@ -1,7 +1,5 @@
 package com.catwork.domain;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResumeInfoVo {
-	private int resumeno;
-	private String title;
-	private String username;
-	private List<SkillVo> skillList;
+public class UserVo {
+	private String user_idx;
+	private String id;
+	private String pwd;
+	private int type;
 }
