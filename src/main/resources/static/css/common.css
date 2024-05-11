@@ -5,10 +5,25 @@
      box-sizing : border-box;
   }
   
-  section {
-  	margin: 0 auto;
-  	
+/*   section { */
+/*   	margin: 0 auto; */
+/*   	text-align: center; */
+/*   	display: block; */
+/*   } */
+  
+  #headerlogo {
+  	height: 100px; 
   }
+  
+  .container {
+      margin : 0 auto;
+      text-align : center;
+   }
+  
+  #mypagetab {
+  	margin-top: 20px;
+  }
+  
   
   
   

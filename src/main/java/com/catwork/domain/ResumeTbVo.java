@@ -5,10 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ResumeVo {
-	private int    num;
+@AllArgsConstructor
+public class ResumeTbVo {
 	private String resume_idx;
 	private String user_idx;
 	private String title;
@@ -17,9 +16,4 @@ public class ResumeVo {
 	private String intro;
 	private String created;
 	private String type;
-	private String skill_idx;
-	private String skill_names;
-	
-	private String name;
-	private String phone;
 }
