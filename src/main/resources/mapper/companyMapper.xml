@@ -23,5 +23,19 @@
 		FROM	COMPANY_TB
 		WHERE	USER_IDX = #{user_idx}
 	</select>
+	
+	<!-- 검색 공고 가져오기 -->
+		<!-- 마감지난 건 안뜨고 마감기한 낮은 순으로 정렬됨 -->
+	<select id="searchPostsByKeyword">
+	    SELECT  POST_IDX,
+	            USER_IDX,
+	            TITLE,
+	            DEADLINE,
+	            TO_CHAR(SYSDATE, 'YY/MM/DD')
+	    FROM    POST_TB
+	    WHERE   TO_CHAR(DEADLINE, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+	            AND TITLE LIKE '%' || #{keyword} || '%'
+	    ORDER BY DEADLINE
+	</select>
 
 </mapper>

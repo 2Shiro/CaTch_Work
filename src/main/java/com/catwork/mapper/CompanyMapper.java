@@ -10,7 +10,11 @@ import com.catwork.domain.PostVo;
 @Mapper
 public interface CompanyMapper {
 
+	// 메인화면
 	List<PostVo> getmainpostList();
 	CompanyVo getCompanyById(int user_idx);
+	
+	// 검색
+	List<PostVo> searchPostsByKeyword(String keyword);
 
 }
