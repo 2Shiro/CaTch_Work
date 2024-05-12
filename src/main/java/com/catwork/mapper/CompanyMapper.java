@@ -12,11 +12,14 @@ import com.catwork.domain.SkillVo;
 @Mapper
 public interface CompanyMapper {
 
-	List<ResumeVo> getResumeList();
-
+	// 메인화면
 	List<PostVo> getmainpostList();
-	
 	CompanyVo getCompanyById(int user_idx);
+	
+	// 검색
+	List<PostVo> searchPostsByKeyword(String keyword);
+	
+	List<ResumeVo> getResumeList();
 
 	SkillVo getSkillName(int skill_idx);
 }

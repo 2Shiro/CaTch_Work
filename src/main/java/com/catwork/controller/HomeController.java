@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catwork.domain.CompanyVo;
@@ -41,5 +45,21 @@ public class HomeController {
 	    mv.setViewName("/home");
 	    return mv;
 	}
+	
+    // 검색 기능 - AJAX 호출
+    @GetMapping("/Search")
+    @ResponseBody // 메소드의 반환값을 응답 본문에 직접 작성하도록 설정
+    public ResponseEntity<List<MainPageVo>> search(@RequestParam(value="keyword") String keyword) {
+        List<MainPageVo> searchResults = new ArrayList<>();
+        List<PostVo> searchedPosts = companyMapper.searchPostsByKeyword(keyword);
+
+        for (PostVo post : searchedPosts) {
+            CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
+            searchResults.add(new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getLogo(), company.getName(),
+                    post.getTitle(), post.getDeadline()));
+        }
+
+        return ResponseEntity.ok(searchResults); // 검색 결과를 JSON 형태로 반환
+    }
 
 }

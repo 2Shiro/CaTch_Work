@@ -28,6 +28,20 @@
 		WHERE	USER_IDX = #{user_idx}
 	</select>
 	
+	<!-- 검색 공고 가져오기 -->
+		<!-- 마감지난 건 안뜨고 마감기한 낮은 순으로 정렬됨 -->
+	<select id="searchPostsByKeyword">
+	    SELECT  POST_IDX,
+	            USER_IDX,
+	            TITLE,
+	            DEADLINE,
+	            TO_CHAR(SYSDATE, 'YY/MM/DD')
+	    FROM    POST_TB
+	    WHERE   TO_CHAR(DEADLINE, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+	            AND TITLE LIKE '%' || #{keyword} || '%'
+	    ORDER BY DEADLINE
+	</select>
+
 	<!-- 기술 이름 가져오기 -->
 	<select id="getSkillName">
 		SELECT SKILL_IDX, NAME FROM SKILL_TB WHERE SKILL_IDX = #{skill_idx}
