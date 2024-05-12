@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.catwork.mapper.CompanyMapper">  
+<mapper namespace="com.catwork.mapper.CompanyMapper"> 
+	<!-- 이력서 리스트 가져오기 -->
+	<select id="getResumeList">
+		SELECT RESUME_IDX, USER_IDX, TITLE, IMAGE, LINK, INTRO, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, TYPE FROM RESUME_TB
+	</select>
 
 	<!-- 전체 공고 가져오기 -->
 	<!-- 마감지난 건 안뜨고 마감기한 낮은 순으로 정렬됨 -->
@@ -36,6 +40,11 @@
 	    WHERE   TO_CHAR(DEADLINE, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
 	            AND TITLE LIKE '%' || #{keyword} || '%'
 	    ORDER BY DEADLINE
+	</select>
+
+	<!-- 기술 이름 가져오기 -->
+	<select id="getSkillName">
+		SELECT SKILL_IDX, NAME FROM SKILL_TB WHERE SKILL_IDX = #{skill_idx}
 	</select>
 
 </mapper>
