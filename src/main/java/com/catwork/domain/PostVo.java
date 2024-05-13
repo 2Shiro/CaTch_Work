@@ -23,5 +23,4 @@ public class PostVo {
 	private String mphone;
 	private String created;
 	
-	
 }
