@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.catwork.domain.PersonApplyResumeVo;
+import com.catwork.domain.PostVo;
+import com.catwork.domain.RecommendPostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
 
@@ -30,6 +33,13 @@ public interface ResumeMapper {
 
 
 	void resumeDelete(ResumeVo resumeVo);
+
+
+	List<RecommendPostVo> getPostList(RecommendPostVo recommendPostVo);
+
+	List<RecommendPostVo> getPostList(int resume_idx);
+
+	List<PersonApplyResumeVo> getResumeList(int resume_idx);
 
 
 	 

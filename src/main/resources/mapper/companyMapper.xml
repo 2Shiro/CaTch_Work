@@ -20,13 +20,7 @@
 </select>
 	
 	<!-- 기업 회원 중 특정 아이디의 컴퍼니 info를 가져옴 -->
-	<select id="getCompanyById">
-		SELECT	USER_IDX,
-				LOGO,
-				NAME
-		FROM	COMPANY_TB
-		WHERE	USER_IDX = #{user_idx}
-	</select>
+
 	
 	<!-- 검색 공고 가져오기 -->
 	<!-- 마감지난 건 안뜨고 마감기한 낮은 순으로 정렬됨 -->
