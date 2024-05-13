@@ -19,18 +19,72 @@
 		ORDER BY DEADLINE
 	</select>
 	
-	<!-- 기업 회원 중 특정 아이디의 컴퍼니 info를 가져옴 -->
-	<select id="getCompanyById">
-		SELECT	USER_IDX,
-				LOGO,
-				NAME
-		FROM	COMPANY_TB
-		WHERE	USER_IDX = #{user_idx}
-	</select>
-	
 	<!-- 기술 이름 가져오기 -->
 	<select id="getSkillName">
 		SELECT SKILL_IDX, NAME FROM SKILL_TB WHERE SKILL_IDX = #{skill_idx}
 	</select>
-
+	
+	<!-- USER_IDX로 기업 회원 디테일 정보 가져오기, 현재는 9로 고정 -->
+	<select id="getCompanyById">
+		SELECT COM_IDX, USER_IDX, NAME, LOGO, CNUM, RESIDENT, ZIP_CODE, ADDRESS, CTYPE, TO_CHAR(BDATE, 'YYYY-MM-DD') BDATE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM COMPANY_TB WHERE USER_IDX = #{user_idx}
+	</select>
+	
+	<!-- user_idx로 기업 회원 공고 리스트 가져오기, 현재는 전부가져옴 -->
+	<select id="getMyPost">
+		SELECT POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, TO_CHAR(DEADLINE, 'YYYY-MM-DD') DEADLINE, INTRO, EXPLAIN, MANAGER, MPHONE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM POST_TB
+	</select>
+	
+	<!-- 스킬 테이블 가져오기 -->
+	<select id="getSkills">
+		SELECT SKILL_IDX, NAME FROM SKILL_TB
+	</select>
+	
+	<!-- post_idx 맥스값 -->
+	<select id="selectpostidxmax" resultType="int">
+		SELECT
+		NVL(MAX(POST_IDX),0) + 1 FROM POST_TB
+	</select>
+	
+	<!-- post insert -->
+	<insert id="insertpost"
+		parameterType="com.catwork.domain.PostVo">
+		INSERT INTO POST_TB
+		(POST_IDX, USER_IDX, TITLE, CAREER,
+		GOWORK, GOHOME, SALARY,
+		DEADLINE, INTRO, EXPLAIN,
+		MANAGER, MPHONE, CREATED)
+		VALUES
+		((SELECT NVL(MAX(POST_IDX),0) + 1 FROM POST_TB), 9,
+		#{title}, #{career}, #{gowork}, #{gohome}, #{salary},
+		#{deadline}, #{intro}, #{explain},
+		#{manager}, #{mphone}, sysdate)
+	</insert>
+	
+	<!-- post skill insert -->
+	<insert id="insertskills"
+		parameterType="com.catwork.domain.PostSkillVo">
+		INSERT INTO POST_SKILL_TB (POSKILL_IDX, POST_IDX, SKILL_IDX)
+		VALUES ((SELECT NVL(MAX(POSKILL_IDX), 0) + 1 FROM POST_SKILL_TB), #{post_idx},
+		#{skill_idx})
+	</insert>
+	
+	<!-- 공고 하나의 정보 가져오기 -->
+	<select id="getPostDetail">
+		SELECT POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, DEADLINE, INTRO, EXPLAIN, MANAGER, MPHONE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM POST_TB WHERE POST_IDX = #{post_idx}
+	</select>
+	
+	<!-- 공고 하나의 스킬 가져오기 -->
+	<select id="getPostSkills">
+		SELECT POSKILL_IDX, POST_IDX, SKILL_IDX FROM POST_SKILL_TB WHERE POST_IDX = #{post_idx}
+	</select>
+	
+	<!-- 특정 공고의 지원 현황 리스트 가져오기 -->
+	<select id="getParticipateList">
+		SELECT APPLY_IDX, RESUME_IDX, POST_IDX, STATE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM APPLY_TB WHERE POST_IDX = #{post_idx}
+	</select>
+	
+	<!-- 특정 지원 현황 하나 가져오기 -->
+	<select id="getApply">
+		SELECT APPLY_IDX, RESUME_IDX, POST_IDX, STATE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM APPLY_TB WHERE APPLY_IDX = #{apply_idx}
+	</select>
 </mapper>

@@ -1,31 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
    
-<!--    <div class="container tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2"> -->
-     <div class="container">
-     <h2>나의 공고</h2>
+   <div class="container">
+     <h2>추천 이력서</h2>
      
-        <div id="mypost">
-           <table class="table">
-             <thead>
-               <tr>
-                 <th scope="col">번호</th>
-                 <th scope="col">공고</th>
-                 <th scope="col">담당자</th>
-                 <th scope="col">마감기한</th>
-               </tr>
-             </thead>
-             <tbody class="table-group-divider">
-                <c:forEach var="postList" items="${postList}" varStatus="status">
-                  <tr>
-                    <th scope="row">${status.count}</th>
-                    <td><a href="/Company/PostDetail?post_idx=${postList.post_idx}">${postList.title}</a></td>
-                    <td>${postList.manager}</td>
-                    <td>${postList.deadline}</td>
-                  </tr>
-               </c:forEach>
-             </tbody>
-           </table>
-        </div>
+        <div id="resume">
+         <table class="table">
+           <thead>
+             <tr>
+               <th scope="col">번호</th>
+               <th scope="col">이력서</th>
+               <th scope="col">이름</th>
+               <th scope="col">기술 스택</th>
+             </tr>
+           </thead>
+           <tbody class="table-group-divider">
+              <c:forEach var="resumeListInfo" items="${resumeListInfo}">
+                <tr>
+                  <th scope="row">${resumeListInfo.resumeno}</th>
+                  <td><a href="/Company/1/PersonResume">${resumeListInfo.title}</a></td>
+                  <td>${resumeListInfo.username}</td>
+                  <td>
+                  	<c:forEach var="skillList" items="${resumeListInfo.skillList}">
+                  		<button type="button" class="btn btn-sm btn-primary">${skillList.name}</button>
+                  	</c:forEach>
+                  </td>
+                </tr>
+             </c:forEach>
+           </tbody>
+         </table>
+      </div>
         <div id="bottom">
 		      <div id="pagination">
 		         <nav aria-label="Page navigation example">
