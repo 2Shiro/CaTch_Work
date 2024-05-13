@@ -73,9 +73,23 @@
 		SELECT PER_IDX, USER_IDX, NAME, PHONE, ZIP_CODE, ADDRESS, SOCIAL_NUM, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM PERSON_TB WHERE USER_IDX = #{user_idx}
 	</select>
 	
-	<!-- 이력서 스킬 idx 얻기 -->
+	<!-- 특정 이력서 스킬 idx 얻기 -->
 	<select id="getResumeSkill">
-		SELECT RESKILL_IDX, RESUME_IDX, SKILL_IDX FROM RESUME_SKILL_TB WHERE SKILL_IDX = #{skill_idx}
+		SELECT RESKILL_IDX, RESUME_IDX, SKILL_IDX FROM RESUME_SKILL_TB WHERE RESUME_IDX = #{resume_idx}
 	</select>
 
+	<!-- resume_idx로 특정 이력서 정보 가져오기 -->
+	<select id="getResume">
+		SELECT RESUME_IDX, USER_IDX, TITLE, IMAGE, LINK, INTRO, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, TYPE FROM RESUME_TB WHERE RESUME_IDX = #{resume_idx}
+	</select>
+	
+	<!-- 이력서 스킬 테이블 전체 가져오기 -->
+	<select id="getResumeSkillAll">
+		SELECT RESKILL_IDX, RESUME_IDX, SKILL_IDX FROM RESUME_SKILL_TB
+	</select>
+	
+	<!-- 이력서 Idx 모두 가져오기 -->
+	<select id="getResumeIdxList">
+		SELECT RESUME_IDX FROM RESUME_TB
+	</select>
 </mapper>

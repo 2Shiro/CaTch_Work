@@ -1,24 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>공고 상세 보기</title>
+<link rel="stylesheet" href="/css/common.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+	<%@include file="/WEB-INF/include/header.jsp" %>
 
-<!-- Modal -->
-<div class="modal modal-xl fade" id="newpost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
+   <%@include file="/WEB-INF/include/nav.jsp" %>
+
+	<div class="" id="postdetail">
+  <div class="">
+    <div class="">
     <form class="needs-validation container"
 				action="/Company/MyPostWrite" novalidate id="postForm"
 				method="post">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h2 class="modal-title" id="staticBackdropLabel">공고 등록하기</h2>
-					<hr>
+      <div class="">
 					<div class="my-1 mx-auto row">
-						<label for="post_name" class="form-label">공고명</label> <input
-							type="text" class="form-control" id="title" name="title" required="required"
-							placeholder="제목을 입력해주세요.">
+						<h2 class="form-control" id="title" name="title">${post.title}</h2>
 					</div>
 					<hr>
 					<div class="my-1 mx-auto row">
@@ -29,7 +33,7 @@
 								</div>
 								<div class="col-md-8">
 									<input type="text" class="form-control" id="career"
-										name="career" required="required">
+										name="career" readonly="readonly" value="${post.career}">
 								</div>
 							</div>
 							<div class="col-6 row d-flex align-items-center ms-4">
@@ -37,7 +41,7 @@
 									<h5>연봉</h5>
 								</div>
 								<div class="col-md-8">
-									<input type="text" class="form-control" id="salary" name="salary" required>
+									<input type="text" class="form-control" id="salary" name="salary" readonly="readonly" value="${post.salary}">
 								</div>
 							</div>
 						</div>
@@ -60,9 +64,9 @@
 								</div>
 								<div class="col-md-8 d-flex">
 									<input class="form-control" type="time" name="gowork" 
-										id="gowork" required> <input
+										id="gowork" readonly="readonly" value="${post.gowork}"> <input
 										class="form-control ms-3" type="time" name="gohome"
-										id="gohome" required>
+										id="gohome" readonly="readonly" value="${post.gohome}">
 								</div>
 							</div>
 						</div>
@@ -74,7 +78,7 @@
 								</div>
 								<div class="col-md-8">
 									<input type="text" class="form-control" id="manager"
-										name="manager" required="required">
+										name="manager" readonly="readonly" value="${post.manager}">
 								</div>
 							</div>
 							<div class="col-6 row d-flex align-items-center ms-4">
@@ -82,41 +86,48 @@
 									<h5>담당자 번호</h5>
 								</div>
 								<div class="col-md-8">
-									<input type="text" class="form-control" id="mphone" name="mphone" required>
+									<input type="text" class="form-control" id="mphone" name="mphone" readonly="readonly" value="${post.mphone}">
 								</div>
 							</div>
 						</div>
 					<div class="my-1 mx-auto row">
 						<label for="deadline" class="form-label">마감 일자</label> <input
-							type="date" class="form-control" id="deadline" name="deadline" required>
+							type="text" class="form-control" id="deadline" name="deadline" readonly="readonly" value="${post.deadline}">
 					</div>
 					<div class="my-1 mx-auto row">
 						<label for="c_intro" class="form-label">기업 소개</label>
 						<textarea rows="10" class="form-control" id="intro"
-							name="intro" placeholder="기업소개를 입력해주세요." required></textarea>
+							name="intro" readonly="readonly">${post.intro}</textarea>
 
 					</div>
 					<div class="my-1 mx-auto row">
 						<label for="job_intro" class="form-label">업무 소개</label>
 						<textarea rows="10" class="form-control" id="explain"
-							name="explain" placeholder="업무소개를 입력해주세요." required></textarea>
+							name="explain" readonly="readonly">${post.explain}</textarea>
 					</div>
 					<div class="mt-3 mx-auto row">
-						<c:forEach var="skill" items="${ skill }">
+						<c:forEach var="skill" items="${skill}">
 							<div class="col-auto">
-								<input type="checkbox" class="btn-check" id="skill_${skill.skill_idx }" value="${skill.skill_idx}" name="skillIdx"
-									autocomplete="off" required> <label
-									class="btn btn-outline-primary" for="skill_${skill.skill_idx }">${skill.name }</label>
+								<button type="button" class="btn btn-primary">${skill.name}</button>
 							</div>
 						</c:forEach>
 						<input type="hidden" id="defaultSkillIdx" name="skillIdx" value="0">
 					</div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        <button type="submit" id="post-submit" class="btn btn-primary">등록</button>
+      <div class="">
+        <button type="submit" id="post-submit" class="btn btn-primary">수정</button>
+        <button type="button" class="btn btn-secondary">뒤로</button>
       </div>
       </form>
     </div>
   </div>
 </div>
+	
+	<hr>
+	<%@include file="/WEB-INF/views/company/post/post_participateList.jsp" %>
+	<hr>
+	<%@include file="/WEB-INF/views/company/post/post_recommendList.jsp" %>
+	<%@include file="/WEB-INF/include/footer.jsp" %>
+
+</body>
+</html>
