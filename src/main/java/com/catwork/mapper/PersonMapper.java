@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.catwork.domain.PersonApplyVo;
 import com.catwork.domain.PersonVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
@@ -25,6 +26,8 @@ public interface PersonMapper {
 	PersonVo getPersonDetail(String user_idx);
 
 	Resume_SkillVo getResumeSkill(String skill_idx);
+
+	List<PersonApplyVo> getApplyList(PersonApplyVo personApplyVo);
 
 
 
