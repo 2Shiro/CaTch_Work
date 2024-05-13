@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResumeVo {
 	private int    num;
-	private String resume_idx;
-	private String user_idx;
+	private int resume_idx;
+	private int user_idx;
 	private String title;
 	private String image;
 	private String link;

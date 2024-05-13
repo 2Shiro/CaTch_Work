@@ -23,9 +23,15 @@ public interface PersonMapper {
 
 	List<ResumeVo> getResumeList(ResumeVo resumeVo);
 
-	PersonVo getPersonDetail(String user_idx);
+	PersonVo getPersonDetail(int user_idx);
 
-	Resume_SkillVo getResumeSkill(String skill_idx);
+	List<Resume_SkillVo> getResumeSkill(int resume_idx);
+
+	ResumeVo getResume(int resume_idx);
+
+	List<Resume_SkillVo> getResumeSkillAll();
+
+	List<Integer> getResumeIdxList();
 
 	List<PersonApplyVo> getApplyList(PersonApplyVo personApplyVo);
 

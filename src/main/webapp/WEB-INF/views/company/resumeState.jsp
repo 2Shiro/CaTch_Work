@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>구직자 이력서 상세 보기</title>
+<title>지원자 이력서 상세 보기</title>
 <link rel="stylesheet" href="/css/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <style>
@@ -18,6 +18,23 @@
    <%@include file="/WEB-INF/include/nav.jsp" %>
    
    <%@include file="/WEB-INF/views/company/resume/resumeForm.jsp" %>
+   
+   <div id="state" class="container">
+   		<div>
+   			<div class="input-group">
+				  <div class="input-group-text">
+				    <input class="form-check-input" type="radio" value="합격" aria-label="Radio button for following text input">
+				  </div>
+				  <input type="text" class="form-control" aria-label="Text input with radio button" value="합격">
+				   <div class="input-group-text">
+				    <input class="form-check-input" type="radio" value="불합격" aria-label="Radio button for following text input" >
+				  </div>
+				  <input type="text" class="form-control" aria-label="Text input with radio button" value="불합격">
+				</div>
+			  <span class="input-group-text">코멘트</span>
+			  <textarea class="form-control" aria-label="With textarea" id="comments" name="comments"></textarea>
+			</div>
+   </div>
    
    <%@include file="/WEB-INF/include/footer.jsp" %>
 </body>
