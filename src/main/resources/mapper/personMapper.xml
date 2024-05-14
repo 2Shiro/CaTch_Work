@@ -63,8 +63,37 @@
 	WHERE USER_IDX=(
 	    SELECT USER_IDX
 	    FROM   USER_TB U
-	    WHERE U.ID='user3')
+	    WHERE U.ID='user')
 
+
+</select>
+
+
+<select id="getApplyList">
+SELECT *
+FROM (
+    SELECT 
+        A.APPLY_IDX,
+        A.RESUME_IDX,
+        A.POST_IDX,
+        A.STATE,
+        A.CREATED,
+        U.USER_IDX,
+        P.TITLE,
+        P.CAREER,
+        P.GOWORK,
+        P.GOHOME,
+        P.SALARY,
+        P.DEADLINE,
+        P.MANAGER,
+        P.MPHONE,
+        ROW_NUMBER() OVER (ORDER BY A.APPLY_IDX) AS ROW_NUM
+    FROM APPLY_TB A 
+    JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
+    JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+    JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
+    WHERE U.USER_IDX = 2
+)
 
 </select>
 
