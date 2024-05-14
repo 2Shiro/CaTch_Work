@@ -97,6 +97,30 @@ FROM (
 
 </select>
 
+
+<select id="getBookmarkList">
+   SELECT 
+        B.BOOK_IDX,
+        B.USER_IDX,
+        B.POST_IDX,
+        B.BOOKMARK,
+        P.TITLE,
+        P.CAREER,
+        P.SALARY,
+        P.DEADLINE,
+        P.MANAGER,
+        P.MPHONE,
+        P.CREATED,
+        ROW_NUMBER() OVER (ORDER BY P.CREATED DESC) AS row_num
+    FROM BOOKMARK_TB B 
+    JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
+    JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
+    WHERE U.USER_IDX = 2
+
+
+
+</select>
+
 	<!-- 개인회원 테이블에서 특정 회원 정보 가져오기 -->
 	<select id="getPersonDetail">
 		SELECT PER_IDX, USER_IDX, NAME, PHONE, ZIP_CODE, ADDRESS, SOCIAL_NUM, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM PERSON_TB WHERE USER_IDX = #{user_idx}

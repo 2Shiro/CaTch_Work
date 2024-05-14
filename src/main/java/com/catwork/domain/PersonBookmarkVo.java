@@ -5,29 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class PersonApplyResumeVo {
-	
+@AllArgsConstructor
+public class PersonBookmarkVo {
 	private int row_num;
-	private int apply_idx;
-	private int resume_idx;
+	private int book_idx;
+	private int user_idx;
 	private int post_idx;
-	private int state;
+	private String bookmark;
 	private String title;
-	private String gohome;
 	private String career;
-	private String rtitle;
-	private String name;
-	private String phone;
-	
 	private String salary;
 	private String deadline;
-	private String intro;
-	private String explain;
 	private String manager;
 	private String mphone;
 	private String created;
-
-	
 }

@@ -158,6 +158,7 @@ FROM (
         A.CREATED,
         U.USER_IDX,
         P.TITLE,
+        R.TITLE RTITLE,
         P.CAREER,
         P.GOWORK,
         P.GOHOME,
@@ -165,16 +166,33 @@ FROM (
         P.DEADLINE,
         P.MANAGER,
         P.MPHONE,
+        PE.NAME,
+        PE.PHONE,
         ROW_NUMBER() OVER (ORDER BY A.APPLY_IDX) AS ROW_NUM
     FROM APPLY_TB A 
     JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
     JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+    JOIN PERSON_TB PE ON U.USER_IDX = PE.USER_IDX
     JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
-    WHERE R.RESUME_IDX = #{resume_idx}
+    WHERE P.POST_IDX = #{post_idx}
+    AND   U.USER_IDX = 2
 )
    
    </select>
 
-
+	<select id="getPersonState">
+	
+	
+	SELECT
+	    APPLY_IDX,
+	    STATE_IDX,
+	    RESUME_IDX,
+	    SCORE,
+	    COMMENTS,
+	    USER_IDX
+	FROM STATE_TB
+	WHERE APPLY_IDX = #{apply_idx}
+    
+	</select>
 
 </mapper>
