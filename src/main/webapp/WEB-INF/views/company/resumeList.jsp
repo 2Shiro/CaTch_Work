@@ -36,11 +36,11 @@
               <c:forEach var="resumeListInfo" items="${resumeListInfo}">
                 <tr>
                   <th scope="row">${resumeListInfo.resumeno}</th>
-                  <td><a href="/Company/1/PersonResume">${resumeListInfo.title}</a></td>
+                  <td><a href="/Company/ResumeDetail?resume_idx=${resumeListInfo.resume_idx}">${resumeListInfo.title}</a></td>
                   <td>${resumeListInfo.username}</td>
                   <td>
                   	<c:forEach var="skillList" items="${resumeListInfo.skillList}">
-                  		<button type="button" class="btn btn-primary">${skillList.name}</button>
+                  		<button type="button" class="btn btn-sm btn-primary">${skillList.name}</button>
                   	</c:forEach>
                   </td>
                 </tr>

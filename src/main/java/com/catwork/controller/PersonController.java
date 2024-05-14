@@ -1,7 +1,6 @@
 package com.catwork.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.catwork.domain.PersonApplyVo;
 import com.catwork.domain.PersonVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
@@ -32,15 +32,18 @@ public class PersonController {
 	private ResumeMapper resumeMapper;
 	
 	@GetMapping("/MyPage")
-	public ModelAndView personMypage(UserVo userVo, PersonVo personVo, ResumeVo resumeVo) {
+	public ModelAndView personMypage(UserVo userVo, PersonVo personVo, ResumeVo resumeVo, PersonApplyVo personApplyVo) {
 		
 		PersonVo pvo = personMapper.getPersonInfo(personVo,userVo);
 		
 		List<ResumeVo> resumeList = personMapper.getResumeList(resumeVo);
 		
+		List<PersonApplyVo> applyList = personMapper.getApplyList(personApplyVo);
+		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("pvo",pvo);
 		mv.addObject("resumeList",resumeList);
+		mv.addObject("applyList",applyList);
 		mv.setViewName("/person/myPage");
 		
 		return mv;
@@ -171,4 +174,9 @@ public class PersonController {
 		return mv;
 		
 	}
+	
+
+
+	
+	
 }

@@ -7,15 +7,17 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostVo {
+public class PersonApplyVo {
 	
+	private int row_num;
+	private int apply_idx;
+	private int resume_idx;
 	private int post_idx;
-	private int user_idx;
+	private int state;
 	private String title;
-	private String career;
-	private String go;
-	private String gowork;
 	private String gohome;
+	private String career;
+	
 	private String salary;
 	private String deadline;
 	private String intro;
@@ -23,5 +25,6 @@ public class PostVo {
 	private String manager;
 	private String mphone;
 	private String created;
+
 	
 }

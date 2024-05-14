@@ -7,14 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostVo {
+public class RecommendPostVo {
 	
 	private int post_idx;
+	private int resume_idx;
+	private int row_num;
 	private int user_idx;
 	private String title;
 	private String career;
-	private String go;
-	private String gowork;
+	private int gowork;
 	private String gohome;
 	private String salary;
 	private String deadline;

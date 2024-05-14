@@ -9,6 +9,8 @@ public interface UserMapper {
 
 	UserVo getUserInfo(UserVo userVo);
 
+	UserVo getUserInfoById(int i);
+
 
 
 
