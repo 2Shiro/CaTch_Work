@@ -18,6 +18,10 @@ public interface CompanyMapper {
 	
 	// 검색
 	List<PostVo> searchPostsByKeyword(String keyword);
+	List<PostVo> searchPosts(String keyword, String career);
+	
+	// 공고 상세보기
+	PostVo getViewPost(int post_idx);
 	
 	List<ResumeVo> getResumeList();
 

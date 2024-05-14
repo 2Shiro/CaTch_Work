@@ -13,8 +13,7 @@ public class PostVo {
 	private int user_idx;
 	private String title;
 	private String career;
-	private int gowork;
-	private String gohome;
+	private String go;
 	private String salary;
 	private String deadline;
 	private String intro;
