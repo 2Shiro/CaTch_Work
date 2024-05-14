@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>개인 마이페이지</title>
+
 <link rel="icon" type="image/png" href="/img/favicon.png" />
 <link href="/css/start.css" rel="stylesheet" />
 <link href="/css/test.css" rel="stylesheet" />

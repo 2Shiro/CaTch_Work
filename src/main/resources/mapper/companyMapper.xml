@@ -58,6 +58,7 @@
 	<!-- 이력서 리스트 가져오기 -->
 	<select id="getResumeList">
 		SELECT RESUME_IDX, USER_IDX, TITLE, IMAGE, LINK, INTRO, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, TYPE FROM RESUME_TB
+		ORDER BY RESUME_IDX DESC
 	</select>
 
 	<!-- 기술 이름 가져오기 -->
@@ -83,7 +84,8 @@
 	
 	<!-- user_idx로 기업 회원 공고 리스트 가져오기, 현재는 전부가져옴 -->
 	<select id="getMyPost">
-		SELECT POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, TO_CHAR(DEADLINE, 'YYYY-MM-DD') DEADLINE, INTRO, EXPLAIN, MANAGER, MPHONE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM POST_TB
+		SELECT POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, TO_CHAR(DEADLINE, 'YYYY-MM-DD') DEADLINE, INTRO, EXPLAIN, MANAGER, MPHONE, 
+		TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, JOBTYPE, DEPARTMENT FROM POST_TB
 	</select>
 	
 	<!-- 스킬 테이블 가져오기 -->
@@ -122,7 +124,8 @@
 	
 	<!-- 공고 하나의 정보 가져오기 -->
 	<select id="getPostDetail">
-		SELECT POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, DEADLINE, INTRO, EXPLAIN, MANAGER, MPHONE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM POST_TB WHERE POST_IDX = #{post_idx}
+		SELECT POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, TO_CHAR(DEADLINE, 'YYYY-MM-DD') DEADLINE, INTRO, EXPLAIN, MANAGER, MPHONE, 
+		TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, JOBTYPE, DEPARTMENT FROM POST_TB WHERE POST_IDX = #{post_idx}
 	</select>
 	
 	<!-- 공고 하나의 스킬 가져오기 -->
@@ -138,5 +141,33 @@
 	<!-- 특정 지원 현황 하나 가져오기 -->
 	<select id="getApply">
 		SELECT APPLY_IDX, RESUME_IDX, POST_IDX, STATE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM APPLY_TB WHERE APPLY_IDX = #{apply_idx}
+	</select>
+	
+	<!-- 페이징 이력서 리스트  -->
+	<select id="countResumeList" resultType="int">
+		SELECT COUNT(*) AS CNT FROM RESUME_TB
+	</select>
+	<select id="getResumeListPaging" resultType="com.catwork.domain.ResumeVo">
+		SELECT 
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX) AS SKILLS
+		FROM 
+		    resume_tb r
+		JOIN 
+		    person_tb p ON r.user_idx = p.user_idx
+		JOIN 
+		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
+		JOIN 
+		    skill_tb s ON rs.skill_idx = s.skill_idx
+		GROUP BY
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME
+		ORDER BY
+		    r.RESUME_IDX
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+		ROWS ONLY
 	</select>
 </mapper>

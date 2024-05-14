@@ -1,6 +1,7 @@
 package com.catwork.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.catwork.domain.ApplyVo;
 import com.catwork.domain.CompanyVo;
+import com.catwork.domain.Pagination;
+import com.catwork.domain.PagingResponse;
+import com.catwork.domain.PagingVo;
 import com.catwork.domain.ParticipateVo;
 import com.catwork.domain.PersonVo;
 import com.catwork.domain.PostSkillVo;
@@ -41,7 +45,10 @@ public class CompanyController {
 	
 	//기업에서 개인의 이력서 중 공개된 이력서 리스트
 	@RequestMapping("/ResumeList")
-	public ModelAndView resumeList() {
+	public ModelAndView resumeList(@RequestParam(value = "nowpage") int nowpage) {
+		// session에서 id를 가져옴
+		//String id = comVo.getId();
+		
 		//정보를 담을 리스트
 		List<ResumeInfoVo> resumeListInfo = new ArrayList<ResumeInfoVo>();
 		
@@ -50,6 +57,7 @@ public class CompanyController {
 		//log.info("[==resumeList==] : ", resumeList);
 		//System.out.println("resumeList: " + resumeList);
 		
+		/*
 		for(int i = 0; i < resumeList.size(); i++) {		
 			//개인 회원 정보 가져오기
 			PersonVo person = personMapper.getPersonDetail(resumeList.get(i).getUser_idx());
@@ -75,11 +83,40 @@ public class CompanyController {
 												resumeList.get(i).getTitle(),
 												person.getName(),
 												skillnameList));
-		}		
+		}	
+		*/
+		
+		// 페이징
+		int count = companyMapper.countResumeList(resumeList);
+		//int count = resumeListInfo.size();
+		PagingResponse<ResumeVo> response = null;
+		if (count < 1) {
+			response = new PagingResponse<>(Collections.emptyList(), null);
+		}
+		// 페이징을 위한 초기 설정값
+		PagingVo pagingVo = new PagingVo();
+		pagingVo.setPage(nowpage);
+		pagingVo.setPageSize(7);
+		pagingVo.setRecordSize(7);//
+
+		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
+		Pagination pagination = new Pagination(count, pagingVo);
+		pagingVo.setPagination(pagination);
+
+		int offset = pagingVo.getOffset();
+		int pageSize = pagingVo.getPageSize();
+
+		List<ResumeVo> pagingList = companyMapper.getResumeListPaging(offset, pageSize);
+		response = new PagingResponse<>(pagingList, pagination);
+		//response = new PagingResponse<>(pagingList, pagination, resumeListInfo, offset);
+		
+		System.out.println("list: " + response.getList());
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("resumeList", resumeList);
-		mv.addObject("resumeListInfo", resumeListInfo);
+		mv.addObject("response", response);
+		mv.addObject("pagingVo", pagingVo);
+		mv.addObject("nowpage", nowpage);
 		mv.setViewName("company/resumeList");
 		
 		return mv;

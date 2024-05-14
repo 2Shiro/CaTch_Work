@@ -20,6 +20,9 @@ public class ResumeVo {
 	private String skill_idx;
 	private String skill_names;
 	
+	private String username;
 	private String name;
 	private String phone;
+	
+	private String skills;
 }
