@@ -18,8 +18,8 @@
   <div class="">
     <div class="">
     <form class="needs-validation container"
-				action="/Company/MyPostWrite" novalidate id="postForm"
-				method="post">
+				action="/Company/PostUpdateForm" method="post">
+				<input type="hidden" id="post_idx" name="post_idx" value="${post.post_idx}">
       <div class="">
 					<div class="my-1 mx-auto row">
 						<h2 class="form-control" id="title" name="title">${post.title}</h2>
@@ -51,11 +51,7 @@
 									<h5>근무 조건</h5>
 								</div>
 								<div class="col-md-8">
-									<select class="form-select" aria-label="job_type" id="job_type" name="job_type" required>
-										<option value="" selected disabled>선택</option>
-										<option value="정규직">정규직</option>
-										<option value="계약직">계약직</option>
-									</select>
+									<input type="text" class="form-control" id="jobtype" name="jobtype" readonly="readonly" value="${post.jobtype}">
 								</div>
 							</div>
 							<div class="col-6 row d-flex align-items-center ms-4">
@@ -115,7 +111,7 @@
 					</div>
       </div>
       <div class="">
-        <button type="submit" id="post-submit" class="btn btn-primary">수정</button>
+        <button type="submit" id="post-update" class="btn btn-primary">수정</button>
         <button type="button" class="btn btn-secondary">뒤로</button>
       </div>
       </form>
