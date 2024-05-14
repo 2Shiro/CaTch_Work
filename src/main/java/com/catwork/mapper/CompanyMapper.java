@@ -42,4 +42,8 @@ public interface CompanyMapper {
 	List<ApplyVo> getParticipateList(int post_idx);
 
 	ApplyVo getApply(int apply_idx);
+	
+	int countResumeList(List<ResumeVo> resumeList);
+	
+	List<ResumeVo> getResumeListPaging(int offset, int pageSize);
 }

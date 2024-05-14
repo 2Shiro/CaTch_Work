@@ -22,5 +22,7 @@ public class PostVo {
 	private String manager;
 	private String mphone;
 	private String created;
+	private String jobtype;
+	private String department;
 	
 }

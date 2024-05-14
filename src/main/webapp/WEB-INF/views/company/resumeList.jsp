@@ -22,7 +22,7 @@
    <div class="container">
       <h2>구직자 이력서</h2>
       
-      <div id="resume">
+      <div id="resume" class="linkDiv">
          <table class="table">
            <thead>
              <tr>
@@ -33,40 +33,21 @@
              </tr>
            </thead>
            <tbody class="table-group-divider">
-              <c:forEach var="resumeListInfo" items="${resumeListInfo}">
+              <c:forEach var="resumeListInfo" items="${response.list}" varStatus="status">
                 <tr>
-                  <th scope="row">${resumeListInfo.resumeno}</th>
+                  <th scope="row">${status.count}</th>
                   <td><a href="/Company/ResumeDetail?resume_idx=${resumeListInfo.resume_idx}">${resumeListInfo.title}</a></td>
-                  <td>${resumeListInfo.username}</td>
+                  <td>${resumeListInfo.name}</td>
                   <td>
-                  	<c:forEach var="skillList" items="${resumeListInfo.skillList}">
-                  		<button type="button" class="btn btn-sm btn-primary">${skillList.name}</button>
-                  	</c:forEach>
+											${resumeListInfo.skills}
                   </td>
                 </tr>
              </c:forEach>
            </tbody>
          </table>
       </div>
-         
-      <div id="pagination">
-         <nav aria-label="Page navigation example">
-           <ul class="pagination">
-             <li class="page-item">
-               <a class="page-link" href="#" aria-label="Previous">
-                 <span aria-hidden="true">&laquo;</span>
-               </a>
-             </li>
-             <li class="page-item"><a class="page-link" href="#">1</a></li>
-             <li class="page-item"><a class="page-link" href="#">2</a></li>
-             <li class="page-item"><a class="page-link" href="#">3</a></li>
-             <li class="page-item">
-               <a class="page-link" href="#" aria-label="Next">
-                 <span aria-hidden="true">&raquo;</span>
-               </a>
-             </li>
-           </ul>
-         </nav>
+			<div class="d-flex justify-content-center paging-bottom-container">
+      <%@include file="/WEB-INF/pagination/resumeListPaging.jsp" %>
       </div>
    </div>
    
