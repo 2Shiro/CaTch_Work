@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.catwork.domain.PersonApplyResumeVo;
+import com.catwork.domain.PersonStateVo;
 import com.catwork.domain.PostVo;
 import com.catwork.domain.RecommendPostVo;
 import com.catwork.domain.ResumeVo;
@@ -40,6 +41,9 @@ public interface ResumeMapper {
 	List<RecommendPostVo> getPostList(int resume_idx);
 
 	List<PersonApplyResumeVo> getResumeList(int resume_idx);
+
+
+	PersonStateVo getPersonState(PersonStateVo personStateVo);
 
 
 	 
