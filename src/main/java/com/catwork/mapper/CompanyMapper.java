@@ -3,6 +3,7 @@ package com.catwork.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.catwork.domain.ApplyVo;
 import com.catwork.domain.CompanyVo;
@@ -18,9 +19,8 @@ public interface CompanyMapper {
 	List<PostVo> getmainpostList();
 	CompanyVo getCompanyById(int user_idx);
 	
-	// 검색
-	List<PostVo> searchPostsByKeyword(String keyword);
-	List<PostVo> searchPosts(String keyword, String career);
+    // 검색
+    List<PostVo> searchPosts(@Param("keyword") String keyword, @Param("job_category") String job_category, @Param("region") String region, @Param("career") String career, @Param("worker") String worker);
 	
 	// 공고 상세보기
 	PostVo getViewPost(int post_idx);

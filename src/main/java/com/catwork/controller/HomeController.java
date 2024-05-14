@@ -16,6 +16,9 @@ import com.catwork.domain.MainPageVo;
 import com.catwork.domain.PostVo;
 import com.catwork.mapper.CompanyMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 public class HomeController {
 	
@@ -46,20 +49,27 @@ public class HomeController {
 	}
 	
     // 검색 기능 - AJAX 호출
-    @RequestMapping("/Search")
-    @ResponseBody // 메소드의 반환값을 응답 본문에 직접 작성하도록 설정
-    public ResponseEntity<List<MainPageVo>> search(@RequestParam(value="keyword") String keyword) {
-        List<MainPageVo> searchResults = new ArrayList<>();
-        List<PostVo> searchedPosts = companyMapper.searchPostsByKeyword(keyword);
+	@RequestMapping("/Search")
+	@ResponseBody
+	public ResponseEntity<List<MainPageVo>> search(
+	        @RequestParam(value="keyword", required=false, defaultValue="") String keyword,
+	        @RequestParam(value="job_category", required=false, defaultValue="") String jobCategory,
+	        @RequestParam(value="region", required=false, defaultValue="") String region,
+	        @RequestParam(value="career", required=false, defaultValue="") String career,
+	        @RequestParam(value="worker", required=false, defaultValue="") String worker) {
+	    
+	    List<MainPageVo> searchResults = new ArrayList<>();
 
-        for (PostVo post : searchedPosts) {
-            CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
-            searchResults.add(new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getLogo(), company.getName(),
-                    post.getTitle(), post.getDeadline()));
-        }
+	    List<PostVo> searchedPosts = companyMapper.searchPosts(keyword, jobCategory, region, career, worker);
 
-        return ResponseEntity.ok(searchResults); // 검색 결과를 JSON 형태로 반환
-    }
+	    for (PostVo post : searchedPosts) {
+	        CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
+	        searchResults.add(new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getLogo(), company.getName(),
+	                post.getTitle(), post.getDeadline()));
+	    }
+	    log.info("searchResults = {}", searchResults);
+	    return ResponseEntity.ok(searchResults); // 검색 결과를 JSON 형태로 반환
+	}
     
     
     @RequestMapping("/Company/Viewpost")
