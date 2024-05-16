@@ -11,6 +11,7 @@ public class PersonApplyResumeVo {
 	
 	private int row_num;
 	private int apply_idx;
+	private int per_idx;
 	private int resume_idx;
 	private int post_idx;
 	private int state;

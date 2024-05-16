@@ -5,9 +5,13 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.catwork.domain.BookmarkVo;
 import com.catwork.domain.PersonApplyResumeVo;
+import com.catwork.domain.PersonBookmarkVo;
 import com.catwork.domain.PersonStateVo;
 import com.catwork.domain.PostVo;
+import com.catwork.domain.RateFormVo;
+import com.catwork.domain.RateVo;
 import com.catwork.domain.RecommendPostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
@@ -44,6 +48,21 @@ public interface ResumeMapper {
 
 
 	PersonStateVo getPersonState(PersonStateVo personStateVo);
+
+	//BookmarkVo deleteBookmark(BookmarkVo bookmarkVo);
+	void deleteBookmark(BookmarkVo bookmarkVo);
+
+
+	List<PersonBookmarkVo> getBookmarkList();
+
+	ResumeVo getResume(ResumeVo resumeVo);
+
+	RateFormVo getRateForm(RateFormVo rateFormVo);
+
+	void insertRate(RateVo rateVo);
+
+	//RateVo insertRate(RateVo rateVo);
+
 
 
 	 

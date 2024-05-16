@@ -23,6 +23,7 @@ public class ResumeVo {
 	private String username;
 	private String name;
 	private String phone;
-	
+	private String social_num;
+	private String address;
 	private String skills;
 }
