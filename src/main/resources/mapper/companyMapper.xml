@@ -157,9 +157,9 @@
 		    resume_tb r
 		JOIN 
 		    person_tb p ON r.user_idx = p.user_idx
-		JOIN 
+		left JOIN 
 		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
-		JOIN 
+		left JOIN 
 		    skill_tb s ON rs.skill_idx = s.skill_idx
 		GROUP BY
 		    r.RESUME_IDX,

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.catwork.domain.PersonApplyVo;
 import com.catwork.domain.PersonBookmarkVo;
 import com.catwork.domain.PersonVo;
+import com.catwork.domain.RecommendPostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
 import com.catwork.domain.UserVo;
@@ -178,9 +179,20 @@ public class PersonController {
 		return mv;
 		
 	}
+	@GetMapping("/Resume/GetrecommendList")
+	public ModelAndView resumeRecommendList(RecommendPostVo recommendPostVo, ResumeVo resumeVo) {
+		
+		//ResumeVo vo = resumeMapper.getResume(resumeVo);
+		List<RecommendPostVo> postList = resumeMapper.getPostList(recommendPostVo);
+		ModelAndView mv = new ModelAndView();
+		//mv.addObject("vo",vo);
+		mv.addObject("postList",postList);
+		mv.setViewName("/person/recommendPost");
+		return mv;
+	}
+	
 
-
-
+	
 	
 	
 }
