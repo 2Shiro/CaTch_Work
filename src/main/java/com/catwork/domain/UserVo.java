@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserVo {
-	private String user_idx;
+	private int user_idx;
 	private String id;
 	private String pwd;
 	private int type;
+	private String email;
 }

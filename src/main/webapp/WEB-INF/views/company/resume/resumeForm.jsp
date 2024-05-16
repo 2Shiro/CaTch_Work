@@ -26,10 +26,12 @@
 						<div class="row mt-2">
 							<div class="col-6 row d-flex align-items-center">
 								<div class="col-md-auto">
-									<img alt="profile" src="${vo.link}" style="height: 180px;">
+									<img alt="profile" src="${vo.image}" style="height: 180px;">
 								</div>
 							</div>
 							<div class="col-6 row ms-4">
+								<input type="hidden" id="resume_idx" name="resume_idx" value="${vo.resume_idx}">
+								<input type="hidden" id="user_idx" name="user_idx" value="${vo.user_idx}">
 								<div class="input-group mb-3 ">
 									<span class="input-group-text text-center" id="pname">이름</span>
 									<input type="text" class="form-control" id="pname" name="pname"
