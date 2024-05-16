@@ -156,32 +156,27 @@
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() { // DOM이 준비되면 함수 실행
+document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btn_search').addEventListener('click', function(e) {
-        e.preventDefault(); // 폼 제출을 방지하여 페이지 새로고침 방지
+        e.preventDefault();
 
-        // '직무 선택', '지역 선택', '경력 선택', '고용 형태 선택' 이 선택되었을 때 값을 빈 문자열로 설정
         var department = document.getElementById('department');
         var region = document.getElementById('region');
         var career = document.getElementById('career');
         var jobtype = document.getElementById('jobtype');
 
-        if(department.value === '직무 선택') department.value = '';
-        if(region.value === '지역 선택') region.value = '';
-        if(career.value === '경력 선택') career.value = '';
-        if(jobtype.value === '고용 형태 선택') jobtype.value = '';
-
         var searchData = {
-            keyword: document.getElementById('keyword').value,
-            department: department.value,
-            region: region.value,
-            career: career.value,
-            jobtype: jobtype.value
+            keyword: document.getElementById('keyword').value
         };
+
+        // 기본 선택값일 경우 빈 문자열을 넘겨주도록 수정
+        searchData.department = department.value !== '직무 선택' ? department.value : "";
+        searchData.region = region.value !== '지역 선택' ? region.value : "";
+        searchData.career = career.value !== '경력 선택' ? career.value : "";
+        searchData.jobtype = jobtype.value !== '고용 형태 선택' ? jobtype.value : "";
 
         console.log(searchData);
 
-        // XMLHttpRequest 객체를 사용하여 Ajax 요청을 합니다.
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '/Search?' + new URLSearchParams(searchData).toString(), true);
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -209,7 +204,6 @@ document.addEventListener('DOMContentLoaded', function() { // DOM이 준비되�
                 }
                 document.querySelector('.d-flex.flex-wrap.ms-3').innerHTML = resultHTML;
             } else {
-                // 오류 처리
                 alert('검색 오류: ' + this.statusText);
             }
         };
