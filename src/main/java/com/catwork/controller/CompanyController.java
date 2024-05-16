@@ -23,6 +23,7 @@ import com.catwork.domain.ResumeInfoVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
 import com.catwork.domain.SkillVo;
+import com.catwork.domain.StateVo;
 import com.catwork.domain.UserVo;
 import com.catwork.mapper.CompanyMapper;
 import com.catwork.mapper.PersonMapper;
@@ -110,7 +111,7 @@ public class CompanyController {
 		response = new PagingResponse<>(pagingList, pagination);
 		//response = new PagingResponse<>(pagingList, pagination, resumeListInfo, offset);
 		
-		System.out.println("list: " + response.getList());
+		//System.out.println("list: " + response.getList());
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("resumeList", resumeList);
@@ -153,7 +154,7 @@ public class CompanyController {
 	
 	//기업의 마이페이지
 	@RequestMapping("/MyPage")
-	public ModelAndView myPage() {
+	public ModelAndView myPage(@RequestParam(value = "nowpage") int nowpage) {
 		//회원 정보
 		//회원 정보 가져오기(현재는 특정 회원 고정)
 		CompanyVo cvo = companyMapper.getCompanyById(9);
@@ -161,6 +162,29 @@ public class CompanyController {
 		
 		//특정 기업 공고 리스트 가져오기
 		List<PostVo> postList = companyMapper.getMyPost(9);
+		
+		//공고 리스트 페이징
+		int count = companyMapper.countPostList(postList);
+		//int count = resumeListInfo.size();
+		PagingResponse<PostVo> response = null;
+		if (count < 1) {
+			response = new PagingResponse<>(Collections.emptyList(), null);
+		}
+		// 페이징을 위한 초기 설정값
+		PagingVo pagingVo = new PagingVo();
+		pagingVo.setPage(nowpage);
+		pagingVo.setPageSize(7);
+		pagingVo.setRecordSize(7);
+
+		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
+		Pagination pagination = new Pagination(count, pagingVo);
+		pagingVo.setPagination(pagination);
+
+		int offset = pagingVo.getOffset();
+		int pageSize = pagingVo.getPageSize();
+
+		List<PostVo> pagingList = companyMapper.getPostListPaging(offset, pageSize);
+		response = new PagingResponse<>(pagingList, pagination);
 		
 		//새공고 쓰기에서 스킬 테이블 가져오기
 		List<SkillVo> skill = companyMapper.getSkills();
@@ -170,6 +194,9 @@ public class CompanyController {
 		mv.addObject("cvo", cvo);
 		mv.addObject("postList", postList);
 		mv.addObject("skill", skill);
+		mv.addObject("response", response);
+		mv.addObject("pagingVo", pagingVo);
+		mv.addObject("nowpage", nowpage);
 		mv.setViewName("company/com_mypage");
 		
 		return mv;
@@ -199,7 +226,7 @@ public class CompanyController {
 			companyMapper.insertskills(skillVo);
 		}
 		
-		mv.setViewName("redirect:/Company/MyPage");
+		mv.setViewName("redirect:/Company/MyPage?nowpage=1");
 		//mv.setViewName("redirect:/Company/MyPost?id=" + id + "&nowpage=1");
 		return mv;
 	}
@@ -233,6 +260,7 @@ public class CompanyController {
 		PostVo post = companyMapper.getPostDetail(postidx.getPost_idx());
 		
 		//특정 공고의 스킬 가져오기
+		//List<PostSkillVo> postSkills = companyMapper.getPostSkills(postidx);
 		List<PostSkillVo> postSkills = companyMapper.getPostSkills(postidx.getPost_idx());
 		
 		//스킬 이름 가져오기
@@ -348,6 +376,7 @@ public class CompanyController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("post", post);
 		mv.addObject("skill", skill);
+		mv.addObject("post_idx", postidx);
 		mv.addObject("participateList", participateList);
 		mv.addObject("resumeListInfo", resumeListInfo);
 		mv.setViewName("company/post_detail");
@@ -357,6 +386,7 @@ public class CompanyController {
 	
 	@RequestMapping("/ParticipateDetail")
 	public ModelAndView participateDetail(ApplyVo apply) {
+		ModelAndView mv = new ModelAndView();
 		//apply_idx로 지원현황 가져오기
 		ApplyVo applydetail = companyMapper.getApply(apply.getApply_idx());
 		
@@ -376,14 +406,95 @@ public class CompanyController {
 			skill.add(skillname);
 		}
 		
+		if(applydetail.getState() != 0) {
+			//state 정보 가져오기
+			StateVo state = companyMapper.getState(applydetail.getApply_idx());
+			state.setState(applydetail.getState());
+			System.out.println("state" + state);
+			
+			mv.addObject("state", state);
+		}
+		
 		//회원 정보 가져오기
 		PersonVo info = personMapper.getPersonDetail(vo.getUser_idx());
 		
-		ModelAndView mv = new ModelAndView();
 		mv.addObject("vo", vo);
 		mv.addObject("info", info);
 		mv.addObject("skill", skill);
+		mv.addObject("apply", apply);
+		mv.addObject("applydetail", applydetail);
 		mv.setViewName("/company/apply_detail");
+		
+		return mv;
+	}
+	
+	@RequestMapping("/PostUpdateForm")
+	public ModelAndView postUpdateForm(PostVo post_idx) {
+		//post 정보 가져오기
+		PostVo post = companyMapper.getPostDetail(post_idx.getPost_idx());
+		
+		//모든 스킬 가져오기
+		List<SkillVo> skill = companyMapper.getAllSKills();
+		
+		//post 스킬 가져오기
+		List<PostSkillVo> postSkills = companyMapper.getPostSkills(post_idx.getPost_idx());
+		
+		//System.out.println("post_idx: " + post_idx.getPost_idx());
+		//System.out.println("this post: " + post);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("post", post);
+		mv.addObject("skill", skill);
+		mv.addObject("postSkills", postSkills);
+		mv.setViewName("company/postupdateform");
+		
+		return mv;
+	}
+	
+	@RequestMapping("/PostUpdate")
+	public ModelAndView postUpdate(@RequestParam("skillIdx") List<Integer> skillIdxList, PostVo post) {
+		//String id = comVo.getId();
+		// 해당 공고의 post_idx를 확정
+		int post_idx = post.getPost_idx();
+		post.setPost_idx(post_idx);
+		
+		//System.out.println("post1: " + post);
+
+		// 해당 공고의 정보를 update
+		companyMapper.updatePost(post);
+		
+		//System.out.println("post2: " + post);
+
+		// 해당 공고의 모든 기술자격 데이터를 삭제
+		companyMapper.deletepostskills(post);
+		
+		//System.out.println("post3: " + post);
+
+		// 해당 공고의 기술자격 데이터를 다시 입력
+		for (Integer skillIdx : skillIdxList) {
+			PostSkillVo skillVo = new PostSkillVo();
+			skillVo.setPost_idx(post_idx);
+			skillVo.setSkill_idx(skillIdx);
+			companyMapper.insertskills(skillVo);
+		}
+		
+		//System.out.println("post4: " + post);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/Company/PostDetail?post_idx=" + post.getPost_idx());
+		
+		return mv;
+	}
+	
+	@RequestMapping("/InfoUpdateForm")
+	public ModelAndView infoUpdateform(UserVo infoUser, CompanyVo infoCompany) {
+		UserVo user = userMapper.getUserInfoById(infoUser.getUser_idx());
+		CompanyVo company = companyMapper.getCompanyById(user.getUser_idx());
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("user", user);
+		mv.addObject("company", company);
+		mv.setViewName("/company/infoupdateform");
 		
 		return mv;
 	}

@@ -14,7 +14,7 @@ public class CompanyVo {
 	private String name;
 	private String logo;
 	private int cnum;
-	private String resident;
+	private String representative;
 	private String zip_code;
 	private String address;
 	private String ctype;
