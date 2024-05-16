@@ -19,37 +19,50 @@
 		ORDER BY DEADLINE_ORDER
 	</select>
 	
-	<!-- 검색 공고 가져오기 -->
-	<!-- 마감지난 건 안뜨고 마감기한 낮은 순으로 정렬됨 -->
-	<select id="searchPosts">
-		SELECT  POST_IDX,
-		        USER_IDX,
-		        TITLE,
-		        TRUNC(DEADLINE) - TRUNC(SYSDATE) AS DEADLINE_ORDER,
-		        CASE 
-		            WHEN TRUNC(DEADLINE) - TRUNC(SYSDATE) = 0 THEN 'D-Day'
-		            ELSE 'D-' || TO_CHAR(TRUNC(DEADLINE) - TRUNC(SYSDATE))
-		        END AS DEADLINE,
-		        TO_CHAR(SYSDATE, 'YY/MM/DD'),
-		        JOB_CATEGORY,
-		        REGION,
-		        CASE 
-		            WHEN CAREER LIKE '%년이상%' THEN '경력'
-		            ELSE CAREER
-		        END AS CAREER,
-		        WORKER
-		FROM    POST_TB
-		WHERE   TO_CHAR(DEADLINE, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
-		        AND TITLE LIKE '%' || #{keyword} || '%'
-		        AND (#{job_category} IS NULL OR JOB_CATEGORY = #{job_category})
-		        AND (#{region} IS NULL OR REGION = #{region})
-		        AND (#{career} IS NULL 
-		             OR CAREER LIKE '%년이상%' 
-		             OR CAREER = '신입'
-		             OR CAREER = '무관')
-		        AND (#{worker} IS NULL OR WORKER = #{worker})
-		ORDER BY DEADLINE_ORDER
-	</select>
+<!-- 검색 공고 가져오기 -->
+<!-- 마감지난 건 안뜨고 마감기한 낮은 순으로 정렬됨 -->
+<select id="searchPosts" resultType="com.catwork.domain.PostVo">
+    SELECT  P.POST_IDX,
+            P.USER_IDX,
+            P.TITLE,
+            TRUNC(P.DEADLINE) - TRUNC(SYSDATE) AS DEADLINE_ORDER,
+            CASE 
+                WHEN TRUNC(P.DEADLINE) - TRUNC(SYSDATE) = 0 THEN 'D-Day'
+                ELSE 'D-' || TO_CHAR(TRUNC(P.DEADLINE) - TRUNC(SYSDATE))
+            END AS DEADLINE,
+            TO_CHAR(SYSDATE, 'YY/MM/DD') AS TODAY,
+            P.DEPARTMENT,
+            SUBSTR(C.ADDRESS, 1, 2) AS REGION,
+            CASE 
+                WHEN P.CAREER LIKE '%년이상%' THEN '경력'
+                ELSE P.CAREER
+            END AS CAREER,
+            P.JOBTYPE
+    FROM    POST_TB P
+    JOIN    COMPANY_TB C ON P.USER_IDX = C.USER_IDX
+    WHERE   TO_CHAR(P.DEADLINE, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+            <if test="keyword != null and keyword != ''">
+                AND P.TITLE LIKE '%' || #{keyword} || '%'
+            </if>
+            <if test="department != null and department != ''">
+                AND P.DEPARTMENT = #{department}
+            </if>
+            <if test="region != null and region != ''">
+                AND SUBSTR(C.ADDRESS, 1, 2) = #{region}
+            </if>
+            <if test="career != null">
+                AND (
+                    (#{career} = '경력' AND P.CAREER LIKE '%년이상%')
+                    OR (#{career} = '신입' AND P.CAREER = '신입')
+                    OR (#{career} = '무관' AND (P.CAREER = '무관' OR P.CAREER LIKE '%년이상%' OR P.CAREER = '신입'))
+                )
+            </if>
+            <if test="jobtype != null and jobtype != ''">
+                AND P.JOBTYPE = #{jobtype}
+            </if>
+    ORDER BY DEADLINE_ORDER
+</select>
+
 	
 	<!-- 공고 상세보기 -->
 	<select id="getViewPost" parameterType="int" resultType="com.catwork.domain.PostVo">

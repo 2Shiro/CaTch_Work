@@ -61,7 +61,7 @@
 							<div class="mcontainer">
 								<div class="selects">
 									<!-- 직무 선택 -->
-									<select class="form-select" id="job_category">
+									<select class="form-select" id="department">
 										<option selected>직무 선택</option>
 										<option value="기획">기획</option>
 										<option value="사무">사무</option>
@@ -112,7 +112,7 @@
 										<option value="경력">경력</option>
 									</select>
 									<!-- 근로 형태 선택 -->
-									<select class="form-select" id="worker">
+									<select class="form-select" id="jobtype">
 										<option selected>고용 형태 선택</option>
 										<option value="정규직">정규직</option>
 										<option value="계약직">계약직</option>
@@ -156,32 +156,43 @@
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-$(document).ready(function() {
-    $('#btn_search').click(function(e) {
+document.addEventListener('DOMContentLoaded', function() { // DOM이 준비되면 함수 실행
+    document.getElementById('btn_search').addEventListener('click', function(e) {
         e.preventDefault(); // 폼 제출을 방지하여 페이지 새로고침 방지
+
+        // '직무 선택', '지역 선택', '경력 선택', '고용 형태 선택' 이 선택되었을 때 값을 빈 문자열로 설정
+        var department = document.getElementById('department');
+        var region = document.getElementById('region');
+        var career = document.getElementById('career');
+        var jobtype = document.getElementById('jobtype');
+
+        if(department.value === '직무 선택') department.value = '';
+        if(region.value === '지역 선택') region.value = '';
+        if(career.value === '경력 선택') career.value = '';
+        if(jobtype.value === '고용 형태 선택') jobtype.value = '';
+
         var searchData = {
-            keyword: $('#keyword').val(),      // 검색창에서 키워드 가져오기
-            job_category: $('#job_category').val(),  // 직무 선택값 가져오기
-            region: $('#region').val(),        // 지역 선택값 가져오기
-            career: $('#career').val(),        // 경력 선택값 가져오기
-            worker: $('#worker').val()         // 고용 형태 선택값 가져오기
+            keyword: document.getElementById('keyword').value,
+            department: department.value,
+            region: region.value,
+            career: career.value,
+            jobtype: jobtype.value
         };
-        
-     // 여기에 console.log를 추가합니다.
+
         console.log(searchData);
 
-        $.ajax({
-            url: '/Search', // 서버의 검색 엔드포인트
-            type: 'GET', // 검색 요청 방식
-            dataType: 'json', // 기대하는 응답 데이터 타입
-            data: searchData, // 수정된 부분: 서버로 보낼 데이터를 searchData 객체로 지정
-            success: function(response) {
-                // 검색 결과 처리
+        // XMLHttpRequest 객체를 사용하여 Ajax 요청을 합니다.
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/Search?' + new URLSearchParams(searchData).toString(), true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+            if(this.status >= 200 && this.status < 300) {
+                var response = JSON.parse(this.responseText);
                 var resultHTML = '';
-                if(response.length > 0){
-                    $.each(response, function(i, item) { // 받아온 데이터를 이용하여 반복
+                if(response.length > 0) {
+                    response.forEach(function(item) {
                         resultHTML += '<div class="cardinterval me-5 my-3">' +
-                                          '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&id=' + item.user_idx + '">' +
+                                          '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&user_id=' + item.user_idx + '">' +
                                               '<div class="card" style="width: 20rem; height: 300px;">' +
                                                   '<img src="' + item.logo + '" class="card-img-top" alt="회사로고" style="height: 150px;">' +
                                                   '<div class="card-body">' +
@@ -196,13 +207,16 @@ $(document).ready(function() {
                 } else {
                     resultHTML = '<p>검색 결과가 없습니다.</p>';
                 }
-                $('.d-flex.flex-wrap.ms-3').html(resultHTML); // 결과를 페이지에 표시
-            },
-            error: function(xhr, status, error) {
+                document.querySelector('.d-flex.flex-wrap.ms-3').innerHTML = resultHTML;
+            } else {
                 // 오류 처리
-                alert('검색 오류: ' + error);
+                alert('검색 오류: ' + this.statusText);
             }
-        });
+        };
+        xhr.onerror = function() {
+            alert('요청 오류');
+        };
+        xhr.send();
     });
 });
 </script>

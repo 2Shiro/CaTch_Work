@@ -20,7 +20,7 @@ public interface CompanyMapper {
 	CompanyVo getCompanyById(int user_idx);
 	
     // 검색
-    List<PostVo> searchPosts(@Param("keyword") String keyword, @Param("job_category") String job_category, @Param("region") String region, @Param("career") String career, @Param("worker") String worker);
+    List<PostVo> searchPosts(@Param("keyword") String keyword, @Param("department") String department, @Param("region") String region, @Param("career") String career, @Param("jobtype") String jobtype);
 	
 	// 공고 상세보기
 	PostVo getViewPost(int post_idx);

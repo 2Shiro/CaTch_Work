@@ -53,14 +53,14 @@ public class HomeController {
 	@ResponseBody
 	public ResponseEntity<List<MainPageVo>> search(
 	        @RequestParam(value="keyword", required=false, defaultValue="") String keyword,
-	        @RequestParam(value="job_category", required=false, defaultValue="") String jobCategory,
+	        @RequestParam(value="department", required=false, defaultValue="") String department,
 	        @RequestParam(value="region", required=false, defaultValue="") String region,
 	        @RequestParam(value="career", required=false, defaultValue="") String career,
-	        @RequestParam(value="worker", required=false, defaultValue="") String worker) {
+	        @RequestParam(value="jobtype", required=false, defaultValue="") String jobtype) {
 	    
 	    List<MainPageVo> searchResults = new ArrayList<>();
 
-	    List<PostVo> searchedPosts = companyMapper.searchPosts(keyword, jobCategory, region, career, worker);
+	    List<PostVo> searchedPosts = companyMapper.searchPosts(keyword, department, region, career, jobtype);
 
 	    for (PostVo post : searchedPosts) {
 	        CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
