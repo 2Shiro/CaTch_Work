@@ -3,9 +3,10 @@ package com.catwork.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
+
+//github.com/2Shiro/CaTch_Work.git
 
 import com.catwork.domain.ApplyVo;
 import com.catwork.domain.CompanyVo;
@@ -15,7 +16,6 @@ import com.catwork.domain.ResumeVo;
 import com.catwork.domain.SkillVo;
 import com.catwork.domain.StateVo;
 
-@Component
 @Mapper
 public interface CompanyMapper {
 
@@ -23,9 +23,8 @@ public interface CompanyMapper {
 	List<PostVo> getmainpostList();
 	CompanyVo getCompanyById(int user_idx);
 	
-	// 검색
-	List<PostVo> searchPostsByKeyword(String keyword);
-	List<PostVo> searchPosts(String keyword, String career);
+    // 검색
+    List<PostVo> searchPosts(@Param("keyword") String keyword, @Param("department") String department, @Param("region") String region, @Param("career") String career, @Param("jobtype") String jobtype);
 	
 	// 공고 상세보기
 	PostVo getViewPost(int post_idx);

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catwork.domain.PersonApplyVo;
+import com.catwork.domain.PersonBookmarkVo;
 import com.catwork.domain.PersonVo;
+import com.catwork.domain.RecommendPostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
 import com.catwork.domain.UserVo;
@@ -32,7 +34,7 @@ public class PersonController {
 	private ResumeMapper resumeMapper;
 	
 	@GetMapping("/MyPage")
-	public ModelAndView personMypage(UserVo userVo, PersonVo personVo, ResumeVo resumeVo, PersonApplyVo personApplyVo) {
+	public ModelAndView personMypage(UserVo userVo, PersonVo personVo, ResumeVo resumeVo, PersonApplyVo personApplyVo, PersonBookmarkVo personbookmarkVo) {
 		
 		PersonVo pvo = personMapper.getPersonInfo(personVo,userVo);
 		
@@ -40,9 +42,12 @@ public class PersonController {
 		
 		List<PersonApplyVo> applyList = personMapper.getApplyList(personApplyVo);
 		
+		List<PersonBookmarkVo> bookmarkList = personMapper.getBookmarkList(personbookmarkVo);
+		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("pvo",pvo);
 		mv.addObject("resumeList",resumeList);
+		mv.addObject("bookmarkList",bookmarkList);
 		mv.addObject("applyList",applyList);
 		mv.setViewName("/person/myPage");
 		
@@ -174,9 +179,20 @@ public class PersonController {
 		return mv;
 		
 	}
+	@GetMapping("/Resume/GetrecommendList")
+	public ModelAndView resumeRecommendList(RecommendPostVo recommendPostVo, ResumeVo resumeVo) {
+		
+		//ResumeVo vo = resumeMapper.getResume(resumeVo);
+		List<RecommendPostVo> postList = resumeMapper.getPostList(recommendPostVo);
+		ModelAndView mv = new ModelAndView();
+		//mv.addObject("vo",vo);
+		mv.addObject("postList",postList);
+		mv.setViewName("/person/recommendPost");
+		return mv;
+	}
 	
 
-
+	
 	
 	
 }
