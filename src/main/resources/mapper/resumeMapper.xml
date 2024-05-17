@@ -41,33 +41,42 @@
    
    <select id="getView">
 		SELECT 
-		    R.RESUME_IDX,
-		    R.USER_IDX,
-		    R.TITLE,
-		    R.IMAGE,
-		    R.LINK,
-		    R.INTRO,
-		    R.CREATED,
-		    R.TYPE,
-		    LISTAGG(L.NAME, ', ') WITHIN GROUP (ORDER BY L.NAME) AS SKILL_NAMES
-		FROM 
-		    RESUME_SKILL_TB S
-		RIGHT JOIN 
-		    RESUME_TB R ON R.RESUME_IDX = S.RESUME_IDX 
-		left JOIN 
-		    SKILL_TB L ON S.SKILL_IDX = L.SKILL_IDX
-		WHERE 
-		    R.RESUME_IDX = #{resume_idx}
-		GROUP BY
-		    R.RESUME_IDX,
-		    R.USER_IDX,
-		    R.TITLE,
-		    R.IMAGE,
-		    R.LINK,
-		    R.INTRO,
-		    R.CREATED,
-		    R.TYPE
-   
+    PE.NAME,
+    PE.PHONE,
+    TO_CHAR(TO_DATE(SUBSTR(PE.SOCIAL_NUM, 1, 6), 'YYMMDD'), 'YY"년 "MM"월 "DD"일"') AS SOCIAL_NUM,
+    PE.ADDRESS,
+    R.RESUME_IDX,
+    R.USER_IDX,
+    R.TITLE,
+    R.IMAGE,
+    R.LINK,
+    R.INTRO,
+    R.CREATED,
+    R.TYPE,
+    LISTAGG(L.NAME, ', ') WITHIN GROUP (ORDER BY L.NAME) AS SKILL_NAMES
+FROM 
+    RESUME_SKILL_TB S
+RIGHT JOIN 
+    RESUME_TB R ON R.RESUME_IDX = S.RESUME_IDX 
+LEFT JOIN 
+    SKILL_TB L ON S.SKILL_IDX = L.SKILL_IDX
+JOIN 
+    PERSON_TB PE ON R.USER_IDX = PE.USER_IDX    
+WHERE 
+    R.RESUME_IDX = #{resume_idx}
+GROUP BY
+    R.RESUME_IDX,
+    R.USER_IDX,
+    R.TITLE,
+    R.IMAGE,
+    R.LINK,
+    R.INTRO,
+    R.CREATED,
+    R.TYPE,
+    PE.NAME,
+    PE.PHONE,
+    PE.SOCIAL_NUM,
+    PE.ADDRESS
    </select>
    
    <select id="getBookmarkList">
