@@ -114,6 +114,24 @@
 		TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, JOBTYPE, DEPARTMENT FROM POST_TB
 	</select>
 	
+	<!-- 페이징 특정 공고 리스트 -->
+	<select id="countPostList">
+		SELECT COUNT(*) AS CNT FROM POST_TB
+	</select>
+	<select id="getPostListPaging">
+		SELECT 
+		    POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, 
+		    TO_CHAR(DEADLINE, 'YYYY-MM-DD') DEADLINE, INTRO, EXPLAIN, 
+		    MANAGER, MPHONE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, 
+		    JOBTYPE, DEPARTMENT
+		FROM 
+		    POST_TB
+		ORDER BY
+		    DEADLINE
+		OFFSET #{arg0} ROWS FETCH NEXT #{arg1}
+		ROWS ONLY
+	</select>
+	
 	<!-- 스킬 테이블 가져오기 -->
 	<select id="getSkills">
 		SELECT SKILL_IDX, NAME FROM SKILL_TB
@@ -129,15 +147,13 @@
 	<insert id="insertpost"
 		parameterType="com.catwork.domain.PostVo">
 		INSERT INTO POST_TB
-		(POST_IDX, USER_IDX, TITLE, CAREER,
-		GOWORK, GOHOME, SALARY,
-		DEADLINE, INTRO, EXPLAIN,
-		MANAGER, MPHONE, CREATED)
+		(POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, DEADLINE, 
+		 INTRO, EXPLAIN, MANAGER, MPHONE, JOBTYPE, DEPARTMENT)
 		VALUES
 		((SELECT NVL(MAX(POST_IDX),0) + 1 FROM POST_TB), 9,
 		#{title}, #{career}, #{gowork}, #{gohome}, #{salary},
 		#{deadline}, #{intro}, #{explain},
-		#{manager}, #{mphone}, sysdate)
+		#{manager}, #{mphone}, #{jobtype}, #{department})
 	</insert>
 	
 	<!-- post skill insert -->
@@ -183,9 +199,9 @@
 		    resume_tb r
 		JOIN 
 		    person_tb p ON r.user_idx = p.user_idx
-		left JOIN 
+		LEFT JOIN 
 		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
-		left JOIN 
+		LEFT JOIN 
 		    skill_tb s ON rs.skill_idx = s.skill_idx
 		GROUP BY
 		    r.RESUME_IDX,
@@ -195,5 +211,78 @@
 		    r.RESUME_IDX
 		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
 		ROWS ONLY
+	</select>
+	
+	<!-- state 부분 추가 -->
+	<insert id="insertState">
+		INSERT INTO STATE_TB (STATE_IDX, RESUME_IDX, APPLY_IDX, SCORE, COMMENTS, USER_IDX)
+		VALUES((SELECT (MAX(STATE_IDX) + 1) STATE_IDX FROM STATE_TB), #{resume_idx}, #{apply_idx},
+						#{score}, #{comments}, #{user_idx})
+	</insert>
+	
+	<!-- 모든 스킬 가져오기 -->
+	<select id="getAllSKills">
+		SELECT SKILL_IDX, NAME FROM SKILL_TB
+	</select>
+	
+	<!-- 공고 수정하기 -->
+	<update id="updatePost">
+		UPDATE POST_TB
+		SET 
+			TITLE = #{title},
+			CAREER = #{career},
+			GOWORK = #{gowork},
+			GOHOME = #{gohome},
+			SALARY = #{salary},
+			DEADLINE = #{deadline},
+			INTRO = #{intro},
+			EXPLAIN = #{explain},
+			MANAGER = #{manager},
+			MPHONE = #{mphone},
+			JOBTYPE = #{jobtype},
+			DEPARTMENT = #{department}
+		WHERE POST_IDX = #{post_idx}
+	</update>
+	
+	<!-- 스킬 다 삭제 -->
+	<delete id="deletepostskills">
+		DELETE FROM POST_SKILL_TB WHERE POST_IDX = #{post_idx}
+	</delete>
+	
+	<!-- insertState시 apply의 state 바꾸기 -->
+	<update id="insertApplyState">
+		UPDATE APPLY_TB
+		SET STATE = #{state}
+		WHERE APPLY_IDX = #{apply_idx}
+	</update>
+	
+	<!-- state table 데이터 가져오기 -->
+	<select id="getState">
+		SELECT STATE_IDX, RESUME_IDX, APPLY_IDX, SCORE, COMMENTS, USER_IDX
+		FROM STATE_TB WHERE APPLY_IDX = #{apply_idx}
+	</select>
+	
+	<!-- 공고 삭제 -->
+	<delete id="deletePost">
+		DELETE FROM POST_TB WHERE POST_IDX = #{post_idx}
+	</delete>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="updateInfo">
+		UPDATE COMPANY_TB
+		SET NAME = #{name},
+		    LOGO = #{logo},
+		    CNUM = #{cnum},
+		    REPRESENTATIVE = #{representative},
+		    ZIP_CODE = #{zip_code},
+		    ADDRESS = #{address},
+		    CTYPE = #{ctype},
+		    BDATE = #{bdate}
+		WHERE USER_IDX = #{user_idx}
+	</update>
+	
+	<!-- 디비에서 주소 가져오기 -->
+	<select id="getAddress">
+		SELECT ADDRESS FROM COMPANY_TB WHERE USER_IDX = #{user_idx}
 	</select>
 </mapper>

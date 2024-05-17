@@ -7,6 +7,7 @@
 		USER_IDX,
 		ID,
 		PWD,
+		EMAIL,
 		TYPE
 	FROM USER_TB
 	WHERE USER_IDX =1
@@ -17,7 +18,19 @@
 
 	<!-- idx로 회원 정보 가져오기, 현재는 컴퍼니 고정 -->
 	<select id="getUserInfoById">
-		SELECT USER_IDX, ID, PWD, TYPE FROM USER_TB WHERE USER_IDX = #{user_idx} AND TYPE = 1
+		SELECT USER_IDX, ID, PWD, EMAIL, TYPE FROM USER_TB WHERE USER_IDX = #{user_idx} AND TYPE = 1
 	</select>
 
+	<!-- 회원 정보 수정 -->
+	<update id="updateInfo">
+		UPDATE USER_TB
+		SET EMAIL = #{email}
+		WHERE USER_IDX = #{user_idx}
+	</update>
+	<!-- 비밀번호 수정 -->
+	<update id="updatePassword">
+		UPDATE USER_TB
+		SET PWD = #{pwd}
+		WHERE USER_IDX = #{user_idx}
+	</update>
 </mapper>

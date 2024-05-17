@@ -20,7 +20,7 @@
    <%@include file="/WEB-INF/include/nav.jsp" %>
    
    <div class="container">
-      <h2>구직자 이력서</h2>
+      <h2 class="mb-3">구직자 이력서</h2>
       
       <div id="resume" class="linkDiv">
          <table class="table">

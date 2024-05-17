@@ -47,7 +47,7 @@
 									<h5>근무 조건</h5>
 								</div>
 								<div class="col-md-8">
-									<select class="form-select" aria-label="job_type" id="job_type" name="job_type" required>
+									<select class="form-select" aria-label="job_type" id="jobtype" name="jobtype" required>
 										<option value="" selected disabled>선택</option>
 										<option value="정규직">정규직</option>
 										<option value="계약직">계약직</option>
@@ -83,6 +83,17 @@
 								</div>
 								<div class="col-md-8">
 									<input type="text" class="form-control" id="mphone" name="mphone" required>
+								</div>
+							</div>
+						</div>
+						<div class="row mt-4"">
+							<div class="col-6 row d-flex align-items-center">
+								<div class="col-md-auto">
+									<h5>부서</h5>
+								</div>
+								<div class="col-md-8">
+									<input type="text" class="form-control" id="department"
+										name="department">
 								</div>
 							</div>
 						</div>

@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
+
+//github.com/2Shiro/CaTch_Work.git
 
 import com.catwork.domain.ApplyVo;
 import com.catwork.domain.CompanyVo;
@@ -11,6 +14,8 @@ import com.catwork.domain.PostSkillVo;
 import com.catwork.domain.PostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.SkillVo;
+import com.catwork.domain.StateVo;
+import com.catwork.domain.UserVo;
 
 @Mapper
 public interface CompanyMapper {
@@ -50,4 +55,28 @@ public interface CompanyMapper {
 	int countResumeList(List<ResumeVo> resumeList);
 	
 	List<ResumeVo> getResumeListPaging(int offset, int pageSize);
+	
+	void insertState(StateVo state);
+	
+	int countPostList(List<PostVo> postList);
+	
+	List<PostVo> getPostListPaging(int offset, int pageSize);
+	
+	void postUpdateForm(@RequestParam("post") PostVo post);
+	
+	List<SkillVo> getAllSKills();
+	
+	void updatePost(PostVo post);
+	
+	void deletepostskills(PostVo post);
+	
+	void insertApplyState(StateVo state);
+	
+	StateVo getState(int apply_idx);
+	
+	void deletePost(PostVo post);
+	
+	void updateInfo(CompanyVo companyVo);
+	
+	String getAddress(CompanyVo companyVo);
 }

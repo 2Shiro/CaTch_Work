@@ -12,9 +12,24 @@
 		display: flex;
 	}
 	#bottom {
-		display: flex;
+		display: flex;d
+	}
+	#profile {
+		width: 500px;
+		margin-right: 20px;
+	}
+	#info {
+		margin-left: 20px;
+	}
+	.img-thumbnail {
+		width: 500px;
+		height: 500px;
+	}
+	#info > div > input {
+		width: 350px;
 	}
 </style>
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	document
@@ -96,5 +111,29 @@
 <!--    </div> -->
    
    <%@include file="/WEB-INF/include/footer.jsp" %>
+   
+   <script>
+			const infoUpdateBtnEl = document.getElementById("info-update")
+		
+			infoUpdateBtnEl.addEventListener('click', (e) => {
+			    let url = '/Company/InfoUpdateForm'
+			    const user = {
+			        user_idx: document.querySelector("#user_idx").value
+			    }
+			    
+			    const param = {
+	            method  : 'POST',
+	            headers : {"Content-Type": "application/json" },
+	            body    : JSON.stringify(user)
+	        }
+		
+			    
+			    fetch(url, param)
+			    .then(response => {
+			        window.location.href("http://localhost:9086/Company/InfoUpdateForm")
+			    })
+			})
+		</script>
+   
 </body>
 </html>
