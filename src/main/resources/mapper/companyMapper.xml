@@ -266,4 +266,23 @@
 	<delete id="deletePost">
 		DELETE FROM POST_TB WHERE POST_IDX = #{post_idx}
 	</delete>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="updateInfo">
+		UPDATE COMPANY_TB
+		SET NAME = #{name},
+		    LOGO = #{logo},
+		    CNUM = #{cnum},
+		    REPRESENTATIVE = #{representative},
+		    ZIP_CODE = #{zip_code},
+		    ADDRESS = #{address},
+		    CTYPE = #{ctype},
+		    BDATE = #{bdate}
+		WHERE USER_IDX = #{user_idx}
+	</update>
+	
+	<!-- 디비에서 주소 가져오기 -->
+	<select id="getAddress">
+		SELECT ADDRESS FROM COMPANY_TB WHERE USER_IDX = #{user_idx}
+	</select>
 </mapper>

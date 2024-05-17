@@ -18,6 +18,9 @@
    <%@include file="/WEB-INF/include/nav.jsp" %>
    
    <%@include file="/WEB-INF/views/company/resume/resumeForm.jsp" %>
+   <div class="container">
+	   <a type="button" class="btn btn-secondary" href="javascript:window.history.back();">뒤로</a>
+   </div>
    
    <%@include file="/WEB-INF/include/footer.jsp" %>
 </body>

@@ -21,4 +21,16 @@
 		SELECT USER_IDX, ID, PWD, EMAIL, TYPE FROM USER_TB WHERE USER_IDX = #{user_idx} AND TYPE = 1
 	</select>
 
+	<!-- 회원 정보 수정 -->
+	<update id="updateInfo">
+		UPDATE USER_TB
+		SET EMAIL = #{email}
+		WHERE USER_IDX = #{user_idx}
+	</update>
+	<!-- 비밀번호 수정 -->
+	<update id="updatePassword">
+		UPDATE USER_TB
+		SET PWD = #{pwd}
+		WHERE USER_IDX = #{user_idx}
+	</update>
 </mapper>

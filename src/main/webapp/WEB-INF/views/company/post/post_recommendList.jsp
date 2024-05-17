@@ -14,10 +14,13 @@
              </tr>
            </thead>
            <tbody class="table-group-divider">
-              <c:forEach var="resumeListInfo" items="${resumeListInfo}">
+              <c:forEach var="resumeListInfo" items="${resumeListInfo}" varStatus="status">
                 <tr>
-                  <th scope="row">${resumeListInfo.resumeno}</th>
-                  <td><a href="/Company/1/PersonResume">${resumeListInfo.title}</a></td>
+                  <th scope="row">${status.count}</th>
+                  <td>
+                  	<a href="/Company/PersonResume?resume_idx=${resumeListInfo.resume_idx}">${resumeListInfo.title}</a>
+                  	<input type="hidden" id="resume_idx" name="resume_idx" value="${resumeListInfo.resume_idx}">
+                  </td>
                   <td>${resumeListInfo.username}</td>
                   <td>
                   	<c:forEach var="skillList" items="${resumeListInfo.skillList}">
