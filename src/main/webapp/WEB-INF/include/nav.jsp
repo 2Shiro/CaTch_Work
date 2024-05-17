@@ -19,7 +19,7 @@
           <a class="nav-link" href="/Company/MyPage?nowpage=1">마이페이지</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/MyPage">개인페이지</a>
+          <a class="nav-link" href="/MyPage?nowpage=1">개인페이지</a>
         </li>
         <li class="nav-item">
           <a class="nav-link disabled" aria-disabled="true">Disabled</a>
