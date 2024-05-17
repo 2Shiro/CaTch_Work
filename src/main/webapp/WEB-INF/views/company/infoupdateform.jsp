@@ -24,6 +24,10 @@
 	input {
 		width: 400px;
 	}
+	img {
+		width: 500px;
+		height: 500px;
+	}
 </style>
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -33,17 +37,17 @@
 	<%@include file="/WEB-INF/include/header.jsp" %>
 
    <%@include file="/WEB-INF/include/nav.jsp" %>
-   
-   <%@include file="/WEB-INF/include/com_mypage_nav.jsp" %>
 
 	<div class="container mt-5" >
+	<form action="/Company/InfoUpdate" method="POST" enctype="multipart/form-data">
 		<section class="container">
 			<h2>회원 정보</h2>
 			<div id="total">
 				<div id="profile">
-					<img src="${company.logo}" class="img-thumbnail" alt="프로필없음">
-					<div class="input-group mb-3">
-					  <input type="file" class="form-control" id="inputGroupFile02">
+					<img src="${company.logo}" id="img-thumbnail" name="logo" class="img-thumbnail" alt="프로필없음">
+					<div class="input-group mb-3 mt-3">
+					  <input type="file" class="form-control" id="file" name="file"
+									aria-describedby="logo">
 					  <label class="input-group-text" for="inputGroupFile02">Upload</label>
 					</div>
 				</div>
@@ -51,13 +55,12 @@
 					<div class="input-group mb-3">
 						<input type="hidden" id="user_idx" name="user_idx" value="${user.user_idx}">
 					  <span class="input-group-text" id="inputGroup-sizing-default">아이디</span>
-					  <input readonly type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${user.id}">
+					  <input readonly type="text"  name="id" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${user.id}">
 					</div>
-					<div class="input-group mb-3">
-					  <span class="input-group-text" id="inputGroup-sizing-default">비밀번호</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${user.pwd}">
 						
-					</div>
+						<!-- 원래 비밀번호 저장 -->
+						<!-- 비밀번호 가져올 방법 찾기 -->
+					  <input type="hidden" id="tbpwd" name="tbpwd" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${user.pwd}">
 					
 					<div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">비밀번호</span>
@@ -65,25 +68,25 @@
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">비밀번호 확인</span>
-            <input type="password" class="form-control" id="pw2" name="passwordck" placeholder="비밀번호를 다시 입력해주세요">
+            <input type="password" class="form-control" id="pw2" name="passwordck pwd" placeholder="비밀번호를 다시 입력해주세요">
           </div>
           <label id="pwck"></label>
 					
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">이메일</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${user.email}">
+					  <input type="text" name="email" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${user.email}">
 					</div>
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">기업 이름</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.name}">
+					  <input type="text" name="name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.name}">
 					</div>
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">사업자 번호</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.cnum}">
+					  <input type="text" name="cnum" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.cnum}">
 					</div>
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">대표자 이름</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.representative}">
+					  <input type="text" name="representative" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.representative}">
 					</div>
 					
 					
@@ -101,9 +104,8 @@
 
           <div class="input-group mb-3">
           	<span class="input-group-text" id="sample6_postcode" for="address">주소</span>
-            <input type="text" class="form-control"  id="sample6_address" name="address1" placeholder="" value="${company.address}">
-                  <input type="hidden" class="form-control"  id="sample6_detailAddress" name="address2" placeholder="상세주소">
-                  <input type="hidden" class="form-control"  id="sample6_extraAddress" name="address3" placeholder="참고항목">
+            <input type="text" class="form-control"  id="sample6_address" name="address" placeholder="" value="${company.address}">
+                  
 <!--             <div class="invalid-feedback"> -->
 <!--               주소를 입력해주세요. -->
 <!--             </div> -->
@@ -119,18 +121,21 @@
 					
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">기업 구분</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.ctype}">
+					  <input type="text" name="ctype" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.ctype}">
 					</div>
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">설립연도</span>
-					  <input type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.bdate}">
+					  <input type="date" name="bdate" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${company.bdate}">
 					</div>
 				</div>
 			</div>
 			<div class="">
-        <button id="info-update" name="info-update" class="btn btn-primary">확인</button>
+        <button type="submit" id="info-update" name="info-update" class="btn btn-primary">확인</button>
+      	<button type="button" id="info-delete" class="btn btn-danger">삭제</button>
+        <a type="button" class="btn btn-secondary" href="javascript:window.history.back();">뒤로</a>
       </div>
 		</section>
+		</form>
 	</div>
 	
 	<%@include file="/WEB-INF/include/footer.jsp" %>
@@ -197,6 +202,43 @@
 	       $('#pwck').html('비밀번호 불일치').css('color', 'red')
 	    }
 	 })
+</script>
+
+<!-- 이미지 업로드 -->
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+	    //파일 필드 imgfile
+	    var fileInput = document.getElementById('file')
+	
+	    //사진 올라갈 img 태그 img-thumbnail
+	    var previewArea = document.getElementById('img-thumbnail')
+	
+	    //기본 이미지 URL 설정
+	    var defaultImage = '/img/logo_default.jpg'
+	
+	    //파일 인풋 필드에 변화가 생기면 실행
+	    fileInput.addEventListener('change', function (e) {
+	        // 파일이 선택되지 않았다면, 미리보기를 기본 이미지로 설정
+	        if (fileInput.files.length === 0) {
+	            previewArea.src = defaultImage;
+	            return; // 함수 실행을 여기서 중단
+	        }
+	
+	        // 선택된 파일을 가져옴
+	        var file = e.target.files[0];
+	        // FileReader 객체 생성
+	        var reader = new FileReader();
+	
+	        // 파일이 읽히면 실행될 함수 정의
+	        reader.onload = function (e) {
+	            // 미리보기 이미지의 src 속성을 읽은 파일의 내용으로 설정
+	            previewArea.src = e.target.result;
+	        }
+	
+	        // FileReader로 파일 읽기를 시작함
+	        reader.readAsDataURL(file);
+	    });
+	});
 </script>
 	
 </body>

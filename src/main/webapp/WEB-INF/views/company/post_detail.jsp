@@ -178,7 +178,7 @@
       <div class="">
         <a id="post-update" class="btn btn-primary" href="/Company/PostUpdateForm?post_idx=${post.post_idx}">수정</a>
         <button type="button" id="post-delete" class="btn btn-danger">삭제</button>
-        <button type="button" class="btn btn-secondary">뒤로</button>
+        <a type="button" class="btn btn-secondary" href="javascript:window.history.back();">뒤로</a>
       </div>
       </form>
     </div>

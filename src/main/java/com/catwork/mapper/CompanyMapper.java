@@ -15,6 +15,7 @@ import com.catwork.domain.PostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.SkillVo;
 import com.catwork.domain.StateVo;
+import com.catwork.domain.UserVo;
 
 @Mapper
 public interface CompanyMapper {
@@ -74,4 +75,8 @@ public interface CompanyMapper {
 	StateVo getState(int apply_idx);
 	
 	void deletePost(PostVo post);
+	
+	void updateInfo(CompanyVo companyVo);
+	
+	String getAddress(CompanyVo companyVo);
 }

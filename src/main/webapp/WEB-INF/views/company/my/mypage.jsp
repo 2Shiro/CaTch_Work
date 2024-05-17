@@ -2,12 +2,12 @@
 	
 	<div class="container mt-5" >
 		<section class="container">
-			<h2>회원 정보</h2>
+			<h2 class="mb-3">회원 정보</h2>
 			<div id="total">
 				<div id="profile">
 					<img src="${cvo.logo}" class="img-thumbnail" alt="프로필없음">
 				</div>
-				<div id="info">
+				<div id="info" class="ml-3">
 					<div class="input-group mb-3">
 						<input type="hidden" id="user_idx" name="user_idx" value="${vo.user_idx}">
 					  <span class="input-group-text" id="inputGroup-sizing-default">아이디</span>

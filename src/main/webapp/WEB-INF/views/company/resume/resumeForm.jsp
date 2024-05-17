@@ -55,7 +55,7 @@
 								<div class="input-group mb-3">
 									<span class="input-group-text" id="user_email">이메일</span> <input
 										type="email" class="form-control" id="user_email"
-										readonly="readonly" value="email 넣기"
+										readonly="readonly" value="${user.email}"
 										name="user_email">
 								</div>
 							</div>
@@ -85,7 +85,7 @@
 							<textarea rows="10" class="form-control" id="job-intro"
 								readonly="readonly" name="self-intro">${ vo.intro }</textarea>
 						</div>
-
+						
 					</div>
 				</div>
 			</section>

@@ -12,7 +12,7 @@
 		display: flex;
 	}
 	#bottom {
-		display: flex;
+		display: flex;d
 	}
 	#profile {
 		width: 500px;
@@ -20,6 +20,13 @@
 	}
 	#info {
 		margin-left: 20px;
+	}
+	.img-thumbnail {
+		width: 500px;
+		height: 500px;
+	}
+	#info > div > input {
+		width: 350px;
 	}
 </style>
 <link rel="icon" href="/img/CaTchWorkFavicon.png">

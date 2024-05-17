@@ -1,13 +1,22 @@
 package com.catwork.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catwork.domain.ApplyVo;
@@ -29,6 +38,7 @@ import com.catwork.mapper.CompanyMapper;
 import com.catwork.mapper.PersonMapper;
 import com.catwork.mapper.UserMapper;
 
+import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @RequestMapping("/Company")
@@ -125,7 +135,7 @@ public class CompanyController {
 	
 	//이력서 목록에서 이력서 상세 보기
 	@RequestMapping("/ResumeDetail")
-	public ModelAndView writeMyPost(ResumeVo resume) {
+	public ModelAndView resumeDetail(ResumeVo resume) {
 		//이력서 내용 가져오기
 		ResumeVo vo = personMapper.getResume(resume.getResume_idx());
 		
@@ -237,17 +247,6 @@ public class CompanyController {
 		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("company/mypost");
-		
-		return mv;
-	}
-	
-	//구직자 이력서 상세 보기
-	@RequestMapping("/PersonResume")
-	public ModelAndView personResume() {
-		//
-		
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("company/resume_detail");
 		
 		return mv;
 	}
@@ -486,6 +485,7 @@ public class CompanyController {
 		return mv;
 	}
 	
+	//회원 정보 수정
 	@RequestMapping("/InfoUpdateForm")
 	public ModelAndView infoUpdateform(UserVo infoUser, CompanyVo infoCompany) {
 		UserVo user = userMapper.getUserInfoById(infoUser.getUser_idx());
@@ -495,6 +495,129 @@ public class CompanyController {
 		mv.addObject("user", user);
 		mv.addObject("company", company);
 		mv.setViewName("/company/infoupdateform");
+		
+		return mv;
+	}
+	@RequestMapping("/InfoUpdate")
+	public ModelAndView infoUpdate(UserVo userVo, CompanyVo companyVo, 
+									@RequestParam("address2") String address2, //상세 주소
+									@RequestParam("tbpwd") String tbpwd, //기존 비밀 번호
+									@RequestParam("file") MultipartFile file, 
+									@Value("${file.upload-dir}") String uploadDir) { 
+		ModelAndView mv = new ModelAndView();
+		
+		if (file != null && !file.isEmpty()) {
+			try {
+				// 파일 저장 경로 구성
+				String baseDir = System.getProperty("user.dir");
+				String imagesDirPath = baseDir + uploadDir; // application.properties에서 설정된 값을 사용
+
+				File directory = new File(imagesDirPath);
+				if (!directory.exists()) {
+					directory.mkdirs();
+				}
+				DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyyMMdd");
+				ZonedDateTime current = ZonedDateTime.now();
+				String namePattern = current.format(format);
+
+				// 파일의 원래 이름을 가져옵니다.
+				String originalFileName = file.getOriginalFilename();
+				// 파일 확장자를 추출합니다.
+				String extension = "";
+				if (originalFileName != null && originalFileName.contains(".")) {
+					extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+				}
+
+				// System.out.println(namePattern);
+				String fileName = namePattern + "_" + originalFileName; //??
+				//String fileName = originalFileName; //??
+				String filePath = Paths.get(imagesDirPath, fileName).toString();
+
+				// 파일 저장 //여기 문제 있음
+				Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+
+				// 데이터베이스에 저장할 파일 경로 설정
+				String relativePath = "/img/" + fileName;
+				companyVo.setLogo(relativePath);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+				// 에러 처리 로직
+			}
+		} else {
+			// 파일이 선택되지 않았거나 비어 있는 경우, 기본 이미지 경로를 사용
+			String relativePath = "/img/logo_default.jpg";
+			companyVo.setLogo(relativePath);
+		}
+		
+		//db에서 주소 가져오기
+		String dbAddress = companyMapper.getAddress(companyVo);
+		String add = companyVo.getAddress();
+		
+		if(!dbAddress.equals(add)) {
+			add +=  ", " + address2;
+			System.out.println(add);
+			companyVo.setAddress(add);	
+		}
+		
+  
+		//비밀번호 외 업데이트(못바꾸는 아이디는 안바꿈)
+		userMapper.updateInfo(userVo);
+		companyMapper.updateInfo(companyVo);
+  
+		System.out.println("userVo: " + userVo);
+		System.out.println("password: " + userVo.getPwd());
+		
+		//비밀번호가 있다면 비밀번호 바꿈
+//		if(!userVo.getPwd().equals(null) || userVo.getPwd().equals("")) {
+//			System.out.println("password: " + userVo.getPwd());
+//			
+//			//비밀번호 바꾸기
+//			userMapper.updatePassword(userVo);
+//		} else if(userVo.getPwd().equals(null)) {
+//			System.out.println("null");
+//		}
+		if (userVo.getPwd() == null || StringUtils.isBlank(userVo.getPwd())) {
+		    System.out.println("password is null or empty");
+		} else {
+		    System.out.println("password: " + userVo.getPwd());
+		    userMapper.updatePassword(userVo);
+		}
+  
+		mv.setViewName("redirect:/Company/MyPage?nowpage=1");
+		return mv;
+	      
+	}
+	
+	//특정 공고의 추천 이력서에서 이력서 보기
+	@RequestMapping("/PersonResume")
+	public ModelAndView personResume(ResumeVo resume) {
+		//이력서 내용 가져오기
+		ResumeVo vo = personMapper.getResume(resume.getResume_idx());
+		
+		//이력서 스킬 가져오기
+		List<Resume_SkillVo> skills = personMapper.getResumeSkill(vo.getResume_idx());
+		//System.out.println("resumeskill: " + resumeskill);
+		
+		List<SkillVo> skill = new ArrayList<SkillVo>();
+		for(int j = 0; j < skills.size(); j++) {
+			SkillVo skillname = companyMapper.getSkillName(skills.get(j).getSkill_idx());
+			//System.out.println("skillname: " + skillname);
+			skill.add(skillname);
+		}
+		
+		//회원 정보 가져오기
+		PersonVo info = personMapper.getPersonDetail(vo.getUser_idx());
+		
+		//user 가져오기
+		UserVo user = userMapper.getUserInfoById(vo.getUser_idx());
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("vo", vo);
+		mv.addObject("info", info);
+		mv.addObject("user", user);
+		mv.addObject("skill", skill);
+		mv.setViewName("/company/resume_detail");
 		
 		return mv;
 	}
