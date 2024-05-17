@@ -19,6 +19,7 @@ public class PersonVo {
 	private String created;
 	private String id;
 	private String pwd;
+	private String email;
 	private int type;
 	
 	

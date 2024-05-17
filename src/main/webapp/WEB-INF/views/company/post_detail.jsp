@@ -126,7 +126,8 @@
 								</div>
 							</div>
 						</div>
-					<div class="row mt-4"">
+
+					<div class="row mt-4">
 							<div class="col-6 row d-flex align-items-center">
 								<div class="col-md-auto ml-2">
 									<h5 style="margin-right:25px;">담당자</h5>

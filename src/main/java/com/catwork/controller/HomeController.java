@@ -14,7 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.catwork.domain.CompanyVo;
 import com.catwork.domain.MainPageVo;
 import com.catwork.domain.PostVo;
+import com.catwork.domain.ResumeVo;
 import com.catwork.mapper.CompanyMapper;
+import com.catwork.mapper.ResumeMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +26,9 @@ public class HomeController {
 	
 	@Autowired
 	private CompanyMapper companyMapper;
+	
+	@Autowired
+	private ResumeMapper resumeMapper;
 
 	// 메인화면
 	@RequestMapping("/")
@@ -37,7 +42,7 @@ public class HomeController {
 
 	        // 바로 MainPageVo 객체를 생성하여 리스트에 추가합니다.
 	        // 이때, CompanyVo에서 필요한 정보만 전달합니다.
-	        mainPageList.add(new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getLogo(), company.getName(),
+	        mainPageList.add(new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getCom_idx(), company.getLogo(), company.getName(),
 	                post.getTitle(), post.getDeadline()));
 	    }
 
@@ -64,7 +69,7 @@ public class HomeController {
 
 	    for (PostVo post : searchedPosts) {
 	        CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
-	        searchResults.add(new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getLogo(), company.getName(),
+	        searchResults.add(new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getCom_idx(), company.getLogo(), company.getName(),
 	                post.getTitle(), post.getDeadline()));
 	    }
 	    log.info("searchResults = {}", searchResults);
@@ -72,23 +77,30 @@ public class HomeController {
 	}
     
     
-    @RequestMapping("/Company/Viewpost")
-    public ModelAndView viewpost(@RequestParam("post_idx") int post_idx, @RequestParam("user_id") int user_id) {
-    	
-    	// POST_TB 에서 해당 공고 찾기
-    	PostVo postvo = companyMapper.getViewPost(post_idx);
-    	
-    	// 기업 정보
-    	CompanyVo companyVo = companyMapper.getCompanyById(user_id);
-    		
-    	ModelAndView mv = new ModelAndView();
-    	
-    	mv.addObject("postvo", postvo);
-    	mv.addObject("companyVo", companyVo);
-    	
-		mv.setViewName("/company/viewpost");
-		return mv;
-    	
-    }
+	@RequestMapping("/Company/Viewpost")
+	public ModelAndView viewpost(@RequestParam("post_idx") int post_idx, @RequestParam("com_idx") int com_idx) {
+	    // POST_TB 에서 해당 공고 찾기
+	    PostVo postvo = companyMapper.getViewPost(post_idx);
+	    
+	    // CompanyVo 객체 생성 및 데이터 설정
+	    CompanyVo companyvo = companyMapper.getCompanyByComId(com_idx); // com_idx로 회사 정보를 가져옴
+	    
+	    ModelAndView mv = new ModelAndView();
+	    
+	    // 예시로 사용자 ID를 직접 지정. 실제로는 인증 정보에서 사용자 ID를 가져와야 함.
+	    int user_idx = 1; // 수정해야함
+
+	    // 이력서 목록을 가져옴
+	    List<ResumeVo> resumevo = resumeMapper.getResumesByUserId(user_idx);
+
+	    mv.addObject("user_idx", user_idx);
+	    mv.addObject("resumevo", resumevo);
+	    mv.addObject("postvo", postvo);
+	    mv.addObject("companyvo", companyvo);
+	    
+	    mv.setViewName("/company/viewpost");
+	    return mv;
+	}
+
 
 }
