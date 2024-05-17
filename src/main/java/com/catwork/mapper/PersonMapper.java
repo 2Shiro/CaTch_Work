@@ -3,6 +3,7 @@ package com.catwork.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.catwork.domain.PersonApplyVo;
 import com.catwork.domain.PersonBookmarkVo;
@@ -38,10 +39,10 @@ public interface PersonMapper {
 
 	List<PersonBookmarkVo> getBookmarkList(PersonBookmarkVo personbookmarkVo);
 
+	// 이력서 지원하기(중복 지원 금지)
+    boolean checkIfAlreadyApplied(@Param("user_idx") int user_idx, @Param("post_idx") int post_idx);
+    void insertProposal(@Param("resume_idx") int resume_idx, @Param("post_idx") int post_idx);
+
 	PersonVo getPwd(PersonVo personVo);
-
-
-
-
 
 }

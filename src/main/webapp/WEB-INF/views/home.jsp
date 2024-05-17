@@ -45,7 +45,7 @@
 	padding: 0.375rem 0.75rem; /* Bootstrap에서의 기본 버튼 패딩을 유지 */
 }
 </style>
-
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
 	<%@include file="/WEB-INF/include/header.jsp"%>
@@ -132,8 +132,7 @@
 				<div class="d-flex flex-wrap ms-3">
 					<c:forEach var="mainPageList" items="${mainPageList}">
 						<div class="cardinterval me-5 my-3">
-							<a
-								href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&user_id=${mainPageList.user_idx}">
+							<a href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&com_idx=${mainPageList.com_idx}">
 								<!-- 각 공고 페이지로 이동하도록 수정 -->
 								<div class="card" style="width: 20rem; height: 300px;">
 									<img src="${mainPageList.logo}" class="card-img-top" alt="회사로고"
@@ -187,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(response.length > 0) {
                     response.forEach(function(item) {
                         resultHTML += '<div class="cardinterval me-5 my-3">' +
-                                          '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&user_id=' + item.user_idx + '">' +
+                                          '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&com_idx=' + item.com_idx + '">' +
                                               '<div class="card" style="width: 20rem; height: 300px;">' +
                                                   '<img src="' + item.logo + '" class="card-img-top" alt="회사로고" style="height: 150px;">' +
                                                   '<div class="card-body">' +

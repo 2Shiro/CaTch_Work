@@ -12,6 +12,7 @@
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
 <link rel="stylesheet" href="/css/common.css" />
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
 	<%@include file="/WEB-INF/include/header.jsp"%>
@@ -57,12 +58,8 @@
 											<h5>근무 조건</h5>
 										</div>
 										<div class="col-md-8">
-											<select class="form-select" aria-label="job_type"
-												id="job_type" name="job_type" required>
-												<option value="" selected disabled>선택</option>
-												<option value="정규직">정규직</option>
-												<option value="계약직">계약직</option>
-											</select>
+											<input type="text" class="form-control" id="jobtype"
+											name="jobtype" readonly="readonly" value="${postvo.jobtype}">
 										</div>
 									</div>
 									<div class="col-6 row d-flex align-items-center ms-4">
@@ -122,16 +119,96 @@
 									value="0">
 							</div>
 						</div>
-						<div class="">
-							<button type="submit" id="post-submit" class="btn btn-primary">수정</button>
-							<button type="button" class="btn btn-secondary">뒤로</button>
-						</div>
+						<input type="hidden" id="comaddress" value="${companyvo.address}">
+						<div id="map" style="width:100%;height:400px;"></div>
 					</form>
 				</div>
 			</div>
 		</div>
-
+		<div class="my-3 d-flex justify-content-center">
+			<!-- 개인회원일때 -->
+			<%-- <c:if test="${sessionVo.type == 2}"> --%>
+				<c:if test="${!alreadyApplied}">
+					<form action="/Person/JoinPost" method="POST">
+						<input type="hidden" name="user_idx" value="${user_idx}" />
+						<input type="hidden" name="post_idx" value="${postvo.post_idx}" />
+						<input type="hidden" name="com_idx" value="${companyvo.com_idx}" />
+						<div class="input-group mb-3 resume">
+							<label class="input-group-text" for="inputGroupSelect01">이력서</label>
+							<select name="resume_idx" class="form-select" id="presumeSelect">
+								<option selected>==선택==</option>
+								<c:forEach var="resumevo" items="${resumevo}">
+									<option value="${resumevo.resume_idx}">${resumevo.title}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="my-3 d-flex justify-content-center">
+							<button type="submit" class="btn btn-primary mx-3">지원하기</button>
+							<div>
+								<a href="/" id="btn-list" class="btn btn-outline-secondary mx-3">메인으로</a>
+							</div>
+						</div>
+					</form>
+				</c:if>
+				<c:if test="${alreadyApplied}">
+					<p>이미 이 공고에 지원하셨습니다.</p>
+				</c:if>
+			<%-- </c:if> --%>
+			<!-- 기업회원일때 -->
+			<%-- <c:if test="${sessionVo.type == 1}"> --%>
+				<div class="my-3 d-flex justify-content-center">
+					<a href="/Company/MyPost?user_id=${sessionVo.user_id}&nowpage=1"
+						class="btn btn-primary mx-3">등록 공고 관리</a>
+					<a href="/" id="btn-list"
+						class="btn btn-outline-secondary mx-3">메인으로</a>
+				</div>
+			<%-- </c:if> --%>
+			<!-- history back 사용? -->
+			<!-- 세션별로 다르게 -->
+		</div>
 	</section>
 	<%@include file="/WEB-INF/include/footer.jsp"%>
 </body>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92d4589340537a5f8d4dbc6cb7e73577&libraries=services"></script>
+<script>
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다
+var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new kakao.maps.services.Geocoder();
+
+//JSP에서 전달된 회사 주소를 사용합니다
+var companyAddress = document.getElementById("comaddress").value;
+
+// 주소로 좌표를 검색합니다
+geocoder.addressSearch(companyAddress, function(result, status) {
+
+    // 정상적으로 검색이 완료됐으면 
+     if (status === kakao.maps.services.Status.OK) {
+
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new kakao.maps.InfoWindow({
+            content: '<div style="width:150px;text-align:center;padding:6px 0;">회사 위치</div>'
+        });
+        infowindow.open(map, marker);
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+    } 
+});    
+</script>
 </html>

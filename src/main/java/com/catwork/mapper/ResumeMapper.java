@@ -49,6 +49,10 @@ public interface ResumeMapper {
 
 	PersonStateVo getPersonState(PersonStateVo personStateVo);
 
+
+	// 로그인 되어 있는 유저의 이력서 불러오기
+	List<ResumeVo> getResumesByUserId(int user_idx);
+
 	//BookmarkVo deleteBookmark(BookmarkVo bookmarkVo);
 	void deleteBookmark(BookmarkVo bookmarkVo);
 
@@ -62,14 +66,5 @@ public interface ResumeMapper {
 	void insertRate(RateVo rateVo);
 
 	//RateVo insertRate(RateVo rateVo);
-
-
-
-	 
-
-
-
-
-
 
 }

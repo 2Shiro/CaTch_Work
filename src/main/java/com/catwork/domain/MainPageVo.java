@@ -11,6 +11,8 @@ public class MainPageVo {
 	
 	private int post_idx;
 	private int user_idx;
+	private int com_idx;
+	
 	private String logo;
 	private String name;
 	private String title;

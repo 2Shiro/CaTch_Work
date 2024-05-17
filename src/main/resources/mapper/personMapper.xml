@@ -158,4 +158,25 @@ FROM (
 	<select id="getResumeIdxList">
 		SELECT RESUME_IDX FROM RESUME_TB
 	</select>
+	
+	<!-- 구직자가 지원하기 (수정해야함) -->
+	<insert id="insertProposal">
+	    INSERT INTO APPLY_TB ( APPLY_IDX, RESUME_IDX,
+	    POST_IDX, STATE )
+	    VALUES  ( ( SELECT NVL( MAX( APPLY_IDX ), 0 ) + 1 FROM APPLY_TB ),
+	            #{resume_idx},
+	            #{post_idx},
+	            0 )
+	</insert>
+	<!-- 사용자가 이미 지원했는지 확인 -->
+    <select id="checkIfAlreadyApplied" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 'true' ELSE 'false' END
+        FROM APPLY_TB
+        WHERE RESUME_IDX IN (
+		    SELECT RESUME_IDX
+		    FROM RESUME_TB
+		    WHERE USER_IDX = #{user_idx}
+		)
+        AND POST_IDX = #{post_idx}
+    </select>
 </mapper>

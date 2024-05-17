@@ -225,12 +225,21 @@ FROM (
     
 	</select>
 	
+	<!-- 로그인 되어있는 유저의 이력서 목록 불러오기 -->
+	<select id="getResumesByUserId">
+	
+		SELECT	RESUME_IDX,
+				USER_IDX,
+				TITLE
+		FROM	RESUME_TB
+		WHERE	USER_IDX = #{user_idx}
+	
+	</select>
 	
 	<delete id="deleteBookmark">
 	
 	DELETE FROM BOOKMARK_TB
 	WHERE BOOK_IDX = #{book_idx}
-	
 	
 	</delete>
 	
