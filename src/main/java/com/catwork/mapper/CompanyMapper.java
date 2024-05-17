@@ -50,4 +50,7 @@ public interface CompanyMapper {
 	int countResumeList(List<ResumeVo> resumeList);
 	
 	List<ResumeVo> getResumeListPaging(int offset, int pageSize);
+	
+	// com_idx 로 COMPANY_TB 정보 불러오기
+	CompanyVo getCompanyByComId(int com_idx);
 }
