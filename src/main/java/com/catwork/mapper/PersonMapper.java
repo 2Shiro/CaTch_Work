@@ -38,6 +38,8 @@ public interface PersonMapper {
 
 	List<PersonBookmarkVo> getBookmarkList(PersonBookmarkVo personbookmarkVo);
 
+	PersonVo getPwd(PersonVo personVo);
+
 
 
 

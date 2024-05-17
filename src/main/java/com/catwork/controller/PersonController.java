@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catwork.domain.PersonApplyVo;
@@ -57,30 +58,42 @@ public class PersonController {
 	@GetMapping("/MyPage/UpdateForm")
 	public ModelAndView myPageUpdateForm(UserVo userVo, PersonVo personVo) {
 		PersonVo pvo = personMapper.getPersonInfo(personVo,userVo);
+		PersonVo vo =personMapper.getPwd(personVo);
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("/person/myPageUpdate");
 		mv.addObject("pvo",pvo);
-		
+		mv.addObject("vo",vo);
 		return mv;
 		
 		
 	}
 	
 	@PostMapping("/MyPageUpdate")
-	public ModelAndView myPageUpdate(UserVo userVo, PersonVo personVo) {
+	public ModelAndView myPageUpdate(UserVo userVo, PersonVo personVo, @RequestParam("address2") String address2) {
 		
 		
 		
 		
 		
-		personMapper.updateMyInfo(personVo);
-		
-		personMapper.updateMyInfo2(personVo);
+		String pwd = personVo.getPwd();
+		if(pwd != null) {
+			String add = personVo.getAddress();
+			personMapper.updateMyInfo(personVo); 
+			add +=  ", " + address2;
+			System.out.println(add);
+			personVo.setAddress(add);
+			
+			personMapper.updateMyInfo2(personVo);
+			
+			
+		}else {
+			
+		}
 		
 		ModelAndView mv = new ModelAndView();
-		
 		mv.setViewName("redirect:/MyPage");
 		return mv;
+
 		
 	}
 	
