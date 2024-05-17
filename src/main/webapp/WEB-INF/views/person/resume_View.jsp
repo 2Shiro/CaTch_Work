@@ -51,7 +51,7 @@
 						<div class="row mt-2">
 							<div class="col-6 row d-flex align-items-center">
 								<div class="col-md-auto">
-									<img alt="profile" src="${vo.link}" style="height: 180px;">
+									<img alt="profile" src="${vo.image}" style="height: 180px;">
 								</div>
 							</div>
 							<div class="col-6 row ms-4">
@@ -94,15 +94,7 @@
 							<div class="mt-3 mx-auto row" id="skills">
 										<input type="text" class="form-control" id="address" name="address"
 										readonly="readonly" value="${ vo.skill_names }">
-<%-- 								<c:forEach var="skill" items="${ vo.skill }"> --%>
-<!-- 									<div class="col-auto"> -->
-<!-- 										<input type="checkbox" class="btn-check" -->
-<%-- 											id="skill_${skill.skill_idx }" value="${skill.skill_idx}" --%>
-<!-- 											name="skillIdx" autocomplete="off" readonly="readonly"> -->
-<!-- 										<label class="btn btn-outline-primary" -->
-<%-- 											for="skill_${skill.skill_idx }">${skill.name }</label> --%>
-<!-- 									</div> -->
-<%-- 								</c:forEach> --%>
+
 							</div>
 						</div>
 						<div class="my-1 mx-auto row">

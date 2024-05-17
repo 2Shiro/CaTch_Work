@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResumeVo {
-	private int    num;
+	private int    num; 
 	private int resume_idx;
 	private int user_idx;
 	private String title;
@@ -18,8 +18,10 @@ public class ResumeVo {
 	private String created;
 	private String type;
 	private String skill_idx;
+	private String reskill_idx;
 	private String skill_names;
 	
+	private String email;
 	private String username;
 	private String name;
 	private String phone;

@@ -15,6 +15,7 @@ import com.catwork.domain.RateVo;
 import com.catwork.domain.RecommendPostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
+import com.catwork.domain.SkillVo;
 
 
 
@@ -60,6 +61,26 @@ public interface ResumeMapper {
 	RateFormVo getRateForm(RateFormVo rateFormVo);
 
 	void insertRate(RateVo rateVo);
+
+	List<SkillVo> getSkillList(SkillVo skillVo);
+
+
+	//List<Resume_SkillVo> getReskillList(Resume_SkillVo resume_SkillVo);
+
+
+	void updateResumeSkill(ResumeVo vo);
+
+	void deleteSkill(ResumeVo resumeVo);
+
+	void deleteSkillByResumeIdx(int resume_idx);
+
+	void insertResumeSkill2(List<Resume_SkillVo> resumeSkillList);
+
+	int countResumeList(List<ResumeVo> resumeList);
+
+	List<ResumeVo> getResumeListPaging(int offset, int pageSize);
+
+	int countRecommensPostList(List<ResumeVo> resumeList);
 
 	//RateVo insertRate(RateVo rateVo);
 

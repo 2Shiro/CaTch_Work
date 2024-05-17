@@ -38,6 +38,72 @@
       </foreach>
    
    </insert>
+	<insert id="insertResumeSkill2">
+      <foreach collection="list" item="resumeSkill"
+           index      = "i"  
+           open       = "INSERT ALL"    
+           close      = "SELECT * FROM DUAL"
+           separator  = " " >
+           INTO  RESUME_SKILL_TB VALUES (
+                GET_FILENUM(),
+                #{resumeSkill.resume_idx},
+                #{ resumeSkill.skill_idx  }
+           )
+      </foreach>
+   
+   </insert>
+   
+   
+   <select id="countResumeList">
+   		SELECT COUNT(*) AS CNT FROM RESUME_TB
+   
+   </select>
+   <select id="countRecommensPostList">
+SELECT COUNT(*)
+FROM (
+    SELECT 
+        LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.NAME) AS SKILL_NAMES
+    FROM POST_TB P 
+    JOIN POST_SKILL_TB PS ON P.POST_IDX = PS.POST_IDX 
+    JOIN SKILL_TB S ON PS.SKILL_IDX = S.SKILL_IDX
+    JOIN RESUME_SKILL_TB RS ON S.SKILL_IDX = RS.SKILL_IDX
+    JOIN RESUME_TB R ON RS.RESUME_IDX = R.RESUME_IDX
+    JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+    WHERE R.RESUME_IDX = #{resume_idx}
+    GROUP BY P.POST_IDX
+) TEMP
+   </select>
+   
+   	<select id="getResumeListPaging">
+   SELECT 
+        ROW_NUMBER() OVER (ORDER BY RESUME_IDX) AS NUM,
+        RESUME_IDX,
+        USER_IDX,
+        TITLE,
+        IMAGE,
+        LINK,
+        INTRO,
+        CREATED,
+        TYPE
+    FROM RESUME_TB
+    WHERE USER_IDX = (
+        SELECT USER_IDX
+        FROM USER_TB U
+        WHERE U.ID = 'user'
+    )
+    OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+	</select>
+   
+   
+   
+   
+   <select id="getSkillList">
+   		SELECT 
+   			SKILL_IDX,
+   			NAME
+   		FROM SKILL_TB	
+   
+   </select>
    
    <select id="getView">
 		SELECT 
@@ -47,6 +113,7 @@
     PE.ADDRESS,
     R.RESUME_IDX,
     R.USER_IDX,
+    R.IMAGE,
     R.TITLE,
     R.IMAGE,
     R.LINK,
@@ -79,6 +146,16 @@ GROUP BY
     PE.ADDRESS
    </select>
    
+   <select id="getReskillList">
+   		SELECT 
+   			RESKILL_IDX,
+   			SKILL_IDX,
+   			RESUME_IDX
+   		FROM RESUME_SKILL_TB
+   		WHERE RESUME_IDX = #{resume_idx}	
+   
+   </select>
+   
    <select id="getBookmarkList">
       SELECT 
         B.BOOK_IDX,
@@ -99,7 +176,7 @@ GROUP BY
     WHERE U.USER_IDX = 2
    </select>
    
-   <select id="getResumeDetailView">
+   <select id="getResumeDetailView"  >
 		SELECT 
 			R.RESUME_IDX,
 		    R.TITLE,
@@ -117,14 +194,35 @@ GROUP BY
    
    <update id="updateResume">
    		UPDATE RESUME_TB
-   			SET TITLE,
-   				IMAGE,
-   				LINK,
-   				INTRO,
-   				TYPE
-   		WHERE = #{resume_idx}		
+   			SET TITLE=#{title},
+   				IMAGE=#{image},
+   				LINK=#{link},
+   				INTRO=#{intro},
+   				TYPE=#{type}
+   		WHERE resume_idx= #{resume_idx}
    
    </update>
+   <update id="updateResumeSkill">
+   		UPDATE RESUME_SKILL_TB
+   			SET 
+   				RESUME_IDX=#{resume_idx},
+   				SKILL_IDX=#{skill_idx}
+   		WHERE  RESKILL_IDX = #{reskill_idx}
+   
+   </update>
+   
+   
+   <delete id="deleteSkill">
+   		DELETE FROM RESUME_SKILL_TB
+   		WHERE  RESUME_IDX = #{resume_idx}
+   
+   </delete>
+   
+    <delete id="deleteSkillByResumeIdx">
+   		DELETE FROM RESUME_SKILL_TB
+   		WHERE  RESUME_IDX = #{resume_idx}
+   
+   </delete>
    
 	<delete id="resumeDelete">
 		DELETE FROM RESUME_TB
@@ -138,7 +236,6 @@ GROUP BY
 		SELECT 
 		    P.TITLE,
 		    P.CAREER,
-		    P.GOWORK,
 		    P.GOHOME,
 		    P.SALARY,
 		    P.POST_IDX,
