@@ -28,8 +28,13 @@
 		width: 500px;
 		height: 500px;
 	}
+	#warningimg {
+		width: 25px;
+		height: 25px;
+	}
 </style>
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
@@ -131,7 +136,8 @@
 			</div>
 			<div class="">
         <button type="submit" id="info-update" name="info-update" class="btn btn-primary">확인</button>
-      	<button type="button" id="info-delete" class="btn btn-danger">삭제</button>
+      	<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#infoWithdrawModal">탈퇴</button>
+      	<%@include file="/WEB-INF/views/company/my/infowithdrawmodal.jsp" %>
         <a type="button" class="btn btn-secondary" href="javascript:window.history.back();">뒤로</a>
       </div>
 		</section>
@@ -239,6 +245,32 @@
 	        reader.readAsDataURL(file);
 	    });
 	});
+</script>
+
+<script>
+	//탈퇴
+	const stateBtnEl = document.getElementById("info-delete"")
+	
+		stateBtnEl.addEventListener('click', (e) => {
+		    let url = '/Company/InfoDelete'
+		    const user = {
+		        user_idx: document.querySelector("#user_idx").value
+		    }
+		    
+		    const param = {
+            method  : 'POST',
+            headers : {"Content-Type": "application/json" },
+            body    : JSON.stringify(user)
+        }
+	
+		    
+		    fetch(url, param)
+		    .then(response => {
+		        const msg = (response.ok) ? "탈퇴 되었습니다." : "탈퇴에 실패하였습니다."
+		        alert(msg)
+		        window.location.href("http://localhost:9086/")
+		    })
+		})
 </script>
 	
 </body>

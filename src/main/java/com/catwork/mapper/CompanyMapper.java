@@ -79,4 +79,6 @@ public interface CompanyMapper {
 	void updateInfo(CompanyVo companyVo);
 	
 	String getAddress(CompanyVo companyVo);
+	
+	List<ResumeVo> getResumeListPagingSearch(int offset, int pageSize, String searchword);
 }

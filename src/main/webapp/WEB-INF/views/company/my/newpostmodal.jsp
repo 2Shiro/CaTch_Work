@@ -86,7 +86,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="row mt-4"">
+						<div class="row mt-4">
 							<div class="col-6 row d-flex align-items-center">
 								<div class="col-md-auto">
 									<h5>부서</h5>
@@ -113,7 +113,7 @@
 							name="explain" placeholder="업무소개를 입력해주세요." required></textarea>
 					</div>
 					<div class="mt-3 mx-auto row">
-						<c:forEach var="skill" items="${ skill }">
+						<c:forEach var="skill" items="${skill}">
 							<div class="col-auto">
 								<input type="checkbox" class="btn-check" id="skill_${skill.skill_idx }" value="${skill.skill_idx}" name="skillIdx"
 									autocomplete="off" required> <label

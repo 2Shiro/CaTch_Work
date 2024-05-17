@@ -11,6 +11,9 @@
    #resume {
       margin: 0 auto;
    }
+   #serarchform {
+   	float: right;
+   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
@@ -21,6 +24,20 @@
    
    <div class="container">
       <h2 class="mb-3">구직자 이력서</h2>
+      
+      <form action="/Company/ResumeList?nowpage=1" method="POST">
+      <div class="d-flex mb-3" id="serarchform">
+      	
+      	<c:choose>
+      		<c:when test="${searchword eq 'none'}">      		
+        		<input class="form-control" type="search" placeholder="기술 스택 검색" aria-label="Search" name="searchword">
+      		</c:when>
+      		<c:otherwise>
+        		<input class="form-control" type="search" placeholder="Search" aria-label="Search" name="searchword" value="${searchword}">      		
+      		</c:otherwise>
+      	</c:choose>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </div>
       
       <div id="resume" class="linkDiv">
          <table class="table">
@@ -43,12 +60,16 @@
                   </td>
                 </tr>
              </c:forEach>
+             <c:if test="${empty response.list}">
+								<td colspan="4" class="justify-content-center">결과가 없습니다.</td>
+             </c:if>
            </tbody>
          </table>
       </div>
 			<div class="d-flex justify-content-center paging-bottom-container">
       <%@include file="/WEB-INF/pagination/resumeListPaging.jsp" %>
       </div>
+      </form>
    </div>
    
    <%@include file="/WEB-INF/include/footer.jsp" %>
