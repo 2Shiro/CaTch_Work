@@ -14,9 +14,15 @@
 	}
 
 	#container > .aside {
+		display: flex;
 		float: left;
 		position: sticky
+		height: auto;
 		margin: 0;
+	}
+	
+	#section {
+		float: right;
 	}
 </style>
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
@@ -33,39 +39,39 @@
 <!--    		<a>맨위로</a> -->
 <!--    </aside> -->
 <div id="container">
-<div class="d-flex flex-column flex-shrink-0 p-3 bg-light aside" style="width: 250px;">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-      <span class="fs-4">Sidebar</span>
-    </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-      <li class="nav-item">
-        <a href="#postdetail" class="nav-link link-dark" aria-current="page">
-          <svg class="bi me-2" width="16" height="16"></svg>
-          공고
-        </a>
-      </li>
-      <li>
-        <a href="#mypost" class="nav-link link-dark">
-          <svg class="bi me-2" width="16" height="16"></svg>
-          지원 현황
-        </a>
-      </li>
-      <li>
-        <a href="#postrec" class="nav-link link-dark">
-          <svg class="bi me-2" width="16" height="16"></svg>
-          추천 이력서
-        </a>
-      </li>
-      <li>
-        <a href="#postdetail" class="nav-link link-dark">
-          <svg class="bi me-2" width="16" height="16"></svg>
-          맨위로 △
-        </a>
-      </li>
-    </ul>
-  </div>
+<!-- <div class="d-flex flex-column flex-shrink-0 p-3 bg-light aside" style="width: 250px;"> -->
+<!--     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"> -->
+<!--       <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg> -->
+<!--       <span class="fs-4">Sidebar</span> -->
+<!--     </a> -->
+<!--     <hr> -->
+<!--     <ul class="nav nav-pills flex-column mb-auto"> -->
+<!--       <li class="nav-item"> -->
+<!--         <a href="#postdetail" class="nav-link link-dark" aria-current="page"> -->
+<!--           <svg class="bi me-2" width="16" height="16"></svg> -->
+<!--           공고 -->
+<!--         </a> -->
+<!--       </li> -->
+<!--       <li> -->
+<!--         <a href="#mypost" class="nav-link link-dark"> -->
+<!--           <svg class="bi me-2" width="16" height="16"></svg> -->
+<!--           지원 현황 -->
+<!--         </a> -->
+<!--       </li> -->
+<!--       <li> -->
+<!--         <a href="#postrec" class="nav-link link-dark"> -->
+<!--           <svg class="bi me-2" width="16" height="16"></svg> -->
+<!--           추천 이력서 -->
+<!--         </a> -->
+<!--       </li> -->
+<!--       <li> -->
+<!--         <a href="#postdetail" class="nav-link link-dark"> -->
+<!--           <svg class="bi me-2" width="16" height="16"></svg> -->
+<!--           맨위로 △ -->
+<!--         </a> -->
+<!--       </li> -->
+<!--     </ul> -->
+<!--   </div> -->
 
 <div class="section">
 	<div class="" id="postdetail" name="postdetail">
@@ -120,11 +126,11 @@
 								</div>
 							</div>
 						</div>
-					</div>
+
 					<div class="row mt-4">
 							<div class="col-6 row d-flex align-items-center">
-								<div class="col-md-auto">
-									<h5>담당자</h5>
+								<div class="col-md-auto ml-2">
+									<h5 style="margin-right:25px;">담당자</h5>
 								</div>
 								<div class="col-md-8">
 									<input type="text" class="form-control" id="manager"
@@ -143,7 +149,7 @@
 						<div class="row mt-4"">
 							<div class="col-6 row d-flex align-items-center">
 								<div class="col-md-auto">
-									<h5>부서</h5>
+									<h5 style="margin-right:45px;">부서</h5>
 								</div>
 								<div class="col-md-8">
 									<input type="text" class="form-control" id="department"
@@ -155,6 +161,7 @@
 						<label for="deadline" class="form-label">마감 일자</label> <input
 							type="text" class="form-control" id="deadline" name="deadline" readonly="readonly" value="${post.deadline}">
 					</div>
+
 					<div class="my-1 mx-auto row">
 						<label for="c_intro" class="form-label">기업 소개</label>
 						<textarea rows="10" class="form-control" id="intro"
@@ -166,6 +173,7 @@
 						<textarea rows="10" class="form-control" id="explain"
 							name="explain" readonly="readonly">${post.explain}</textarea>
 					</div>
+						</div>
 					<div class="mt-3 mx-auto row">
 						<c:forEach var="skill" items="${skill}">
 							<div class="col-auto">

@@ -56,19 +56,24 @@ public class CompanyController {
 	
 	//기업에서 개인의 이력서 중 공개된 이력서 리스트
 	@RequestMapping("/ResumeList")
-	public ModelAndView resumeList(@RequestParam(value = "nowpage") int nowpage) {
+	public ModelAndView resumeList(@RequestParam(value = "nowpage") int nowpage
+			, @RequestParam(value = "searchword", defaultValue = "none") String searchword) {
 		// session에서 id를 가져옴
 		//String id = comVo.getId();
 		
 		//정보를 담을 리스트
 		List<ResumeInfoVo> resumeListInfo = new ArrayList<ResumeInfoVo>();
 		
+		//List<ResumeVo> resumeList = companyMapper.getResumeList();
+		
 		//이력서 목록 가져오기
 		List<ResumeVo> resumeList = companyMapper.getResumeList();
+		
+		System.out.println("searchword" + searchword);
+		
 		//log.info("[==resumeList==] : ", resumeList);
 		//System.out.println("resumeList: " + resumeList);
 		
-		/*
 		for(int i = 0; i < resumeList.size(); i++) {		
 			//개인 회원 정보 가져오기
 			PersonVo person = personMapper.getPersonDetail(resumeList.get(i).getUser_idx());
@@ -95,10 +100,24 @@ public class CompanyController {
 												person.getName(),
 												skillnameList));
 		}	
-		*/
 		
 		// 페이징
-		int count = companyMapper.countResumeList(resumeList);
+		int count = 0;
+		
+		//검색어 별 count
+		if(searchword.equals("none")) {
+			count = companyMapper.countResumeList(resumeList);
+		} else {
+			for(int i = 0; i < resumeListInfo.size(); i++) {
+				for(int j = 0; j < resumeListInfo.get(i).getSkillList().size(); j++) {
+					if(searchword.toUpperCase().equals(resumeListInfo.get(i).getSkillList().get(j).getName().toUpperCase())) {
+						count++;
+					}
+				}
+			}
+		}
+		
+		
 		//int count = resumeListInfo.size();
 		PagingResponse<ResumeVo> response = null;
 		if (count < 1) {
@@ -117,16 +136,24 @@ public class CompanyController {
 		int offset = pagingVo.getOffset();
 		int pageSize = pagingVo.getPageSize();
 
-		List<ResumeVo> pagingList = companyMapper.getResumeListPaging(offset, pageSize);
+		List<ResumeVo> pagingList = new ArrayList<>();
+		
+		if(searchword.equals("none")) {
+			pagingList = companyMapper.getResumeListPaging(offset, pageSize);
+		} else {
+			pagingList = companyMapper.getResumeListPagingSearch(offset, pageSize, searchword);
+		}
+		
 		response = new PagingResponse<>(pagingList, pagination);
 		//response = new PagingResponse<>(pagingList, pagination, resumeListInfo, offset);
 		
-		//System.out.println("list: " + response.getList());
+		System.out.println("list: " + response.getList());
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("resumeList", resumeList);
 		mv.addObject("response", response);
 		mv.addObject("pagingVo", pagingVo);
+		mv.addObject("searchword", searchword);
 		mv.addObject("nowpage", nowpage);
 		mv.setViewName("company/resumeList");
 		
@@ -202,12 +229,64 @@ public class CompanyController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("vo", vo);
 		mv.addObject("cvo", cvo);
-		mv.addObject("postList", postList);
+		//mv.addObject("postList", postList);
 		mv.addObject("skill", skill);
 		mv.addObject("response", response);
 		mv.addObject("pagingVo", pagingVo);
 		mv.addObject("nowpage", nowpage);
 		mv.setViewName("company/com_mypage");
+		
+		return mv;
+	}
+	
+	//공고 리스트만
+	@RequestMapping("/MyPostList")
+	public ModelAndView myPostList(@RequestParam(value = "nowpage") int nowpage) {
+		//회원 정보
+		//회원 정보 가져오기(현재는 특정 회원 고정)
+		CompanyVo cvo = companyMapper.getCompanyById(9);
+		UserVo vo = userMapper.getUserInfoById(9);
+		
+		//특정 기업 공고 리스트 가져오기
+		List<PostVo> postList = companyMapper.getMyPost(9);
+		
+		//공고 리스트 페이징
+		int count = companyMapper.countPostList(postList);
+		//int count = resumeListInfo.size();
+		PagingResponse<PostVo> response = null;
+		if (count < 1) {
+			response = new PagingResponse<>(Collections.emptyList(), null);
+		}
+		// 페이징을 위한 초기 설정값
+		PagingVo pagingVo = new PagingVo();
+		pagingVo.setPage(nowpage);
+		pagingVo.setPageSize(7);
+		pagingVo.setRecordSize(7);
+
+		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
+		Pagination pagination = new Pagination(count, pagingVo);
+		pagingVo.setPagination(pagination);
+
+		int offset = pagingVo.getOffset();
+		int pageSize = pagingVo.getPageSize();
+
+		List<PostVo> pagingList = companyMapper.getPostListPaging(offset, pageSize);
+		response = new PagingResponse<>(pagingList, pagination);
+		
+		//새공고 쓰기에서 스킬 테이블 가져오기
+		List<SkillVo> skill = companyMapper.getSkills();
+		
+		//System.out.println("list" + response.getList());
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("vo", vo);
+		mv.addObject("cvo", cvo);
+		//mv.addObject("postList", postList);
+		//mv.addObject("skill", skill);
+		mv.addObject("response", response);
+		mv.addObject("pagingVo", pagingVo);
+		mv.addObject("nowpage", nowpage);
+		mv.setViewName("company/my/mypostlist");
 		
 		return mv;
 	}

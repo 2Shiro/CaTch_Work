@@ -33,4 +33,9 @@
 		SET PWD = #{pwd}
 		WHERE USER_IDX = #{user_idx}
 	</update>
+	
+	<!-- 회원 탈퇴 -->
+	<delete id="deleteUser">
+		DELETE USER_TB WHERE USER_IDX = #{user_idx}
+	</delete>
 </mapper>
