@@ -20,15 +20,28 @@
     WHERE U.ID = 'id001'
 
 </select>
+
+<select id="getPwd">
+	SELECT 
+		PWD,
+		EMAIL
+		
+	FROM USER_TB
+	WHERE  USER_IDX = 2 	
+
+</select>
 <update id="updateMyInfo">
 	UPDATE USER_TB 
-		SET PWD = #{pwd}
+		SET 
+			PWD = #{pwd},
+			EMAIL = #{email}	
+			
 	WHERE  ID='id001'	
 
 </update>
 <update id="updateMyInfo2">
 	UPDATE PERSON_TB 
-		SET NAME=#{name},
+		SET 
 			PHONE=#{phone},
 			ZIP_CODE=#{zip_code},
 			ADDRESS=#{address}

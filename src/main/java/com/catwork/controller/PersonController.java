@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.catwork.domain.PersonApplyVo;
 import com.catwork.domain.PersonBookmarkVo;
 import com.catwork.domain.PersonVo;
+import com.catwork.domain.RecommendPostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
 import com.catwork.domain.UserVo;
@@ -58,27 +59,44 @@ public class PersonController {
 
 	@GetMapping("/MyPage/UpdateForm")
 	public ModelAndView myPageUpdateForm(UserVo userVo, PersonVo personVo) {
-		PersonVo pvo = personMapper.getPersonInfo(personVo, userVo);
+		PersonVo pvo = personMapper.getPersonInfo(personVo,userVo);
+		PersonVo vo =personMapper.getPwd(personVo);
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("/person/myPageUpdate");
-		mv.addObject("pvo", pvo);
-
+		mv.addObject("pvo",pvo);
+		mv.addObject("vo",vo);
 		return mv;
 
 	}
 
 	@PostMapping("/MyPageUpdate")
-	public ModelAndView myPageUpdate(UserVo userVo, PersonVo personVo) {
 
-		personMapper.updateMyInfo(personVo);
-
-		personMapper.updateMyInfo2(personVo);
-
+	public ModelAndView myPageUpdate(UserVo userVo, PersonVo personVo, @RequestParam("address2") String address2) {
+		
+		
+		
+		
+		
+		String pwd = personVo.getPwd();
+		if(pwd != null) {
+			String add = personVo.getAddress();
+			personMapper.updateMyInfo(personVo); 
+			add +=  ", " + address2;
+			System.out.println(add);
+			personVo.setAddress(add);
+			
+			personMapper.updateMyInfo2(personVo);
+			
+			
+		}else {
+			
+		}
+		
 		ModelAndView mv = new ModelAndView();
-
 		mv.setViewName("redirect:/MyPage");
 		return mv;
 
+		
 	}
 
 	@GetMapping("/PersonDelete")
@@ -174,7 +192,18 @@ public class PersonController {
 		return mv;
 
 	}
-
+	@GetMapping("/Resume/GetrecommendList")
+	public ModelAndView resumeRecommendList(RecommendPostVo recommendPostVo, ResumeVo resumeVo) {
+		
+		//ResumeVo vo = resumeMapper.getResume(resumeVo);
+		List<RecommendPostVo> postList = resumeMapper.getPostList(recommendPostVo);
+		ModelAndView mv = new ModelAndView();
+		//mv.addObject("vo",vo);
+		mv.addObject("postList",postList);
+		mv.setViewName("/person/recommendPost");
+		return mv;
+	}
+	
 	// 특정 구직자의 특정 공고에 지원하기( 중복 안되게 할것( 이미 지원한 공고라면 지원하기 버튼 없애는 방법 또는 지원하기 눌렀을때 이미
 	// 지원한 공고라고 알람 출력 ) )
 	@RequestMapping("/Person/JoinPost")

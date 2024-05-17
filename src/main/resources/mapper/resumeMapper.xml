@@ -41,33 +41,62 @@
    
    <select id="getView">
 		SELECT 
-		    R.RESUME_IDX,
-		    R.USER_IDX,
-		    R.TITLE,
-		    R.IMAGE,
-		    R.LINK,
-		    R.INTRO,
-		    R.CREATED,
-		    R.TYPE,
-		    LISTAGG(L.NAME, ', ') WITHIN GROUP (ORDER BY L.NAME) AS SKILL_NAMES
-		FROM 
-		    RESUME_SKILL_TB S
-		RIGHT JOIN 
-		    RESUME_TB R ON R.RESUME_IDX = S.RESUME_IDX 
-		left JOIN 
-		    SKILL_TB L ON S.SKILL_IDX = L.SKILL_IDX
-		WHERE 
-		    R.RESUME_IDX = #{resume_idx}
-		GROUP BY
-		    R.RESUME_IDX,
-		    R.USER_IDX,
-		    R.TITLE,
-		    R.IMAGE,
-		    R.LINK,
-		    R.INTRO,
-		    R.CREATED,
-		    R.TYPE
+    PE.NAME,
+    PE.PHONE,
+    TO_CHAR(TO_DATE(SUBSTR(PE.SOCIAL_NUM, 1, 6), 'YYMMDD'), 'YY"년 "MM"월 "DD"일"') AS SOCIAL_NUM,
+    PE.ADDRESS,
+    R.RESUME_IDX,
+    R.USER_IDX,
+    R.TITLE,
+    R.IMAGE,
+    R.LINK,
+    R.INTRO,
+    R.CREATED,
+    R.TYPE,
+    LISTAGG(L.NAME, ', ') WITHIN GROUP (ORDER BY L.NAME) AS SKILL_NAMES
+FROM 
+    RESUME_SKILL_TB S
+RIGHT JOIN 
+    RESUME_TB R ON R.RESUME_IDX = S.RESUME_IDX 
+LEFT JOIN 
+    SKILL_TB L ON S.SKILL_IDX = L.SKILL_IDX
+JOIN 
+    PERSON_TB PE ON R.USER_IDX = PE.USER_IDX    
+WHERE 
+    R.RESUME_IDX = #{resume_idx}
+GROUP BY
+    R.RESUME_IDX,
+    R.USER_IDX,
+    R.TITLE,
+    R.IMAGE,
+    R.LINK,
+    R.INTRO,
+    R.CREATED,
+    R.TYPE,
+    PE.NAME,
+    PE.PHONE,
+    PE.SOCIAL_NUM,
+    PE.ADDRESS
+   </select>
    
+   <select id="getBookmarkList">
+      SELECT 
+        B.BOOK_IDX,
+        B.USER_IDX,
+        B.POST_IDX,
+        B.BOOKMARK,
+        P.TITLE,
+        P.CAREER,
+        P.SALARY,
+        P.DEADLINE,
+        P.MANAGER,
+        P.MPHONE,
+        P.CREATED,
+        ROW_NUMBER() OVER (ORDER BY P.CREATED DESC) AS row_num
+    FROM BOOKMARK_TB B 
+    JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
+    JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
+    WHERE U.USER_IDX = 2
    </select>
    
    <select id="getResumeDetailView">
@@ -106,43 +135,43 @@
    
    
    <select id="getPostList">
-SELECT 
-    P.TITLE,
-    P.CAREER,
-    P.GOWORK,
-    P.GOHOME,
-    P.SALARY,
-    P.POST_IDX,
-    P.USER_IDX,
-    P.DEADLINE,
-    P.INTRO,
-    P.EXPLAIN,
-    P.MANAGER,
-    P.MPHONE,
-    P.CREATED,
-    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.NAME) AS SKILL_NAMES,
-    ROW_NUMBER() OVER (ORDER BY P.CREATED DESC) AS ROW_NUM
-FROM POST_TB P 
-JOIN POST_SKILL_TB PS ON P.POST_IDX = PS.POST_IDX 
-JOIN SKILL_TB S ON PS.SKILL_IDX= S.SKILL_IDX
-JOIN RESUME_SKILL_TB RS ON S.SKILL_IDX = RS.SKILL_IDX
-JOIN RESUME_TB R ON RS.RESUME_IDX = R.RESUME_IDX
-JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
-WHERE R.RESUME_IDX = #{resume_idx}  
-GROUP BY
-    P.TITLE,
-    P.CAREER,
-    P.GOWORK,
-    P.GOHOME,
-    P.SALARY,
-    P.POST_IDX,
-    P.USER_IDX,
-    P.DEADLINE,
-    P.INTRO,
-    P.EXPLAIN,
-    P.MANAGER,
-    P.MPHONE,
-    P.CREATED
+		SELECT 
+		    P.TITLE,
+		    P.CAREER,
+		    P.GOWORK,
+		    P.GOHOME,
+		    P.SALARY,
+		    P.POST_IDX,
+		    P.USER_IDX,
+		    P.DEADLINE,
+		    P.INTRO,
+		    P.EXPLAIN,
+		    P.MANAGER,
+		    P.MPHONE,
+		    P.CREATED,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.NAME) AS SKILL_NAMES,
+		    ROW_NUMBER() OVER (ORDER BY P.CREATED DESC) AS ROW_NUM
+		FROM POST_TB P 
+		JOIN POST_SKILL_TB PS ON P.POST_IDX = PS.POST_IDX 
+		JOIN SKILL_TB S ON PS.SKILL_IDX= S.SKILL_IDX
+		JOIN RESUME_SKILL_TB RS ON S.SKILL_IDX = RS.SKILL_IDX
+		JOIN RESUME_TB R ON RS.RESUME_IDX = R.RESUME_IDX
+		JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+		WHERE R.RESUME_IDX = #{resume_idx}  
+		GROUP BY
+		    P.TITLE,
+		    P.CAREER,
+		    P.GOWORK,
+		    P.GOHOME,
+		    P.SALARY,
+		    P.POST_IDX,
+		    P.USER_IDX,
+		    P.DEADLINE,
+		    P.INTRO,
+		    P.EXPLAIN,
+		    P.MANAGER,
+		    P.MPHONE,
+		    P.CREATED
    
    </select>
    
@@ -166,6 +195,7 @@ FROM (
         P.DEADLINE,
         P.MANAGER,
         P.MPHONE,
+        PE.PER_IDX,
         PE.NAME,
         PE.PHONE,
         ROW_NUMBER() OVER (ORDER BY A.APPLY_IDX) AS ROW_NUM
@@ -205,5 +235,43 @@ FROM (
 		WHERE	USER_IDX = #{user_idx}
 	
 	</select>
+	
+	<delete id="deleteBookmark">
+	
+	DELETE FROM BOOKMARK_TB
+	WHERE BOOK_IDX = #{book_idx}
+	
+	</delete>
+	
+	
+	<select id="getRateForm">
+		SELECT 
+		    PE.PER_IDX,
+		    C.COM_IDX
+		FROM APPLY_TB A
+		JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
+		JOIN USER_TB U ON P.USER_IDX = U.USER_IDX
+		JOIN COMPANY_TB C ON U.USER_IDX = C.USER_IDX
+		JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX
+		LEFT JOIN PERSON_TB PE ON R.USER_IDX = PE.USER_IDX 
+		WHERE A.APPLY_IDX = #{apply_idx}
+	
+	</select>
+	
+	<insert id="insertRate">
+INSERT INTO RATE_TB(
+    RATE_IDX,
+    PER_IDX,
+    COM_IDX,
+    RATING
+)
+VALUES (
+    COALESCE((SELECT MAX(RATE_IDX) FROM RATE_TB), 0) + 1,
+    #{per_idx},
+    #{com_idx},
+    #{rating}
+)
+	
+	</insert>
 
 </mapper>

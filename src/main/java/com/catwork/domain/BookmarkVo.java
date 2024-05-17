@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserVo {
+public class BookmarkVo {
+	private int book_idx;
 	private int user_idx;
-	private String id;
-	private String pwd;
-	private int type;
-	private String email;
+	private int post_idx;
+	private int bookmark;
+
 }

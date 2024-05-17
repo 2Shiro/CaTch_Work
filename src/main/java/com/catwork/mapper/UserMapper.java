@@ -11,6 +11,10 @@ public interface UserMapper {
 
 	UserVo getUserInfoById(int i);
 
+	void updateInfo(UserVo userVo);
+
+	void updatePassword(UserVo userVo);
+
 
 
 

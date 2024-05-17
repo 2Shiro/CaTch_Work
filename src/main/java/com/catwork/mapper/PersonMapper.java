@@ -43,5 +43,6 @@ public interface PersonMapper {
     boolean checkIfAlreadyApplied(@Param("user_idx") int user_idx, @Param("post_idx") int post_idx);
     void insertProposal(@Param("resume_idx") int resume_idx, @Param("post_idx") int post_idx);
 
+	PersonVo getPwd(PersonVo personVo);
 
 }

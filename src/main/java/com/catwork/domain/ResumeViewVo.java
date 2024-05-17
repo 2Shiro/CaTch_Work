@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResumeVo {
+public class ResumeViewVo {
 	private int    num;
 	private int resume_idx;
 	private int user_idx;

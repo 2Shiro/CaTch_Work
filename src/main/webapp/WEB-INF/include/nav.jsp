@@ -16,7 +16,7 @@
           <a class="nav-link" href="/Company/ResumeList?nowpage=1">구직자 이력서</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/Company/MyPage">마이페이지</a>
+          <a class="nav-link" href="/Company/MyPage?nowpage=1">마이페이지</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/MyPage">개인페이지</a>

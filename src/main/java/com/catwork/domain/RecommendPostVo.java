@@ -24,5 +24,6 @@ public class RecommendPostVo {
 	private String manager;
 	private String mphone;
 	private String created;
+	private String skill_names;
 	
 }
