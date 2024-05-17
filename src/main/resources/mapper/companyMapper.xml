@@ -70,6 +70,7 @@
 	            TITLE,
 	            CAREER,
 	            GOWORK || ' ~ ' || GOHOME	GO,
+	            JOBTYPE,
 	            SALARY,
 	            TO_CHAR(DEADLINE, 'YY/MM/DD') AS DEADLINE,
 	            INTRO,
@@ -106,6 +107,22 @@
 				TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED
 		FROM	COMPANY_TB
 		WHERE	USER_IDX = #{user_idx}
+	</select>
+	
+	<!-- COM_IDX로 기업 회원 디테일 정보 가져오기 -->
+	<select id="getCompanyByComId">
+		SELECT	COM_IDX,
+				USER_IDX,
+				NAME,
+				LOGO,
+				CNUM,
+				REPRESENTATIVE,
+				ZIP_CODE,
+				ADDRESS,
+				CTYPE, TO_CHAR(BDATE, 'YYYY-MM-DD') BDATE,
+				TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED
+		FROM	COMPANY_TB
+		WHERE	COM_IDX = #{com_idx}
 	</select>
 	
 	<!-- user_idx로 기업 회원 공고 리스트 가져오기, 현재는 전부가져옴 -->
@@ -207,6 +224,30 @@
 		    r.RESUME_IDX,
 		    R.TITLE,
 		    P.NAME
+		ORDER BY
+		    r.RESUME_IDX
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+		ROWS ONLY
+	</select>
+	<select id="getResumeListPagingSearch">
+		SELECT 
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX) AS SKILLS
+		FROM 
+		    resume_tb r
+		JOIN 
+		    person_tb p ON r.user_idx = p.user_idx
+		LEFT JOIN 
+		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
+		LEFT JOIN 
+		    skill_tb s ON rs.skill_idx = s.skill_idx
+		GROUP BY
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME
+		HAVING UPPER(LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX)) LIKE '%' || UPPER(#{arg2}) || '%'
 		ORDER BY
 		    r.RESUME_IDX
 		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}

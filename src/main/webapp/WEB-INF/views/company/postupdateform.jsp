@@ -73,11 +73,11 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					
 					<div class="row mt-4"">
 							<div class="col-6 row d-flex align-items-center">
 								<div class="col-md-auto">
-									<h5>담당자</h5>
+									<h5 style="margin-right:25px;">담당자</h5>
 								</div>
 								<div class="col-md-8">
 									<input type="text" class="form-control" id="manager" required
@@ -96,7 +96,7 @@
 						<div class="row mt-4"">
 							<div class="col-6 row d-flex align-items-center">
 								<div class="col-md-auto">
-									<h5>부서</h5>
+									<h5 style="margin-right:45px;">부서</h5>
 								</div>
 								<div class="col-md-8">
 									<input type="text" class="form-control" id="department"
@@ -119,6 +119,7 @@
 						<textarea rows="10" class="form-control" id="explain"
 							name="explain" required>${post.explain}</textarea>
 					</div>
+					</div>
 					<div class="mt-3 mx-auto row">
 						<c:forEach var="skill" items="${skill}">
 								<div class="col-auto">
@@ -136,9 +137,9 @@
 							</c:forEach>
 					</div>
       </div>
-      <div class="">
+      <div class="mt-3">
         <input type="submit" id="post-update" class="btn btn-primary" value="확인">
-        <button type="button" class="btn btn-secondary">뒤로</button>
+        <a type="button" class="btn btn-secondary" href="javascript:window.history.back();">뒤로</a>
       </div>
       </form>
     </div>

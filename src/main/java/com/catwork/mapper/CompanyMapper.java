@@ -56,6 +56,9 @@ public interface CompanyMapper {
 	
 	List<ResumeVo> getResumeListPaging(int offset, int pageSize);
 	
+	// com_idx 로 COMPANY_TB 정보 불러오기
+	CompanyVo getCompanyByComId(int com_idx);
+
 	void insertState(StateVo state);
 	
 	int countPostList(List<PostVo> postList);
@@ -79,4 +82,6 @@ public interface CompanyMapper {
 	void updateInfo(CompanyVo companyVo);
 	
 	String getAddress(CompanyVo companyVo);
+	
+	List<ResumeVo> getResumeListPagingSearch(int offset, int pageSize, String searchword);
 }
