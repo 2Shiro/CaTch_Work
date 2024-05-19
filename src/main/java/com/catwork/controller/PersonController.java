@@ -391,20 +391,36 @@ public class PersonController {
 		return mv;
 	}
 	
-    @RequestMapping("/Person/UpdateBookmark")
-    public ResponseEntity<?> updateBookmark(@RequestBody BookmarkVo bookmarkVo) {
+    @RequestMapping("/Person/AddBookmark")
+    public ResponseEntity<?> addBookmark(@RequestBody BookmarkVo bookmarkVo) {
         // user_idx를 임시로 1로 설정합니다. 나중에 세션으로 변경
         bookmarkVo.setUser_idx(1);
         
         // POST_IDX 값이 제대로 설정되었는지 로그로 확인
         System.out.println("POST_IDX: " + bookmarkVo.getPost_idx());
 
-        boolean success = personMapper.updateBookmark(bookmarkVo);
+        boolean success = personMapper.addBookmark(bookmarkVo);
         if (success) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
         }
+    }
+    
+    @RequestMapping("/Person/RemoveBookmark")
+    public ResponseEntity<?> removeBookmark(@RequestBody BookmarkVo bookmarkVo) {
+    	// user_idx를 임시로 1로 설정합니다. 나중에 세션으로 변경
+    	bookmarkVo.setUser_idx(1);
+    	
+    	// POST_IDX 값이 제대로 설정되었는지 로그로 확인
+    	System.out.println("POST_IDX: " + bookmarkVo.getPost_idx());
+    	
+    	boolean success = personMapper.removeBookmark(bookmarkVo);
+    	if (success) {
+    		return ResponseEntity.ok().build();
+    	} else {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
+    	}
     }
 
 }
