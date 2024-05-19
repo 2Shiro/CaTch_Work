@@ -9,28 +9,30 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.catwork.domain.BookmarkVo;
 import com.catwork.domain.Pagination;
 import com.catwork.domain.PagingResponse;
 import com.catwork.domain.PagingVo;
 import com.catwork.domain.PersonApplyVo;
 import com.catwork.domain.PersonBookmarkVo;
 import com.catwork.domain.PersonVo;
-import com.catwork.domain.PostVo;
 import com.catwork.domain.RecommendPostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.Resume_SkillVo;
@@ -388,5 +390,21 @@ public class PersonController {
 
 		return mv;
 	}
+	
+    @RequestMapping("/Person/UpdateBookmark")
+    public ResponseEntity<?> updateBookmark(@RequestBody BookmarkVo bookmarkVo) {
+        // user_idx를 임시로 1로 설정합니다. 나중에 세션으로 변경
+        bookmarkVo.setUser_idx(1);
+        
+        // POST_IDX 값이 제대로 설정되었는지 로그로 확인
+        System.out.println("POST_IDX: " + bookmarkVo.getPost_idx());
+
+        boolean success = personMapper.updateBookmark(bookmarkVo);
+        if (success) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
+        }
+    }
 
 }

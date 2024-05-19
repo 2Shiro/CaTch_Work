@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.catwork.domain.BookmarkVo;
 import com.catwork.domain.PersonApplyVo;
 import com.catwork.domain.PersonBookmarkVo;
 import com.catwork.domain.PersonVo;
@@ -44,5 +45,8 @@ public interface PersonMapper {
     void insertProposal(@Param("resume_idx") int resume_idx, @Param("post_idx") int post_idx);
 
 	PersonVo getPwd(PersonVo personVo);
+
+	// 북마크 등록
+	boolean updateBookmark(BookmarkVo bookmarkVo);
 
 }
