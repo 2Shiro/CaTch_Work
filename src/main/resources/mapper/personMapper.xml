@@ -181,15 +181,26 @@ FROM (
         AND POST_IDX = #{post_idx}
     </select>
     
-	<!-- 북마크 등록 -->
-	<insert id="updateBookmark">
-	    INSERT INTO BOOKMARK_TB ( BOOK_IDX, USER_IDX,
-	    POST_IDX, BOOKMARK )
-	    VALUES  ( ( SELECT NVL( MAX( BOOK_IDX ), 0 ) + 1 FROM BOOKMARK_TB ),
-	            #{user_idx},
-	            #{post_idx},
-	            1 )
+	<!-- 북마크 등록 시 중복 방지 -->
+	<insert id="addBookmark">
+	    <!-- 동일한 USER_IDX와 POST_IDX를 가진 데이터가 없는 경우에만 북마크 추가 -->
+	    INSERT INTO BOOKMARK_TB ( BOOK_IDX, USER_IDX, POST_IDX, BOOKMARK )
+	    SELECT ( SELECT NVL( MAX( BOOK_IDX ), 0 ) + 1 FROM BOOKMARK_TB ),
+	           #{user_idx},
+	           #{post_idx},
+	           1
+	    FROM DUAL
+	    WHERE NOT EXISTS (
+	        SELECT 1 FROM BOOKMARK_TB
+	        WHERE USER_IDX = #{user_idx} AND POST_IDX = #{post_idx}
+	    )
 	</insert>
-
+	
+	<!-- 북마크 삭제 -->
+	<delete id="removeBookmark">
+	    DELETE FROM BOOKMARK_TB
+	    WHERE USER_IDX = #{user_idx}
+	    AND POST_IDX = #{post_idx}
+	</delete>
     
 </mapper>

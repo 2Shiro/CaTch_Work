@@ -47,6 +47,8 @@ public interface PersonMapper {
 	PersonVo getPwd(PersonVo personVo);
 
 	// 북마크 등록
-	boolean updateBookmark(BookmarkVo bookmarkVo);
+	boolean addBookmark(BookmarkVo bookmarkVo);
+	// 북마크 삭제
+	boolean removeBookmark(BookmarkVo bookmarkVo);
 
 }
