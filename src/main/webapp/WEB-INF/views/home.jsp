@@ -227,15 +227,14 @@ function toggleBookmark(event, post_idx) {
     var bookmarkIcon = document.getElementById('bookmark_' + post_idx);
     var isBookmarked = bookmarkIcon.src.includes('moew_on.png'); // 북마크 상태 확인
 
- // AJAX 요청을 통해 서버에 북마크 상태 업데이트
+    // AJAX 요청을 통해 서버에 북마크 상태 업데이트
     $.ajax({
-        url: '/Person/AddBookmark',
+        url: isBookmarked ? '/Person/RemoveBookmark' : '/Person/AddBookmark', // 조건에 따라 URL 결정
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ post_idx: post_idx, isBookmarked: !isBookmarked }),
+        data: JSON.stringify({ post_idx: post_idx }),
         success: function(response) {
             // 성공적으로 처리된 경우, 북마크 아이콘 업데이트
-            // 절대 경로를 사용하여 업데이트
             bookmarkIcon.src = isBookmarked ? '/img/moew_off.png' : '/img/moew_on.png';
             // 사용자에게 북마크 상태 변경 알림 (옵션)
             alert(isBookmarked ? '북마크가 해제되었습니다.' : '북마크가 추가되었습니다.');
@@ -245,6 +244,5 @@ function toggleBookmark(event, post_idx) {
         }
     });
 }
-
 </script>
 </html>
