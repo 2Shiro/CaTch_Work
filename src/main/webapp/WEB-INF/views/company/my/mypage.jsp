@@ -47,7 +47,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="">
+			<div class="mt-3">
         <a id="info-update" name="info-update" class="btn btn-primary" href="/Company/InfoUpdateForm?user_idx=${vo.user_idx}">수정</a>
       </div>
 		</section>

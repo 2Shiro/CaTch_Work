@@ -6,6 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>개인 마이페이지</title>
+
+<link rel="stylesheet" href="/css/common.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 <style>
 
 .bookmark-icons {
@@ -77,17 +83,22 @@ h1 {
   opacity: 0.7;
   cursor: default;
 }
+
 </style>
 
-<link rel="stylesheet" href="/css/common.css" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<style>
+	
+
+
+</style>
+
+
 
 </head>
 	<%@include file="/WEB-INF/include/header.jsp" %>
 	<%@include file="/WEB-INF/include/nav.jsp" %>
     <%@include file="/WEB-INF/include/person_mypage_nav.jsp" %>
+    
 <body>
 	<div class="tab-content" id="userinfo">
 		<div class="container">
@@ -102,32 +113,32 @@ h1 {
 				<div id="info">
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">아이디</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.id}">
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.id}" readonly>
 					</div>
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">이름</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.name}">
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.name}" readonly>
 					</div>
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">주민등록번호</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.social_num}">
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.social_num}" readonly>
 					</div>
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">연락처</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.phone}">
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.phone}" readonly>
 					</div>
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">우편번호</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.zip_code}">
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.zip_code}" readonly>
 					</div>
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">주소</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.address}">
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.address}" readonly>
 					</div>
 
 					<div class="input-group mb-3">
 					  <span class="input-group-text" id="inputGroup-sizing-default">가입날짜</span>
-					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.created}">
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.created}" readonly>
 					</div>
 				</div>
 			</div>
@@ -165,9 +176,9 @@ h1 {
              </tr>
            </thead>
            <tbody class="table-group-divider">
-              <c:forEach var="ro" items="${resumeList}" >
+              <c:forEach var="ro" items="${response.list}" varStatus="status" >
                 <tr>
-                  <th scope="row">${ro.num}</th>
+                  <th scope="row">${status.count}</th>
                   <td class ="td2"><a href="/Resume/View?resume_idx=${ro.resume_idx}">${ro.title}</a></td>
                   <td>${ro.created}</td>
                   <td>
@@ -183,6 +194,9 @@ h1 {
       <div>&nbsp;</div>
       <div>&nbsp;</div>
 	   </section>
+	   <div class="d-flex justify-content-center paging-bottom-container">
+	         <%@include file="/WEB-INF/pagination/personPaging.jsp" %>
+	         </div>
       </div>
 	
 		
@@ -481,17 +495,36 @@ h1 {
 	                .then(resumeList => {
 	                    outputEl.innerHTML = ''; // 해당 리스트의 출력 요소 초기화
 	                    resumeList.forEach(resume => {
-	                        let html = '<tr>';
+	                        let html = '';
+	                        html += '<table class="table">';
+// 	                        html += '<tr>';
+// 	                        html += '<td>순번';
+// 	                        html += '</td>';
+// 	                        html += '<td>이름';
+// 	                        html += '</td>';
+// 	                        html += '<td> 제목';
+// 	                        html += '</td>';
+// 	                        html += '<td>연락처';
+// 	                        html += '</td>';
+// 	                        html += '<td>지원날짜';
+// 	                        html += '</td>';
+// 	                        html += '<td>결과보기';
+// 	                        html += '</td>';
+// 	                        html += '<td>평가하기';
+// 	                        html += '</td>';
+// 	                        html += '</tr>';
+	                        html += '<tr>';
 	                        html += '<td>'+resume.row_num+'</td>';
-	                        html += '<td>이름:'+resume.name+'</td>';
-	                        html += '<td>제목:'+resume.rtitle+'</td>';
-	                        html += '<td>전화:'+resume.phone+'</td>';
-	                        html += '<td>지원날짜:'+resume.created+'</td>';
+	                        html += '<td>'+resume.name+'</td>';
+	                        html += '<td>'+resume.rtitle+'</td>';
+	                        html += '<td>'+resume.phone+'</td>';
+	                        html += '<td>'+resume.created+'</td>';
 	                        html += '<td><button class="btn btn-primary result-btn">결과보기</button></td>'; // 클래스 추가
 	                        html += '<td><button class="btn btn-danger rate-btn">기업평가</button></td>'; // 클래스 추가
 	                        html += '<input type="hidden" value="'+resume.apply_idx+'" name="apply_idx">'; // 클래스 추가
 	                        html += '<input type="hidden" value="'+resume.per_idx+'" name="per_idx">'; // 클래스 추가
 	                        html += '</tr>'; // 클래스 추가
+	                        html += '</table>';
 	                          
 	                        outputEl.innerHTML += html; // 해당 리스트의 출력 요소에 HTML 추가
 	                    });

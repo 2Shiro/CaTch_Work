@@ -229,6 +229,30 @@
 		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
 		ROWS ONLY
 	</select>
+	<select id="getResumeListPagingSearch">
+		SELECT 
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX) AS SKILLS
+		FROM 
+		    resume_tb r
+		JOIN 
+		    person_tb p ON r.user_idx = p.user_idx
+		LEFT JOIN 
+		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
+		LEFT JOIN 
+		    skill_tb s ON rs.skill_idx = s.skill_idx
+		GROUP BY
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME
+		HAVING UPPER(LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX)) LIKE '%' || UPPER(#{arg2}) || '%'
+		ORDER BY
+		    r.RESUME_IDX
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+		ROWS ONLY
+	</select>
 	
 	<!-- state 부분 추가 -->
 	<insert id="insertState">

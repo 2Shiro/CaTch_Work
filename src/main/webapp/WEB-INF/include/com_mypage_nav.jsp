@@ -29,11 +29,11 @@
 				data-bs-target="#myreview" type="button" role="tab"
 				aria-controls="myreview" aria-selected="false">공고 목록</button>
 		</li>
-		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="wishlist-tab" data-bs-toggle="tab"
-				data-bs-target="#wishlist" type="button" role="tab"
-				aria-controls="wishlist" aria-selected="false">위시리스트</button>
-		</li>
+<!-- 		<li class="nav-item" role="presentation"> -->
+<!-- 			<button class="nav-link" id="wishlist-tab" data-bs-toggle="tab" -->
+<!-- 				data-bs-target="#wishlist" type="button" role="tab" -->
+<!-- 				aria-controls="wishlist" aria-selected="false">위시리스트</button> -->
+<!-- 		</li> -->
 	</ul>
 
 </div>
