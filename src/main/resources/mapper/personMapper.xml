@@ -154,6 +154,7 @@ FROM (
 		SELECT RESKILL_IDX, RESUME_IDX, SKILL_IDX FROM RESUME_SKILL_TB
 	</select>
 	
+	<!-- 이력서 지원하기 관련 쿼리문 -->
 	<!-- 이력서 Idx 모두 가져오기 -->
 	<select id="getResumeIdxList">
 		SELECT RESUME_IDX FROM RESUME_TB
@@ -179,4 +180,16 @@ FROM (
 		)
         AND POST_IDX = #{post_idx}
     </select>
+    
+	<!-- 북마크 등록 -->
+	<insert id="updateBookmark">
+	    INSERT INTO BOOKMARK_TB ( BOOK_IDX, USER_IDX,
+	    POST_IDX, BOOKMARK )
+	    VALUES  ( ( SELECT NVL( MAX( BOOK_IDX ), 0 ) + 1 FROM BOOKMARK_TB ),
+	            #{user_idx},
+	            #{post_idx},
+	            1 )
+	</insert>
+
+    
 </mapper>
