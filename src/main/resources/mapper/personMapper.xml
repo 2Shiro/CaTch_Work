@@ -203,4 +203,11 @@ FROM (
 	    AND POST_IDX = #{post_idx}
 	</delete>
     
+	<!-- 사용자의 북마크한 게시글 ID 목록을 반환 -->
+	<select id="getBookmarked" resultType="int">
+	    SELECT POST_IDX
+	    FROM BOOKMARK_TB
+	    WHERE USER_IDX = #{user_idx}
+	</select>
+    
 </mapper>

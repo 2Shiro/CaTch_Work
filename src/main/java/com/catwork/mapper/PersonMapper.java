@@ -50,5 +50,7 @@ public interface PersonMapper {
 	boolean addBookmark(BookmarkVo bookmarkVo);
 	// 북마크 삭제
 	boolean removeBookmark(BookmarkVo bookmarkVo);
+	// 북마크 여부
+	List<Integer> getBookmarked(int user_idx);
 
 }
