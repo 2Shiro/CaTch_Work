@@ -16,6 +16,7 @@ import com.catwork.domain.MainPageVo;
 import com.catwork.domain.PostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.mapper.CompanyMapper;
+import com.catwork.mapper.PersonMapper;
 import com.catwork.mapper.ResumeMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,22 +29,27 @@ public class HomeController {
 	private CompanyMapper companyMapper;
 	
 	@Autowired
+	private PersonMapper personMapper;
+	
+	@Autowired
 	private ResumeMapper resumeMapper;
 
 	// 메인화면
 	@RequestMapping("/")
 	public ModelAndView main() {
+	    int user_idx = 1; // 사용자 ID를 임시로 설정
 	    List<MainPageVo> mainPageList = new ArrayList<>();
 	    List<PostVo> postList = companyMapper.getmainpostList();
 
-	    for (PostVo post : postList) {
-	        // 각 공고에 해당하는 회사 정보를 가져옵니다.
-	        CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
+	    // 사용자의 북마크 정보를 조회하는 로직 추가 (가정)
+	    List<Integer> bookmarkedPostIds = personMapper.getBookmarked(user_idx);
 
-	        // 바로 MainPageVo 객체를 생성하여 리스트에 추가합니다.
-	        // 이때, CompanyVo에서 필요한 정보만 전달합니다.
-	        mainPageList.add(new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getCom_idx(), company.getLogo(), company.getName(),
-	                post.getTitle(), post.getDeadline()));
+	    for (PostVo post : postList) {
+	        CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
+	        boolean isBookmarked = bookmarkedPostIds.contains(post.getPost_idx()); // 북마크 여부 확인
+	        MainPageVo mainPageVo = new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getCom_idx(), company.getLogo(), company.getName(),
+	                post.getTitle(), post.getDeadline(), isBookmarked); // 북마크 여부를 포함하여 객체 생성
+	        mainPageList.add(mainPageVo);
 	    }
 
 	    ModelAndView mv = new ModelAndView();
@@ -52,8 +58,8 @@ public class HomeController {
 	    mv.setViewName("/home");
 	    return mv;
 	}
-	
-    // 검색 기능 - AJAX 호출
+
+	// 검색 기능 - AJAX 호출
 	@RequestMapping("/Search")
 	@ResponseBody
 	public ResponseEntity<List<MainPageVo>> search(
@@ -63,18 +69,24 @@ public class HomeController {
 	        @RequestParam(value="career", required=false, defaultValue="") String career,
 	        @RequestParam(value="jobtype", required=false, defaultValue="") String jobtype) {
 	    
+	    int user_idx = 1; // 사용자 ID를 임시로 설정
 	    List<MainPageVo> searchResults = new ArrayList<>();
+
+	    // 사용자의 북마크 정보를 조회하는 로직 추가 (가정)
+	    List<Integer> bookmarkedPostIds = personMapper.getBookmarked(user_idx);
 
 	    List<PostVo> searchedPosts = companyMapper.searchPosts(keyword, department, region, career, jobtype);
 
 	    for (PostVo post : searchedPosts) {
 	        CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
-	        searchResults.add(new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getCom_idx(), company.getLogo(), company.getName(),
-	                post.getTitle(), post.getDeadline()));
+	        boolean isBookmarked = bookmarkedPostIds.contains(post.getPost_idx()); // 북마크 여부 확인
+	        MainPageVo mainPageVo = new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getCom_idx(), company.getLogo(), company.getName(),
+	                post.getTitle(), post.getDeadline(), isBookmarked); // 북마크 여부를 포함하여 객체 생성
+	        searchResults.add(mainPageVo);
 	    }
-	    log.info("searchResults = {}", searchResults);
 	    return ResponseEntity.ok(searchResults); // 검색 결과를 JSON 형태로 반환
 	}
+
     
     
 	@RequestMapping("/Company/Viewpost")

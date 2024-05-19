@@ -189,18 +189,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 var resultHTML = '';
                 if(response.length > 0) {
                     response.forEach(function(item) {
-                        resultHTML += '<div class="cardinterval me-5 my-3">' +
-                                          '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&com_idx=' + item.com_idx + '">' +
-                                              '<div class="card" style="width: 20rem; height: 300px;">' +
-                                                  '<img src="' + item.logo + '" class="card-img-top" alt="회사로고" style="height: 150px;">' +
-                                                  '<div class="card-body">' +
-                                                      '<p class="card-company">' + item.name + '</p>' +
-                                                      '<h5 class="card-title">' + item.title + '</h5>' +
-                                                      '<p class="card-deadline">' + item.deadline + '</p>' +
-                                                  '</div>' +
-                                              '</div>' +
-                                          '</a>' +
-                                      '</div>';
+                    	resultHTML += '<div class="cardinterval me-5 my-3">' +
+                        '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&com_idx=' + item.com_idx + '">' +
+                            '<div class="card" style="width: 20rem; height: 300px;">' +
+                                '<div class="bookmark-icon" style="position: absolute; right: 10px; top: 10px; z-index: 10;">' + 
+                                    '<img src="/img/moew_off.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">' + 
+                                '</div>' +
+                                '<img src="' + item.logo + '" class="card-img-top" alt="회사로고" style="height: 150px;">' +
+                                '<div class="card-body">' +
+                                    '<p class="card-company">' + item.name + '</p>' +
+                                    '<h5 class="card-title">' + item.title + '</h5>' +
+                                    '<p class="card-deadline">' + item.deadline + '</p>' +
+                                '</div>' +
+                            '</div>' +
+                        '</a>' +
+                    '</div>';
                     });
                 } else {
                     resultHTML = '<p>검색 결과가 없습니다.</p>';
@@ -224,7 +227,7 @@ function toggleBookmark(event, post_idx) {
     var bookmarkIcon = document.getElementById('bookmark_' + post_idx);
     var isBookmarked = bookmarkIcon.src.includes('moew_on.png'); // 북마크 상태 확인
 
-    // AJAX 요청을 통해 서버에 북마크 상태 업데이트
+ // AJAX 요청을 통해 서버에 북마크 상태 업데이트
     $.ajax({
         url: '/Person/AddBookmark',
         type: 'POST',
@@ -232,7 +235,8 @@ function toggleBookmark(event, post_idx) {
         data: JSON.stringify({ post_idx: post_idx, isBookmarked: !isBookmarked }),
         success: function(response) {
             // 성공적으로 처리된 경우, 북마크 아이콘 업데이트
-            bookmarkIcon.src = isBookmarked ? 'moew_off.png' : 'moew_on.png';
+            // 절대 경로를 사용하여 업데이트
+            bookmarkIcon.src = isBookmarked ? '/img/moew_off.png' : '/img/moew_on.png';
             // 사용자에게 북마크 상태 변경 알림 (옵션)
             alert(isBookmarked ? '북마크가 해제되었습니다.' : '북마크가 추가되었습니다.');
         },
