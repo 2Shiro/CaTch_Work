@@ -31,6 +31,7 @@
                </c:forEach>
              </tbody>
            </table>
+
         </div>
         <div class="d-flex justify-content-center paging-bottom-container">
 			      <%@include file="/WEB-INF/pagination/postListPaging.jsp" %>
@@ -41,4 +42,32 @@
 		      </div>
 			    </div>
         </div>
+       		<script> 
+       		alert('dd')
+    		const pagingEls = document.querySelectorAll('#postListPage')
+   		
+    		const userinfotab = document.getElementById('userinfo-tab')
+    		const myreviewtab = document.getElementById('myreview-tab')
+   		
+    		const userinfo = document.getElementById('userinfo')
+    		const myreview = document.getElementById('myreview')
+   
+		   pagingEls.forEach(pagingEl => {
+ 			    pagingEl.addEventListener('click', (e) => {
+ 			    	e.preventDefault()
+			    	
+ 						$("#userinfo-tab").removeClass("active");
+						$("#myreview-tab").addClass("active");
+						
+ 						$("#userinfo").removeClass("show active");
+ 						$("#myreview").addClass("show active");
+			    	
+ 			    	const href = e.target.href
+ 			    	alert(href)
+ 			    	//document.load(href)
+ 			    	$('#mypostList').load(href)
+ 			    })
+ 			})
+    	$('#mypost').load()
+    </script>
 </body>

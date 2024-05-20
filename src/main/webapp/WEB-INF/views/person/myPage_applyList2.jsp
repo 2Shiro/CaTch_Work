@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-   pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+    pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>개인 마이페이지</title>
-
+<title>이력서 페이징 갈아끼우기</title>
 <link rel="stylesheet" href="/css/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
@@ -14,189 +13,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-
-<style>
-
-.bookmark-icons {
-    width: 20px;
-    height: 10px;
-}
-
-.img-thumbnail {
-    width: 100px;
-    height: 100px;
-}
-
-#goUpdate {
-    float: right;
-}
-
-#goWrite {
-    float: right;
-}
-
-.wrap {
-  height: 100vh;
-  min-height: 400px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 32px;
-}
-
-h1 {
-  font-size: 40px;
-  font-weight: 600;
-}
-
-.rating {
-  float: none;
-  width: 200px;
-  display: flex;
-}
-.rating__input {
-  display: none;
-}
-.rating__label {
-  width: 20px;
-  overflow: hidden;
-  cursor: pointer;
-}
-.rating__label .star-icon {
-  width: 20px;
-  height: 40px;
-  display: block;
-  position: relative;
-  left: 0;
-  background-image: url("/img/star.svg");
-  background-repeat: no-repeat;
-  background-size: 40px;
-}
-.rating__label .star-icon.filled {
-  background-image: url("/img/star_fill.svg");
-}
-.rating__label--full .star-icon {
-  background-position: right;
-}
-.rating__label--half .star-icon {
-  background-position: left;
-}
-.rating.readonly .star-icon {
-  opacity: 0.7;
-  cursor: default;
-}
-
-</style>
-
-<style>
-	
-
-
-</style>
-
-
-
 </head>
-	<%@include file="/WEB-INF/include/header.jsp" %>
-	<%@include file="/WEB-INF/include/nav.jsp" %>
-    <%@include file="/WEB-INF/include/person_mypage_nav.jsp" %>
-    
 <body>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="personinfo" role="tabpanel" aria-labelledby="personinfo-tab">
-        <div class="container">
-            <div>&nbsp;</div>
-            <h2>회원 정보</h2>
-            <div>&nbsp;</div>
-            <div id="total">
-                <div id="profile">
-                    <img src="/img/defaultProfile.png" class="img-thumbnail" alt="프로필없음">
-                </div>
-                <div>&nbsp;</div>
-                <div id="info">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">아이디</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.id}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">이름</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.name}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">주민등록번호</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.social_num}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">연락처</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.phone}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">우편번호</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.zip_code}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">주소</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.address}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">가입날짜</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.created}" readonly>
-                    </div>
-                </div>
-            </div>
-            <div>&nbsp;</div>
-            <button type="button" id="goUpdate" class="btn btn-primary">수정하기</button>
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-        </div>
-    </div>
-    
-     <div class="tab-pane fade" id="resume" role="tabpanel" aria-labelledby="resume-tab"> 
-		
-        <div class="container mt-5">
-            <div id="personresume">
-                <div>&nbsp;</div>
-                <h2>구직자 이력서</h2>
-                <div id="myresume" name="resume" class="linkDiv">
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">번호</th>
-                                <th scope="col">이력서 제목</th>
-                                <th scope="col">이름</th>
-                                <th scope="col">추천공고 보러가기</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            <c:forEach var="ro" items="${response.list}" varStatus="status">
-                                <tr>
-                                    <th scope="row">${status.count}</th>
-                                    <td class="td2"><a href="/Resume/View?resume_idx=${ro.resume_idx}">${ro.title}</a></td>
-                                    <td>${ro.created}</td>
-                                    <td>
-                                        <button name="recommendList" class="btn btn-primary">추천 공고 보러가기</button>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                <div>&nbsp;</div>
-                <button type="button" id="goWrite" class="btn btn-primary">이력서 작성하기</button>
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
-            <div class="d-flex justify-content-center paging-bottom-container">
-                <%@include file="/WEB-INF/pagination/personPaging.jsp" %>
-            </div>
-                </div>
-                </div>
-        </div>
-     </div> 
-
-    <div class="tab-pane fade" id="apply" role="tabpanel" aria-labelledby="apply-tab">
+    <div class="tab-pane fade active show" id="apply" role="tabpanel" aria-labelledby="apply-tab">
         <div class="container">
         	<div id="personapply">
             <div>&nbsp;</div>
@@ -243,192 +62,12 @@ h1 {
             </div>
         </div>
     </div>
-
-    <div class="tab-pane fade" id="bookmark" role="tabpanel" aria-labelledby="bookmark-tab">
-	<div class="container">
-	<div id="personbookmark">
-	<div>&nbsp;</div>
-		<h2>내가 북마크한 공고</h2>
-		<div>&nbsp;</div>
-		<div>&nbsp;</div>
-		<div>&nbsp;</div>
-	<div class="mybookmark">
-		      <table class="table" class="linkDiv">
-	           <thead>
-	             <tr>
-	               <th scope="col">번호</th>
-	               <th scope="col">공고 제목</th>
-	               <th scope="col">연봉</th>
-	               <th scope="col">요구 경력</th>
-	               <th scope="col">담당자연락처</th>
-	               <th scope="col">비고</th>
-	             </tr>
-	           </thead>
-	           <tbody class="table-group-divider">
-					<c:forEach var="bo" items="${response2.list}" varStatus="status">
-					   <tr data-row-num="${status.count}" data-deleted="false">
-					        <th scope="row">${bo.row_num}</th>
-					        <td class="td2"><a href="/Post?post_idx=${po.post_idx}">${bo.title}</a></td>
-					        <td>${bo.salary}</td>
-					        <td>${bo.career}</td>
-					        <td>${bo.mphone}</td>
-					        <td class="td8">
-					        	<input type="hidden" value="${bo.book_idx}">
-					                                             <img src="/img/fillmoew.png"
-                                      class="bookmark-icons" alt="북마크"
-                                       style="width: 24px; height: 24px;">
-					        </td>
-					    </tr>
-
-					</c:forEach>
-	           </tbody>
-	         </table>
-         	</div>
-         	            <div class="d-flex justify-content-center paging-bottom-container">
-                <%@include file="/WEB-INF/pagination/personBookmarkPaging.jsp" %>
-            </div>
-         </div>
-         </div>
-    </div>
-</div>
-
-
-
-	
-	<!-- 합격 결과 모달 창 HTML -->
-<div class="modal" tabindex="-1" id="myModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="modalData">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-	
-
-
-
-
-
-<!-- 기업 평가 모달 창 HTML -->
-<div class="modal" tabindex="-1" id="modalState1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="modalState">
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-	
-
-	<%@include file="/WEB-INF/include/footer.jsp" %>
-<script>
-
-
-// 이력서 수정하러가기
-	const goUpdateEl = document.querySelector('#goUpdate')
-	goUpdateEl.addEventListener('click', ()=>{
-		location.href='/MyPage/UpdateForm';
+ <script>
+ console.dir(document)
+ alert('asdfa');
+ document.addEventListener('DomContentLoaded', (e) => {
 		
-	})
-	
-	
-// 이력서 작성하러가기	
-	const goWriteEl = document.querySelector('#goWrite')
-	goWriteEl.addEventListener('click',()=>{
-		location.href='/MyPage/Resume/WriteForm';	
-	})
-
-// 해당 이력서의 추천공고 보러가기
-	const recommendListEls = document.getElementsByName('recommendList');
-	
-	for (let i = 0; i < recommendListEls.length; i++) {
-	    const btn = recommendListEls[i];
-	    
-	    btn.addEventListener('click', () => {
-	        //alert('dd');
-        const parentRow = btn.closest('tr');
-        // 부모 요소 내에서 <a> 태그를 선택합니다.
-        const aTag = parentRow.querySelector('td.td2 a');
-        // <a> 태그의 href 속성 값을 가져옵니다.
-        const href = aTag.getAttribute('href');
-        // href 속성 값에서 ${ro.resume_idx} 값을 추출합니다.
-        const resume_idx = href.split('=')[1];
-        
-	        let url = '/Resume/GetrecommendList?resume_idx='+resume_idx+'&nowpage=1';
-	        location.href=url;	
-	    });
-	}
-	
-
-// 이력서 추천공고
-	document.addEventListener('DOMContentLoaded', () => {
-	    const recommendBtns = document.querySelectorAll('.resume .content1 .td4 button[name="recommend"]');
-	    
-	    recommendBtns.forEach(btn => {
-	        btn.addEventListener('click', () => {
-	            const resume_idx = btn.closest('.content1').querySelector('.td2 a').getAttribute('href').split('=')[1];
-	            //alert(resume_idx);
-	            const url = '/Resume/GetRecommendList?resume_idx='+resume_idx;
-	            const outputEl = btn.closest('.content1').querySelector('.output');
-	            
-	            // 상태 변수 선언
-	            let isOpen = outputEl.classList.contains('open');
-	            
-	            if (isOpen) {
-	                outputEl.innerHTML = ''; // 해당 리스트의 출력 요소 초기화
-	                outputEl.classList.remove('open');
-	            } else {
-	                fetch(url)
-	                .then(response => response.json())
-	                .then(postList => {
-	                    outputEl.innerHTML = ''; // 해당 리스트의 출력 요소 초기화
-	                    postList.forEach(post => {
-	                        let html =  '<p>'+post.row_num+'</p>'
-	                            html +=  '<p>title:'+post.title+'</p>'
-	                            html +=  '<p>career:'+post.career+'</p>'
-	                            html +=  '<p>salary:'+post.salary+'</p>'
-	                            html +=  '<p>mphone:'+post.mphone+'</p>'
-	                            html +=  '<p>created:'+post.created+'</p>'
-	                        ;
-	                       outputEl.innerHTML += html; // 해당 리스트의 출력 요소에 HTML 추가
-	                    });
-	                    outputEl.classList.add('open');
-	                })
-	                .catch(error => {
-	                    console.dir(error);
-	                    console.log(error);
-	                    alert(error)
-	                });
-	            }
-	        });
-	    });
-	});
-	
-	
-	
-// 내가 지원한 이력서 	
-
-	document.addEventListener('DOMContentLoaded', (e) => {
-		//alert("dd")
+		alert("두번쨰")
 		console.log(e)
 	    const applyBtns = document.querySelectorAll('.myapply .td8 button[name="apply"]');
 	    const modalResult = document.getElementById('myModal');
@@ -437,6 +76,7 @@ h1 {
 	    //let   selectedRating = 0;
 	    applyBtns.forEach(btn => {
 	        btn.addEventListener('click', () => {
+				alert('sdfsadf');
 	            const tr = btn.closest('tr');
 	            
 	            // tr 안에서 post_idx 값을 가져옵니다.
@@ -462,22 +102,6 @@ h1 {
 	                    resumeList.forEach(resume => {
 	                        let html = '';
 	                        html += '<table class="table">';
-// 	                        html += '<tr>';
-// 	                        html += '<td>순번';
-// 	                        html += '</td>';
-// 	                        html += '<td>이름';
-// 	                        html += '</td>';
-// 	                        html += '<td> 제목';
-// 	                        html += '</td>';
-// 	                        html += '<td>연락처';
-// 	                        html += '</td>';
-// 	                        html += '<td>지원날짜';
-// 	                        html += '</td>';
-// 	                        html += '<td>결과보기';
-// 	                        html += '</td>';
-// 	                        html += '<td>평가하기';
-// 	                        html += '</td>';
-// 	                        html += '</tr>';
 	                        html += '<tr>';
 	                        html += '<td>'+resume.row_num+'</td>';
 	                        html += '<td>'+resume.name+'</td>';
@@ -503,7 +127,6 @@ h1 {
 	                            
 	                            // tr 안에서 input[type=hidden] 요소를 찾아서 apply_idx 값을 가져오기
 	                            const apply_idx = tr.querySelector('input[type=hidden]').value;
-	                            alert(apply_idx)
 	                            
 	                            const modalData = document.getElementById('modalData');
 
@@ -548,8 +171,8 @@ h1 {
 	                            fetch(modalUrl)
 	                                .then(response => response.json())
 	                                .then(vo => {
-                                        comidx = vo.com_idx;
-                                        peridx = vo.per_idx;
+                                     comidx = vo.com_idx;
+                                     peridx = vo.per_idx;
 	                                    modalData.innerHTML = ''; // 초기화
 	                            
 	                                    let modalHtml = '<p>per_idx:'+vo.per_idx+'</p>';
@@ -628,7 +251,7 @@ h1 {
 											
 	                                        // 여기에서 fetch를 사용하여 데이터를 전송하고 처리하는 코드를 작성합니다.
 											    // 선택된 값을 저장할 변수를 선언합니다.
- 
+
 	                                        let   rate_url = 'Company/Rate'; 
 	                                        const formData = new FormData();
 	                                        formData.append('rating', ratingValue);
@@ -782,70 +405,8 @@ h1 {
 	}
 
 	
-// 북마크 리스트 
-	document.addEventListener('DOMContentLoaded', () => {
-	    let deletedRows = []; // 삭제된 행을 기록하는 배열
 	
-	    // 클릭 이벤트를 상위 요소에 등록하여 중첩 방지
-	    document.querySelector('.mybookmark .table-group-divider').addEventListener('click', (event) => {
-	        const clickedElement = event.target;
-	        if (clickedElement.classList.contains('bookmark-icon')) {
-	            const bookmarkValue = clickedElement.closest('.td8').querySelector('[type=hidden]').value;
-	            
-	            const url = '/Bookmark/Delete?book_idx=' + bookmarkValue;
-	
-	            fetch(url, {
-	                method: 'DELETE'
-	            })
-	            .then(response => {
-	                if (!response.ok) {
-	                    throw new Error('Network response was not ok');
-	                }
-	                return response.json();
-	            })
-	            .then(deletedData => {
-	                const deletedRowNum = deletedData.row_num;
-	
-	                // 삭제된 요소의 인덱스를 기록
-	                deletedRows.push(deletedRowNum);
-	
-	                // 화면에서 삭제된 데이터를 제외하고 나머지 데이터를 다시 그림
-	                fetch('/Bookmark/List')
-	                .then(response => response.json())
-	                .then(bookmarkList => {
-	                    const tableDivider = document.querySelector('.bookmark .table-group-divider');
-	                    tableDivider.innerHTML = '';
-	
-	                    bookmarkList.forEach(bo => {
-	                        // 삭제된 요소가 아닌 경우에만 추가
-	                        if (!deletedRows.includes(bo.row_num)) {
-	                            let html = '<tr data-row-num="' + bo.row_num + '">';
-	                            html += '<th scope="row">'+bo.row_num+'</th>';
-	                            html += '<td class="td2"><a href="/Post?post_idx='+bo.post_idx+'">'+bo.title+'</a></td>';
-	                            html += '<td>'+bo.salary+'</td>';
-	                            html += '<td>'+bo.career+'</td>';
-	                            html += '<td>'+bo.mphone+'</td>';
-	                            html += '<td class="td8">';
-	                            html += '<input type="hidden" value="'+bo.book_idx+'">';
-	                            html += '<img class="bookmark-icon" src="/img/fillmoew.png" alt="북마크 아이콘">';
-	                            html += '</td>';
-	                            html += '</tr>';
-	
-	                            tableDivider.innerHTML += html;
-	                        }
-	                    });
-	                })
-	                .catch(error => console.error('Error:', error));
-	            })
-	            .catch(error => {
-	                console.error('Error:', error);
-	            });
-	        }
-	    });
-	});
-
-</script>
-
+ 
+ </script>
 </body>
-
 </html>
