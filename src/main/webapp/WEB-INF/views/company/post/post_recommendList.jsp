@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
    
-   <div class="container" name="postrec">
+   <div class="container" id="postrec">
      <h2>추천 이력서</h2>
      
-        <div id="resume">
+        <div id="resume"class="mt-3">
          <table class="table">
            <thead>
              <tr>

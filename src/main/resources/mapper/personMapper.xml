@@ -181,6 +181,22 @@ FROM (
         AND POST_IDX = #{post_idx}
     </select>
     
+    <insert id="insert">		
+		INSERT ALL
+		INTO user_tb (user_idx,id, pwd ,email,type)
+		VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},2)		
+		INTO person_tb (per_idx,user_idx,name,phone,zip_code,address,social_num,created)
+		VALUES
+		((SELECT MAX(NVL(per_idx,0)+1) FROM PERSON_TB),(SELECT MAX(NVL(user_idx,0)) FROM user_tb),
+			#{name},#{phone},#{zip_code},#{address},#{social_num},sysdate)
+		SELECT *
+		FROM DUAL
+	</insert>
+	
+	<select id="getUser_idx">
+		SELECT USER_IDX FROM USER_TB WHERE ID = #{id}
+	</select>
+
 	<!-- 북마크 등록 시 중복 방지 -->
 	<insert id="addBookmark">
 	    <!-- 동일한 USER_IDX와 POST_IDX를 가진 데이터가 없는 경우에만 북마크 추가 -->
@@ -216,5 +232,4 @@ FROM (
 	    FROM BOOKMARK_TB
 	    WHERE USER_IDX = #{user_idx} AND POST_IDX = #{post_idx}
 	</select>
-	
 </mapper>

@@ -46,6 +46,10 @@ public interface PersonMapper {
 
 	PersonVo getPwd(PersonVo personVo);
 
+	void insert(PersonVo perVo);
+
+	int getUser_idx(String id);
+
 	// 북마크 등록
 	boolean addBookmark(BookmarkVo bookmarkVo);
 	// 북마크 삭제
@@ -54,5 +58,4 @@ public interface PersonMapper {
 	List<Integer> getBookmarked(int user_idx);
 
 	boolean isBookmarked(@Param("user_idx") int user_idx, @Param("post_idx") int post_idx);
-
 }
