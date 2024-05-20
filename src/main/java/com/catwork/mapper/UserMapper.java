@@ -17,8 +17,11 @@ public interface UserMapper {
 
 	void deleteUser(UserVo user);
 
+	UserVo login1(String id, String pwd);
 
+	UserVo login2(String id, String pwd);
 
+	int checkId(String id);
 
-
+	int getUser_idx(String id);
 }

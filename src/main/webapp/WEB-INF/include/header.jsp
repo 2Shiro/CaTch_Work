@@ -17,8 +17,16 @@
 <!--       </ul> -->
 
       <div class="col-md-3 text-end">
-        <button type="button" class="btn btn-outline-primary me-2">Login</button>
-        <button type="button" class="btn btn-primary">Sign-up</button>
+        <c:choose>
+        <c:when test="${usertype.type eq null}">
+	        <a type="button" class="btn btn-primary me-2" href="/LoginForm"><img id="loginimg" src="/img/login.png" alt="그림 오류"></a>
+	        <a type="button" class="btn btn-secondary" href=""><img id="loginimg" src="/img/join.png" alt="그림 오류"></a>
+      		</c:when>
+      		<c:otherwise>
+      			<a type="button" class="btn btn-secondary" href="/Logout"><img id="loginimg" src="/img/logout.png" alt="그림 오류"></a>
+      		</c:otherwise>
+      	</c:choose>
+      	
       </div>
     </header>
   </div>

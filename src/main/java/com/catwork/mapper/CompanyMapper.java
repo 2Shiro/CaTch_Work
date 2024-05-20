@@ -63,7 +63,7 @@ public interface CompanyMapper {
 	
 	int countPostList(List<PostVo> postList);
 	
-	List<PostVo> getPostListPaging(int offset, int pageSize);
+	//List<PostVo> getPostListPaging(int offset, int pageSize);
 	
 	void postUpdateForm(@RequestParam("post") PostVo post);
 	
@@ -84,4 +84,10 @@ public interface CompanyMapper {
 	String getAddress(CompanyVo companyVo);
 	
 	List<ResumeVo> getResumeListPagingSearch(int offset, int pageSize, String searchword);
+	
+	void insert(CompanyVo companyVo);
+	
+	List<PostVo> getPostListPaging(int offset, int pageSize, int user_idx);
+	
+	int getMyRate(int user_idx);
 }

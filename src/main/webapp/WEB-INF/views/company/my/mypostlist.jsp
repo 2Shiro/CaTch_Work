@@ -1,16 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>마이페이지</title>
-<link rel="stylesheet" href="/css/common.css" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<link rel="icon" href="/img/CaTchWorkFavicon.png">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-</head>
+
 <body>
 <!--    <div class="container tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2"> -->
      <div class="container mt-5">
@@ -41,12 +31,17 @@
                </c:forEach>
              </tbody>
            </table>
+
+        </div>
         <div class="d-flex justify-content-center paging-bottom-container">
 			      <%@include file="/WEB-INF/pagination/postListPaging.jsp" %>
 			    </div>
+		      <div id="buttongroup" class="d-flex justify-content-md-end container">
+		      	<button type="button" class="btn btn-primary d-flex flex-row-reverse" id="newpostbtn" data-bs-toggle="modal" data-bs-target="#newpost">새공고 등록</button>
+		      	<%@include file="/WEB-INF/views/company/my/newpostmodal.jsp" %>
+		      </div>
+			    </div>
         </div>
-        </div>
-      </div>
        		<script> 
        		alert('dd')
     		const pagingEls = document.querySelectorAll('#postListPage')
@@ -76,4 +71,3 @@
     	$('#mypost').load()
     </script>
 </body>
-</html>
