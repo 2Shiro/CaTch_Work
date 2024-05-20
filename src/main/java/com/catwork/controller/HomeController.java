@@ -115,20 +115,14 @@ public class HomeController {
 	    // 예시로 사용자 ID를 직접 지정. 실제로는 인증 정보에서 사용자 ID를 가져와야 함.
 	    int user_idx = 1; // 수정해야함
 	    
-	    // 사용자의 북마크 정보를 조회하는 로직 추가 (가정)
-	    List<Integer> bookmarkedPostIds = personMapper.getBookmarked(user_idx);
-	    boolean isBookmarked = bookmarkedPostIds.contains(postidx.getPost_idx()); // 북마크 여부 확인
+	    // 북마크 여부 확인
+	    boolean isBookmarked = personMapper.isBookmarked(user_idx, post_idx);
 
 	    // 이력서 목록을 가져옴
 	    List<ResumeVo> resumevo = resumeMapper.getResumesByUserId(user_idx);
-	    
-	    System.out.println("사용자 ID: " + user_idx);
-	    System.out.println("북마크된 공고 ID 목록: " + bookmarkedPostIds);
-	    System.out.println("현재 공고 ID: " + post_idx);
-	    System.out.println("북마크 여부: " + isBookmarked);
 
 	    mv.addObject("user_idx", user_idx);
-	    mv.addObject("bookmarked", isBookmarked);
+	    mv.addObject("isBookmarked", isBookmarked); // 북마크 여부 추가
 	    mv.addObject("skill", skill);
 	    mv.addObject("resumevo", resumevo);
 	    mv.addObject("postvo", postvo);

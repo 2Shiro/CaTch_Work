@@ -6,12 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>CaTch Work</title>
+<link rel="stylesheet" href="/css/common.css" />
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
-<link rel="stylesheet" href="/css/common.css" />
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
@@ -34,16 +34,16 @@
 										style="flex-grow: 1;">${postvo.title}</h2>
 									<!-- Bookmark Icon -->
 									<div class="bookmark-icon ms-3"
-										onclick="toggleBookmark(event, ${mainPageList.post_idx})">
+										onclick="toggleBookmark(event, ${postvo.post_idx})">
 										<c:choose>
-											<c:when test="${mainPageList.bookmarked}">
+											<c:when test="${isBookmarked}">
 												<img src="/img/moew_on.png"
-													id="bookmark_${mainPageList.post_idx}" alt="북마크"
-													style="width: 24px; height: 24px;">
+													id="bookmark_${postvo.post_idx}" alt="북마크"
+													style="width: 50px; height: 50px;">
 											</c:when>
 											<c:otherwise>
 												<img src="/img/moew_off.png"
-													id="bookmark_${mainPageList.post_idx}" alt="북마크"
+													id="bookmark_${postvo.post_idx}" alt="북마크"
 													style="width: 50px; height: 50px;">
 											</c:otherwise>
 										</c:choose>
@@ -194,6 +194,7 @@
 	<%@include file="/WEB-INF/include/footer.jsp"%>
 </body>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92d4589340537a5f8d4dbc6cb7e73577&libraries=services"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
@@ -234,5 +235,38 @@ geocoder.addressSearch(companyAddress, function(result, status) {
         map.setCenter(coords);
     } 
 });
+
+function toggleBookmark(event, post_idx) {
+    event.preventDefault(); // 링크 기본 동작 방지
+    event.stopPropagation(); // 이벤트 버블링 방지
+
+    var bookmarkIcon = document.getElementById('bookmark_' + post_idx);
+    
+    // bookmarkIcon이 null인지 확인
+    if (!bookmarkIcon) {
+        console.error('Bookmark icon element not found for post index: ' + post_idx);
+        return;
+    }
+
+    var isBookmarked = bookmarkIcon.src.includes('moew_on.png'); // 북마크 상태 확인
+
+    // AJAX 요청을 통해 서버에 북마크 상태 업데이트
+    $.ajax({
+        url: isBookmarked ? '/Person/RemoveBookmark' : '/Person/AddBookmark', // 조건에 따라 URL 결정
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ post_idx: post_idx }),
+        success: function(response) {
+            // 성공적으로 처리된 경우, 북마크 아이콘 업데이트
+            bookmarkIcon.src = isBookmarked ? '/img/moew_off.png' : '/img/moew_on.png';
+            // 사용자에게 북마크 상태 변경 알림 (옵션)
+            alert(isBookmarked ? '북마크가 해제되었습니다.' : '북마크가 추가되었습니다.');
+        },
+        error: function(xhr, status, error) {
+            alert('북마크 업데이트 실패: ' + error);
+        }
+    });
+}
+
 </script>
 </html>
