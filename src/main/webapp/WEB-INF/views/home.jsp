@@ -51,6 +51,7 @@
 	<%@include file="/WEB-INF/include/header.jsp"%>
 
 	<%@include file="/WEB-INF/include/nav.jsp"%>
+
 	<section>
 		<div id="PostCard">
 			<div class="grand_banner_wrap mx-5">

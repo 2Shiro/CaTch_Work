@@ -15,6 +15,7 @@
    	float: right;
    }
 </style>
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -33,7 +34,7 @@
         		<input class="form-control" type="search" placeholder="기술 스택 검색" aria-label="Search" name="searchword">
       		</c:when>
       		<c:otherwise>
-        		<input class="form-control" type="search" placeholder="Search" aria-label="Search" name="searchword" value="${searchword}">      		
+        		<input class="form-control" type="search" placeholder="Search" aria-label="Search" id="searchword" name="searchword" value="${searchword}">      		
       		</c:otherwise>
       	</c:choose>
         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -73,5 +74,14 @@
    </div>
    
    <%@include file="/WEB-INF/include/footer.jsp" %>
+   
+   <script>
+   		const pagingEl = document.querySelectorAll('#paging')
+   		const searchword = document.querySelector('#searchword').value
+   		
+   		pagingEl.forEach((paging) => {
+   			paging.href += '&searchword=' + searchword
+   		})
+   </script>
 </body>
 </html>

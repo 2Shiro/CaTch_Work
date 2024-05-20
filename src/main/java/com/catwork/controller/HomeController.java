@@ -9,15 +9,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catwork.domain.CompanyVo;
 import com.catwork.domain.MainPageVo;
 import com.catwork.domain.PostVo;
 import com.catwork.domain.ResumeVo;
+import com.catwork.domain.UserVo;
 import com.catwork.mapper.CompanyMapper;
 import com.catwork.mapper.ResumeMapper;
+import com.catwork.mapper.UserMapper;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,10 +33,18 @@ public class HomeController {
 	
 	@Autowired
 	private ResumeMapper resumeMapper;
+	
+	@Autowired
+	private UserMapper userMapper;
 
 	// 메인화면
 	@RequestMapping("/")
-	public ModelAndView main() {
+	public ModelAndView main(@SessionAttribute("login") UserVo userVo) {
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		
 	    List<MainPageVo> mainPageList = new ArrayList<>();
 	    List<PostVo> postList = companyMapper.getmainpostList();
 
@@ -49,6 +61,7 @@ public class HomeController {
 	    ModelAndView mv = new ModelAndView();
 	    mv.addObject("postList", postList);
 	    mv.addObject("mainPageList", mainPageList);
+	    mv.addObject("usertype", usertype);
 	    mv.setViewName("/home");
 	    return mv;
 	}
@@ -102,5 +115,24 @@ public class HomeController {
 	    return mv;
 	}
 
+	@RequestMapping("/LoginForm")
+	public String plogin() {
+		return "login";
+	}
+	
+	// logout
+	@RequestMapping("/Logout")
+	public String logout(HttpSession session) {
 
+		session.invalidate();
+
+		return "redirect:/";
+	}
+	
+	// 아이디 중복체크(기업+개인)
+	@RequestMapping("/CheckId")
+	public @ResponseBody int checkId(@RequestParam(value = "id") String id) {
+		int result = userMapper.checkId(id);
+		return result;
+	}
 }

@@ -45,4 +45,7 @@ public interface PersonMapper {
 
 	PersonVo getPwd(PersonVo personVo);
 
+	void insert(PersonVo perVo);
+
+	int getUser_idx(String id);
 }

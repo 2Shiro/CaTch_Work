@@ -9,7 +9,7 @@
 				action="/Company/MyPostWrite" novalidate id="postForm"
 				method="post">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">새로운 공고</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -66,11 +66,11 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					
 					<div class="row mt-4"">
 							<div class="col-6 row d-flex align-items-center">
 								<div class="col-md-auto">
-									<h5>담당자</h5>
+									<h5 style="margin-right:25px;">담당자</h5>
 								</div>
 								<div class="col-md-8">
 									<input type="text" class="form-control" id="manager"
@@ -89,11 +89,33 @@
 						<div class="row mt-4">
 							<div class="col-6 row d-flex align-items-center">
 								<div class="col-md-auto">
-									<h5>부서</h5>
+									<h5 style="margin-right:45px;">부서</h5>
 								</div>
 								<div class="col-md-8">
-									<input type="text" class="form-control" id="department"
-										name="department">
+<!-- 									<input type="text" class="form-control" id="department" -->
+<!-- 										name="department"> -->
+										<select class="form-select" aria-label="department" id="department" name="department" required>
+											<option value="" selected disabled>선택</option>
+											<option value="기획">기획</option>
+											<option value="사무">사무</option>
+											<option value="인사">인사</option>
+											<option value="회계">회계</option>
+											<option value="마케팅">마케팅</option>
+											<option value="개발">개발</option>
+											<option value="디자인">디자인</option>
+											<option value="물류">물류</option>
+											<option value="영업">영업</option>
+											<option value="고객상담">고객상담</option>
+											<option value="금융">금융</option>
+											<option value="요식업">요식업</option>
+											<option value="엔지니어링">엔지니어링</option>
+											<option value="생산">생산</option>
+											<option value="교육">교육</option>
+											<option value="건축">건축</option>
+											<option value="의료">의료</option>
+											<option value="미디어">미디어</option>
+											<option value="복지">복지</option>
+										</select>
 								</div>
 							</div>
 						</div>
@@ -111,6 +133,7 @@
 						<label for="job_intro" class="form-label">업무 소개</label>
 						<textarea rows="10" class="form-control" id="explain"
 							name="explain" placeholder="업무소개를 입력해주세요." required></textarea>
+					</div>
 					</div>
 					<div class="mt-3 mx-auto row">
 						<c:forEach var="skill" items="${skill}">

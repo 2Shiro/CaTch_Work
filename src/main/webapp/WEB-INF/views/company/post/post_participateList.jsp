@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
    
-   <div class="container" name="mypost">
+   <div class="container" name="mypostparticipate">
      <h2>지원 현황</h2>
      
-        <div id="mypost">
+        <div id="mypost" class="mt-3">
            <table class="table">
              <thead>
                <tr>
