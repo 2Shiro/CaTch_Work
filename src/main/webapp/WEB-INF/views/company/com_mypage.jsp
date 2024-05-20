@@ -139,32 +139,32 @@
 			})
 		</script>
 		
-		<script>
-   		const pagingEls = document.querySelectorAll('#postListPage')
+ 		<script> 
+    		const pagingEls = document.querySelectorAll('#postListPage')
    		
-   		const userinfotab = document.getElementById('userinfo-tab')
-   		const myreviewtab = document.getElementById('myreview-tab')
+    		const userinfotab = document.getElementById('userinfo-tab')
+    		const myreviewtab = document.getElementById('myreview-tab')
    		
-   		const userinfo = document.getElementById('userinfo')
-   		const myreview = document.getElementById('myreview')
+    		const userinfo = document.getElementById('userinfo')
+    		const myreview = document.getElementById('myreview')
    
 		   pagingEls.forEach(pagingEl => {
-			    pagingEl.addEventListener('click', (e) => {
-			    	e.preventDefault()
+ 			    pagingEl.addEventListener('click', (e) => {
+ 			    	e.preventDefault()
 			    	
-						$("#userinfo-tab").removeClass("active");
+ 						$("#userinfo-tab").removeClass("active");
 						$("#myreview-tab").addClass("active");
 						
-						$("#userinfo").removeClass("show active");
-						$("#myreview").addClass("show active");
+ 						$("#userinfo").removeClass("show active");
+ 						$("#myreview").addClass("show active");
 			    	
-			    	const href = e.target.href
-			    	//alert(href)
-			    	//document.load(href)
-			    	$('#mypostList').load(href)
-			    })
-			})
-   	//$('#mypost').load()
-   </script>
+ 			    	const href = e.target.href
+ 			    	alert(href)
+ 			    	//document.load(href)
+ 			    	$('#mypostList').load(href)
+ 			    })
+ 			})
+    	$('#mypost').load()
+    </script>
 </body>
 </html>

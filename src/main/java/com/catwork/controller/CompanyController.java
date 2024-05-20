@@ -260,8 +260,8 @@ public class CompanyController {
 		// 페이징을 위한 초기 설정값
 		PagingVo pagingVo = new PagingVo();
 		pagingVo.setPage(nowpage);
-		pagingVo.setPageSize(7);
-		pagingVo.setRecordSize(7);
+		pagingVo.setPageSize(3);
+		pagingVo.setRecordSize(3);
 
 		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
 		Pagination pagination = new Pagination(count, pagingVo);

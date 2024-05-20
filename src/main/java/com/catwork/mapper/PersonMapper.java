@@ -45,4 +45,8 @@ public interface PersonMapper {
 
 	PersonVo getPwd(PersonVo personVo);
 
+	int countApplyList(List<PersonApplyVo> applyList);
+
+	int countBookmarkList(List<PersonBookmarkVo> bookmarkList);
+
 }

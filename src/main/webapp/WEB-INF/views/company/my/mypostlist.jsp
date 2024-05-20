@@ -7,10 +7,7 @@
 <title>마이페이지</title>
 <link rel="stylesheet" href="/css/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
@@ -44,8 +41,39 @@
                </c:forEach>
              </tbody>
            </table>
+        <div class="d-flex justify-content-center paging-bottom-container">
+			      <%@include file="/WEB-INF/pagination/postListPaging.jsp" %>
+			    </div>
         </div>
         </div>
       </div>
+       		<script> 
+       		alert('dd')
+    		const pagingEls = document.querySelectorAll('#postListPage')
+   		
+    		const userinfotab = document.getElementById('userinfo-tab')
+    		const myreviewtab = document.getElementById('myreview-tab')
+   		
+    		const userinfo = document.getElementById('userinfo')
+    		const myreview = document.getElementById('myreview')
+   
+		   pagingEls.forEach(pagingEl => {
+ 			    pagingEl.addEventListener('click', (e) => {
+ 			    	e.preventDefault()
+			    	
+ 						$("#userinfo-tab").removeClass("active");
+						$("#myreview-tab").addClass("active");
+						
+ 						$("#userinfo").removeClass("show active");
+ 						$("#myreview").addClass("show active");
+			    	
+ 			    	const href = e.target.href
+ 			    	alert(href)
+ 			    	//document.load(href)
+ 			    	$('#mypostList').load(href)
+ 			    })
+ 			})
+    	$('#mypost').load()
+    </script>
 </body>
 </html>

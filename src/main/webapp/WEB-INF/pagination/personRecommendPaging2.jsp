@@ -6,31 +6,31 @@
 <c:set var="endnum" value="${pagingVo.pagination.endPage}" />
 <c:set var="totalpagecount" value="${pagingVo.pagination.totalPageCount}" />
 
-<div id="postlistpagination">
+<div id="pagination">
 <nav aria-label="Page navigation" id="paging">
 	<ul class="pagination">
 		<c:if test="${nowpage > 1}">
 			<li class="page-item"><a class="page-link"
-				href="/Company/MyPostList?nowpage=1" id="postListPage" aria-label="Previous">
+				href="/Resume/GetrecommendList?resume_idx=${vo.resume_idx }&nowpage=1" aria-label="Previous">
 					<span aria-hidden="true">&laquo;</span>
 			</a></li>
-			<li class="page-item"><a class="page-link" id="postListPage"
-				href="/Company/MyPostList?nowpage=${nowpage - 1}" aria-label="Previous">
+			<li class="page-item"><a class="page-link"
+				href="/Resume/GetrecommendList?resume_idx=${vo.resume_idx }&nowpage=${nowpage - 1}" aria-label="Previous">
 					<span aria-hidden="true">&lt;</span>
 			</a></li>
 		</c:if>
 		<c:forEach var="pagenum" begin="${startnum}" end="${endnum}" step="1">
-			<li class="page-item"><a class="page-link" id="postListPage"
-				href="/Company/MyPostList?nowpage=${ pagenum }"> ${ pagenum }
+			<li class="page-item"><a class="page-link"
+				href="/Resume/GetrecommendList?resume_idx=${vo.resume_idx }&nowpage=${ pagenum }"> ${ pagenum }
 			</a></li>
 		</c:forEach>
 		<c:if test="${pagingVo.pagination.existNextPage}">
-			<li class="page-item"><a class="page-link" id="postListPage"
-				href="/Company/MyPostList?nowpage=${ nowpage + 1 }"
+			<li class="page-item"><a class="page-link"
+				href="/Resume/GetrecommendList?resume_idx=${vo.resume_idx }&nowpage=${ nowpage + 1 }"
 					aria-label="Next"> <span aria-hidden="true">&gt;</span>
 			</a></li>
-			<li class="page-item"><a class="page-link" id="postListPage"
-				href="/Company/MyPostList?nowpage=${ totalpagecount }"
+			<li class="page-item"><a class="page-link"
+				href="/Resume/GetrecommendList?resume_idx=${vo.resume_idx }&nowpage=${ totalpagecount }"
 				aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 			</a></li>
 		</c:if>

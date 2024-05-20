@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.catwork.domain.BookmarkVo;
 import com.catwork.domain.PersonApplyResumeVo;
+import com.catwork.domain.PersonApplyVo;
 import com.catwork.domain.PersonBookmarkVo;
 import com.catwork.domain.PersonStateVo;
 import com.catwork.domain.PostVo;
@@ -84,7 +85,26 @@ public interface ResumeMapper {
 
 	List<ResumeVo> getResumeListPaging(int offset, int pageSize);
 
-	int countRecommensPostList(List<ResumeVo> resumeList);
+	//int countRecommensPostList(List<ResumeVo> resumeList);
+
+	int countRecommensPostList(List<RecommendPostVo> postList);
+
+	//List<RecommendPostVo> getPostListPaging(int offset, int pageSize, int i);
+
+	int countRecommensPostList(int resume_idx);
+
+	List<RecommendPostVo> getPostListPaging(int resume_idx, int offset, int pageSize);
+
+	int countApplyList(List<PersonApplyVo> applyList);
+
+	List<PersonApplyVo> getApplyListPaging(int offset1, int pageSize1);
+
+	int countBookmarkList(List<PersonBookmarkVo> bookmarkList);
+
+	List<PersonBookmarkVo> getBookmarkListPaging(int offset2, int pageSize2);
+
+
+
 
 	//RateVo insertRate(RateVo rateVo);
 
