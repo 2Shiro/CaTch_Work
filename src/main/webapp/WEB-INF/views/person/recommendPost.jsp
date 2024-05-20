@@ -17,11 +17,15 @@
 
 <body>
 	<div class="recommendPost">
-		<section>
-			<h2>${vo.title}</h2>
-		</section>
+	<div>&nbsp;</div>
 		 <div class="container">
+		<div>
+			<h2>${vo.title}</h2>
+		</div>
      <h2>추천 공고 목록</h2>
+	<div>&nbsp;</div>
+	<div>&nbsp;</div>
+	<div>&nbsp;</div>
      
         <div id="recommend">
          <table class="table">
@@ -47,23 +51,15 @@
 			
 	</div>
 	
-	
-	<button class="btn btn-primary" id="goUpdate">수정하기</button>
+	</div>
+	</div>
 
 
 	
 	
 	<%@include file="/WEB-INF/include/footer.jsp" %>
 
-<script> 
-	const goUpdateEl = document.querySelector('#goUpdate')
-	goUpdateEl.addEventListener('click',()=>{
-		location.href='/Resume/UpdateForm?resume_idx=${vo.resume_idx}';
-	
-	})
-	
-	
-</script>
+
 
 </body>
 

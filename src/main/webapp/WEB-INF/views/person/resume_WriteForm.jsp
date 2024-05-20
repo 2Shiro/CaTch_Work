@@ -31,6 +31,17 @@
 textarea {
     resize: vertical; /* 세로 리사이징 허용 */
 }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 100px; /* 라디오 버튼 사이에 여분의 공간 설정 */
+            margin-top: 20px; /* 상단에 여분의 공간 설정 */
+        }
+        .radio-group label {
+            margin-right: 10px; /* 라벨과 라디오 버튼 사이의 간격 설정 */
+        }
+
 </style>
 <link rel="icon" type="image/png" href="/img/favicon.png" />
 <link href="/css/start.css" rel="stylesheet" />
@@ -94,17 +105,24 @@ textarea {
 						</div>
 						<div class="my-1 mx-auto row">
 						<label for="skills" class="form-label">기술스택</label>
-						<input type="hidden" id="selectedSkills" name="skill_idx">
-
-							<button type="button" class="btn btn-secondary skill-btn" name="skill_idx" value="1">Java</button>
-							<button type="button" class="btn btn-secondary skill-btn" name="skill_idx" value="8">JavaScript</button>
-							<button type="button" class="btn btn-secondary skill-btn" name="skill_idx" value="2">SpringBoot</button>
-							<button type="button" class="btn btn-secondary skill-btn" name="skill_idx" value="6">SpringLegacy</button>
-							<button type="button" class="btn btn-secondary skill-btn" name="skill_idx" value="7">JPA</button>
-							<button type="button" class="btn btn-secondary skill-btn" name="skill_idx" value="5">DB</button>
-							<button type="button" class="btn btn-secondary skill-btn" name="skill_idx" value="3">HTML</button>
-							<button type="button" class="btn btn-secondary skill-btn" name="skill_idx" value="4">CSS</button>
-							<button type="button" class="btn btn-secondary skill-btn" name="skill_idx" value="9">무관</button>
+								<c:forEach var="skill" items="${ skillList }">
+									<div class="col-auto">
+											<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="${ skill.skill_idx }">${skill.name }</button>
+									</div>
+								</c:forEach>
+								<input type="hidden" id="selectedSkills" name="skill_idx">
+							</div>
+<!-- 						<input type="hidden" id="selectedSkills" name="skill_idx"> -->
+							
+<!-- 							<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="1">Java</button> -->
+<!-- 							<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="8">JavaScript</button> -->
+<!-- 							<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="2">SpringBoot</button> -->
+<!-- 							<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="6">SpringLegacy</button> -->
+<!-- 							<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="7">JPA</button> -->
+<!-- 							<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="5">DB</button> -->
+<!-- 							<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="3">HTML</button> -->
+<!-- 							<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="4">CSS</button> -->
+<!-- 							<button type="button" class="btn btn-outline-primary skill-btn" name="skill_idx" value="9">무관</button> -->
 
 						</div>
 						<div class="my-1 mx-auto row">
@@ -113,10 +131,16 @@ textarea {
 						</div>
 						<div class="my-1 mx-auto row">
 							<label for="self-intro" class="form-label">공개 여부</label>
-								<input type="radio" id="option1" name="type" value="1" >
-							    <label for="option1">공개</label><br>
-							    <input type="radio" id="option2" name="type" value="0" >
-							    <label for="option2">비공개</label><br>
+    <div class="radio-group">
+        <div>
+            <input type="radio" id="option1" name="type" value="1">
+            <label for="option1">공개</label>
+        </div>
+        <div>
+            <input type="radio" id="option2" name="type" value="0">
+            <label for="option2">비공개</label>
+        </div>
+    </div>
 						</div>
 	
 					</div>

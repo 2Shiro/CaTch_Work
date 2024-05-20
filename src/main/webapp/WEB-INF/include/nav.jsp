@@ -24,7 +24,7 @@
         </c:if>
         <c:if test="${usertype.type == 2}">
         <li class="nav-item">
-          <a class="nav-link" href="/MyPage">개인페이지</a>
+          <a class="nav-link" href="/MyPage?nowpage=1">개인페이지</a>
         </li>
         </c:if>
       </ul>

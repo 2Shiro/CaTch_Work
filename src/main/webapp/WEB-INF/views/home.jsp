@@ -133,9 +133,25 @@
 				<div class="d-flex flex-wrap ms-3">
 					<c:forEach var="mainPageList" items="${mainPageList}">
 						<div class="cardinterval me-5 my-3">
-							<a href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&com_idx=${mainPageList.com_idx}">
-								<!-- 각 공고 페이지로 이동하도록 수정 -->
+							<a
+								href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&com_idx=${mainPageList.com_idx}">
 								<div class="card" style="width: 20rem; height: 300px;">
+									<div class="bookmark-icon"
+										style="position: absolute; right: 10px; top: 10px; z-index: 10;"
+										onclick="toggleBookmark(event, ${mainPageList.post_idx})">
+										<c:choose>
+											<c:when test="${mainPageList.bookmarked}">
+												<img src="/img/moew_on.png"
+													id="bookmark_${mainPageList.post_idx}" alt="북마크"
+													style="width: 24px; height: 24px;">
+											</c:when>
+											<c:otherwise>
+												<img src="/img/moew_off.png"
+													id="bookmark_${mainPageList.post_idx}" alt="북마크"
+													style="width: 24px; height: 24px;">
+											</c:otherwise>
+										</c:choose>
+									</div>
 									<img src="${mainPageList.logo}" class="card-img-top" alt="회사로고"
 										style="height: 150px;">
 									<div class="card-body">
@@ -186,18 +202,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 var resultHTML = '';
                 if(response.length > 0) {
                     response.forEach(function(item) {
-                        resultHTML += '<div class="cardinterval me-5 my-3">' +
-                                          '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&com_idx=' + item.com_idx + '">' +
-                                              '<div class="card" style="width: 20rem; height: 300px;">' +
-                                                  '<img src="' + item.logo + '" class="card-img-top" alt="회사로고" style="height: 150px;">' +
-                                                  '<div class="card-body">' +
-                                                      '<p class="card-company">' + item.name + '</p>' +
-                                                      '<h5 class="card-title">' + item.title + '</h5>' +
-                                                      '<p class="card-deadline">' + item.deadline + '</p>' +
-                                                  '</div>' +
-                                              '</div>' +
-                                          '</a>' +
-                                      '</div>';
+                    	resultHTML += '<div class="cardinterval me-5 my-3">' +
+                        '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&com_idx=' + item.com_idx + '">' +
+                            '<div class="card" style="width: 20rem; height: 300px;">' +
+                                '<div class="bookmark-icon" style="position: absolute; right: 10px; top: 10px; z-index: 10;" onclick="toggleBookmark(event, ' + item.post_idx + ')">' + 
+                                    (item.bookmarked ? 
+                                        '<img src="/img/moew_on.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">' :
+                                        '<img src="/img/moew_off.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">') + 
+                                '</div>' +
+                                '<img src="' + item.logo + '" class="card-img-top" alt="회사로고" style="height: 150px;">' +
+                                '<div class="card-body">' +
+                                    '<p class="card-company">' + item.name + '</p>' +
+                                    '<h5 class="card-title">' + item.title + '</h5>' +
+                                    '<p class="card-deadline">' + item.deadline + '</p>' +
+                                '</div>' +
+                            '</div>' +
+                        '</a>' +
+                    '</div>';
+
                     });
                 } else {
                     resultHTML = '<p>검색 결과가 없습니다.</p>';
@@ -213,5 +235,30 @@ document.addEventListener('DOMContentLoaded', function() {
         xhr.send();
     });
 });
+
+function toggleBookmark(event, post_idx) {
+    event.preventDefault(); // 링크 기본 동작 방지
+    event.stopPropagation(); // 이벤트 버블링 방지
+
+    var bookmarkIcon = document.getElementById('bookmark_' + post_idx);
+    var isBookmarked = bookmarkIcon.src.includes('moew_on.png'); // 북마크 상태 확인
+
+    // AJAX 요청을 통해 서버에 북마크 상태 업데이트
+    $.ajax({
+        url: isBookmarked ? '/Person/RemoveBookmark' : '/Person/AddBookmark', // 조건에 따라 URL 결정
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ post_idx: post_idx }),
+        success: function(response) {
+            // 성공적으로 처리된 경우, 북마크 아이콘 업데이트
+            bookmarkIcon.src = isBookmarked ? '/img/moew_off.png' : '/img/moew_on.png';
+            // 사용자에게 북마크 상태 변경 알림 (옵션)
+            alert(isBookmarked ? '북마크가 해제되었습니다.' : '북마크가 추가되었습니다.');
+        },
+        error: function(xhr, status, error) {
+            alert('북마크 업데이트 실패: ' + error);
+        }
+    });
+}
 </script>
 </html>

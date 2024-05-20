@@ -26,6 +26,7 @@
 		float : right;
 		
 	}
+
 </style>
 </head>
 	<%@include file="/WEB-INF/include/header.jsp" %>
@@ -74,8 +75,8 @@
 								</div>
 								<div class="input-group mb-3">
 									<span class="input-group-text" id="zip_code">우편번호</span> 
-									<input	type="text" class="form-control" id="sample6_postcode" name="zip_code"  placeholder="우편번호">
-									<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" id="zip_code" class="btn btn-primary" ><br>
+									<input	type="text" class="form-control zipe_code" id="sample6_postcode" name="zip_code"  placeholder="우편번호">
+									<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" id="zip_code" class="btn btn-primary input-group-text" style="border-radius: 0 0.25rem 0.25rem 0;" ><br>
 								</div>
 <!-- 								<div class="input-group mb-3"> -->
 <!-- 								    <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" id="zip_code" class="btn btn-primary" ><br> -->

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.catwork.domain.BookmarkVo;
 import com.catwork.domain.PersonApplyVo;
 import com.catwork.domain.PersonBookmarkVo;
 import com.catwork.domain.PersonVo;
@@ -48,4 +49,13 @@ public interface PersonMapper {
 	void insert(PersonVo perVo);
 
 	int getUser_idx(String id);
+
+	// 북마크 등록
+	boolean addBookmark(BookmarkVo bookmarkVo);
+	// 북마크 삭제
+	boolean removeBookmark(BookmarkVo bookmarkVo);
+	// 북마크 여부
+	List<Integer> getBookmarked(int user_idx);
+
+	boolean isBookmarked(@Param("user_idx") int user_idx, @Param("post_idx") int post_idx);
 }
