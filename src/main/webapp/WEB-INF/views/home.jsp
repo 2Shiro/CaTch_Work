@@ -132,12 +132,24 @@
 				<div class="d-flex flex-wrap ms-3">
 					<c:forEach var="mainPageList" items="${mainPageList}">
 						<div class="cardinterval me-5 my-3">
-							<a href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&com_idx=${mainPageList.com_idx}">
+							<a
+								href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&com_idx=${mainPageList.com_idx}">
 								<div class="card" style="width: 20rem; height: 300px;">
 									<div class="bookmark-icon"
 										style="position: absolute; right: 10px; top: 10px; z-index: 10;"
 										onclick="toggleBookmark(event, ${mainPageList.post_idx})">
-										<img src="/img/moew_off.png" id="bookmark_${mainPageList.post_idx}" alt="북마크" style="width: 24px; height: 24px;">
+										<c:choose>
+											<c:when test="${mainPageList.bookmarked}">
+												<img src="/img/moew_on.png"
+													id="bookmark_${mainPageList.post_idx}" alt="북마크"
+													style="width: 24px; height: 24px;">
+											</c:when>
+											<c:otherwise>
+												<img src="/img/moew_off.png"
+													id="bookmark_${mainPageList.post_idx}" alt="북마크"
+													style="width: 24px; height: 24px;">
+											</c:otherwise>
+										</c:choose>
 									</div>
 									<img src="${mainPageList.logo}" class="card-img-top" alt="회사로고"
 										style="height: 150px;">
@@ -192,8 +204,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     	resultHTML += '<div class="cardinterval me-5 my-3">' +
                         '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&com_idx=' + item.com_idx + '">' +
                             '<div class="card" style="width: 20rem; height: 300px;">' +
-                                '<div class="bookmark-icon" style="position: absolute; right: 10px; top: 10px; z-index: 10;">' + 
-                                    '<img src="/img/moew_off.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">' + 
+                                '<div class="bookmark-icon" style="position: absolute; right: 10px; top: 10px; z-index: 10;" onclick="toggleBookmark(event, ' + item.post_idx + ')">' + 
+                                    (item.bookmarked ? 
+                                        '<img src="/img/moew_on.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">' :
+                                        '<img src="/img/moew_off.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">') + 
                                 '</div>' +
                                 '<img src="' + item.logo + '" class="card-img-top" alt="회사로고" style="height: 150px;">' +
                                 '<div class="card-body">' +
@@ -204,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             '</div>' +
                         '</a>' +
                     '</div>';
+
                     });
                 } else {
                     resultHTML = '<p>검색 결과가 없습니다.</p>';
