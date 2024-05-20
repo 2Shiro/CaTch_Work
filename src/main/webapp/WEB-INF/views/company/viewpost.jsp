@@ -27,14 +27,35 @@
 						action="/Company/MyPostWrite" novalidate id="postForm"
 						method="post">
 						<div class="">
-							<div class="my-1 mx-auto row">
-								<h2 class="form-control" id="title" name="title">${postvo.title}</h2>
+							<div class="my-1 mx-auto row position-relative">
+								<div class="d-flex justify-content-start align-items-center">
+									<!-- Title -->
+									<h2 class="form-control mb-0" id="title" name="title"
+										style="flex-grow: 1;">${postvo.title}</h2>
+									<!-- Bookmark Icon -->
+									<div class="bookmark-icon ms-3"
+										onclick="toggleBookmark(event, ${mainPageList.post_idx})">
+										<c:choose>
+											<c:when test="${mainPageList.bookmarked}">
+												<img src="/img/moew_on.png"
+													id="bookmark_${mainPageList.post_idx}" alt="북마크"
+													style="width: 24px; height: 24px;">
+											</c:when>
+											<c:otherwise>
+												<img src="/img/moew_off.png"
+													id="bookmark_${mainPageList.post_idx}" alt="북마크"
+													style="width: 50px; height: 50px;">
+											</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
 							</div>
 							<hr>
 							<div class="my-1 mx-auto row">
 								<div class="row">
 									<div class="col-6 row d-flex align-items-center">
-										<div class="col-md-auto">
+										<div class="col-md-4">
+											<!-- col-md-auto를 col-md-4로 변경 -->
 											<h5>지원 자격</h5>
 										</div>
 										<div class="col-md-8">
@@ -42,7 +63,7 @@
 												name="career" readonly="readonly" value="${postvo.career}">
 										</div>
 									</div>
-									<div class="col-6 row d-flex align-items-center ms-4">
+									<div class="col-6 row d-flex align-items-center">
 										<div class="col-md-4">
 											<h5>연봉</h5>
 										</div>
@@ -54,15 +75,16 @@
 								</div>
 								<div class="row mt-4">
 									<div class="col-6 row d-flex align-items-center">
-										<div class="col-md-auto">
+										<div class="col-md-4">
+											<!-- col-md-auto를 col-md-4로 변경 -->
 											<h5>근무 조건</h5>
 										</div>
 										<div class="col-md-8">
 											<input type="text" class="form-control" id="jobtype"
-											name="jobtype" readonly="readonly" value="${postvo.jobtype}">
+												name="jobtype" readonly="readonly" value="${postvo.jobtype}">
 										</div>
 									</div>
-									<div class="col-6 row d-flex align-items-center ms-4">
+									<div class="col-6 row d-flex align-items-center">
 										<div class="col-md-4">
 											<h5>근무 시간</h5>
 										</div>
@@ -75,7 +97,8 @@
 							</div>
 							<div class="row mt-4">
 								<div class="col-6 row d-flex align-items-center">
-									<div class="col-md-auto">
+									<div class="col-md-4">
+										<!-- col-md-auto를 col-md-4로 변경 -->
 										<h5>담당자</h5>
 									</div>
 									<div class="col-md-8">
@@ -83,7 +106,7 @@
 											name="manager" readonly="readonly" value="${postvo.manager}">
 									</div>
 								</div>
-								<div class="col-6 row d-flex align-items-center ms-4">
+								<div class="col-6 row d-flex align-items-center">
 									<div class="col-md-4">
 										<h5>담당자 번호</h5>
 									</div>
@@ -93,6 +116,7 @@
 									</div>
 								</div>
 							</div>
+
 							<div class="my-1 mx-auto row">
 								<label for="deadline" class="form-label">마감 일자</label> <input
 									type="text" class="form-control" id="deadline" name="deadline"
@@ -119,8 +143,9 @@
 									value="0">
 							</div>
 						</div>
-						<input type="hidden" id="comaddress" value="${companyvo.address}">
-						<div id="map" style="width:100%;height:400px;"></div>
+						<br> <input type="hidden" id="comaddress"
+							value="${companyvo.address}">
+						<div id="map" style="width: 100%; height: 400px;"></div>
 					</form>
 				</div>
 			</div>
@@ -128,40 +153,39 @@
 		<div class="my-3 d-flex justify-content-center">
 			<!-- 개인회원일때 -->
 			<%-- <c:if test="${sessionVo.type == 2}"> --%>
-				<c:if test="${!alreadyApplied}">
-					<form action="/Person/JoinPost" method="POST">
-						<input type="hidden" name="user_idx" value="${user_idx}" />
-						<input type="hidden" name="post_idx" value="${postvo.post_idx}" />
-						<input type="hidden" name="com_idx" value="${companyvo.com_idx}" />
-						<div class="input-group mb-3 resume">
-							<label class="input-group-text" for="inputGroupSelect01">이력서</label>
-							<select name="resume_idx" class="form-select" id="presumeSelect">
-								<option selected>==선택==</option>
-								<c:forEach var="resumevo" items="${resumevo}">
-									<option value="${resumevo.resume_idx}">${resumevo.title}</option>
-								</c:forEach>
-							</select>
+			<c:if test="${!alreadyApplied}">
+				<form action="/Person/JoinPost" method="POST">
+					<input type="hidden" name="user_idx" value="${user_idx}" /> <input
+						type="hidden" name="post_idx" value="${postvo.post_idx}" /> <input
+						type="hidden" name="com_idx" value="${companyvo.com_idx}" />
+					<div class="input-group mb-3 resume">
+						<label class="input-group-text" for="inputGroupSelect01">이력서</label>
+						<select name="resume_idx" class="form-select" id="presumeSelect">
+							<option selected>==선택==</option>
+							<c:forEach var="resumevo" items="${resumevo}">
+								<option value="${resumevo.resume_idx}">${resumevo.title}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="my-3 d-flex justify-content-center">
+						<button type="submit" class="btn btn-primary mx-3">지원하기</button>
+						<div>
+							<a href="/" id="btn-list" class="btn btn-outline-secondary mx-3">메인으로</a>
 						</div>
-						<div class="my-3 d-flex justify-content-center">
-							<button type="submit" class="btn btn-primary mx-3">지원하기</button>
-							<div>
-								<a href="/" id="btn-list" class="btn btn-outline-secondary mx-3">메인으로</a>
-							</div>
-						</div>
-					</form>
-				</c:if>
-				<c:if test="${alreadyApplied}">
-					<p>이미 이 공고에 지원하셨습니다.</p>
-				</c:if>
+					</div>
+				</form>
+			</c:if>
+			<c:if test="${alreadyApplied}">
+				<p>이미 이 공고에 지원하셨습니다.</p>
+			</c:if>
 			<%-- </c:if> --%>
 			<!-- 기업회원일때 -->
 			<%-- <c:if test="${sessionVo.type == 1}"> --%>
-				<div class="my-3 d-flex justify-content-center">
-					<a href="/Company/MyPost?user_id=${sessionVo.user_id}&nowpage=1"
-						class="btn btn-primary mx-3">등록 공고 관리</a>
-					<a href="/" id="btn-list"
-						class="btn btn-outline-secondary mx-3">메인으로</a>
-				</div>
+			<div class="my-3 d-flex justify-content-center">
+				<a href="/Company/MyPost?user_id=${sessionVo.user_id}&nowpage=1"
+					class="btn btn-primary mx-3">등록 공고 관리</a> <a href="/" id="btn-list"
+					class="btn btn-outline-secondary mx-3">메인으로</a>
+			</div>
 			<%-- </c:if> --%>
 			<!-- history back 사용? -->
 			<!-- 세션별로 다르게 -->
@@ -209,6 +233,6 @@ geocoder.addressSearch(companyAddress, function(result, status) {
         // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
         map.setCenter(coords);
     } 
-});    
+});
 </script>
 </html>
