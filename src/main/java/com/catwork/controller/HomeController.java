@@ -143,6 +143,7 @@ public class HomeController {
 	    
 	    //Integer user_idx = (Integer) session.getAttribute("user_idx");
 	    boolean isBookmarked = false;
+	    boolean alreadyApplied = personMapper.checkIfAlreadyApplied(user_idx, post_idx);
 	    List<ResumeVo> resumevo = new ArrayList<>();
 
 	    if (usertype.getId() != null && usertype.getType() == 2) {
@@ -152,6 +153,7 @@ public class HomeController {
 
 	    mv.addObject("user_idx", user_idx);
 	    mv.addObject("isBookmarked", isBookmarked);
+	    mv.addObject("alreadyApplied", alreadyApplied);
 	    mv.addObject("skill", skill);
 	    mv.addObject("resumevo", resumevo);
 	    mv.addObject("postvo", postvo);
