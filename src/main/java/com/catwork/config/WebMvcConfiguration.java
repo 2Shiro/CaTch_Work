@@ -13,7 +13,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new LoginCheckInterceptor())
 		        .addPathPatterns("/**","/**/*")
-		        .excludePathPatterns("/","/LoginForm","/logout",
+		        .excludePathPatterns("/LoginForm","/logout",
 		        					 "/Person/Login","/Person/JoinForm","/Person/Join",
 		        					 "/Company/Login","/Company/JoinForm","/Company/Join",
 		        		             "/Board",
@@ -24,5 +24,3 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	}	
 	
 }
-
-

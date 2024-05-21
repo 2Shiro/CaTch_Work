@@ -59,12 +59,12 @@ public interface PersonMapper {
 	int getUser_idx(String id);
 
 	// 북마크 등록
-	boolean addBookmark(BookmarkVo bookmarkVo);
+	boolean addBookmark(int user_idx, int post_idx);
 	// 북마크 삭제
-	boolean removeBookmark(BookmarkVo bookmarkVo);
+	boolean removeBookmark(int user_idx, int post_idx);
 	// 북마크 여부
 	List<Integer> getBookmarked(int user_idx);
-
+	// viewpost 에서의 북마크 여부
 	boolean isBookmarked(@Param("user_idx") int user_idx, @Param("post_idx") int post_idx);
 
 	PersonVo getPersonInfo(PersonVo personVo, String id);
@@ -76,9 +76,6 @@ public interface PersonMapper {
 	List<PersonBookmarkVo> getBookmarkList(PersonBookmarkVo personbookmarkVo, int user_idx);
 
 	PersonVo getPwd(int user_idx);
-
-
-
 
 	void updateMyInfo(PersonVo personVo, String id);
 

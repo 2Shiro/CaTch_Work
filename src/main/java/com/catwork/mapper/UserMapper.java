@@ -30,6 +30,8 @@ public interface UserMapper {
 
 	int checkId(String id);
 
+	int getUser_idx(int i);
+
 	int getUser_idx(String id);
 
 	List<UserVo> getAllUser();
