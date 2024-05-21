@@ -10,10 +10,7 @@
 <link rel="stylesheet" href="/css/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-<link rel="icon" href="/img/CaTchWorkFavicon.png">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
 <style>
 
@@ -103,156 +100,193 @@ h1 {
     <%@include file="/WEB-INF/include/person_mypage_nav.jsp" %>
     
 <body>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="personinfo" role="tabpanel" aria-labelledby="personinfo-tab">
-        <div class="container">
-            <div>&nbsp;</div>
-            <h2>회원 정보</h2>
-            <div>&nbsp;</div>
-            <div id="total">
-                <div id="profile">
-                    <img src="/img/defaultProfile.png" class="img-thumbnail" alt="프로필없음">
-                </div>
-                <div>&nbsp;</div>
-                <div id="info">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">아이디</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.id}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">이름</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.name}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">주민등록번호</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.social_num}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">연락처</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.phone}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">우편번호</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.zip_code}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">주소</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.address}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">가입날짜</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.created}" readonly>
-                    </div>
-                </div>
-            </div>
-            <div>&nbsp;</div>
-            <button type="button" id="goUpdate" class="btn btn-primary">수정하기</button>
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-        </div>
-    </div>
-    
-     <div class="tab-pane fade" id="resume" role="tabpanel" aria-labelledby="resume-tab"> 
+	<div class="tab-content" id="userinfo">
+		<div class="container">
+		<div>&nbsp;</div>
+			<h2>회원 정보</h2>
+			<div>&nbsp;</div>
+			<div id="total">
+				<div id="profile">
+					<img src="/img/defaultProfile.png" class="img-thumbnail" alt="프로필없음">
+				</div>
+				<div>&nbsp;</div>
+				<div id="info">
+					<div class="input-group mb-3">
+					  <span class="input-group-text" id="inputGroup-sizing-default">아이디</span>
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.id}" readonly>
+					</div>
+					<div class="input-group mb-3">
+					  <span class="input-group-text" id="inputGroup-sizing-default">이름</span>
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.name}" readonly>
+					</div>
+					<div class="input-group mb-3">
+					  <span class="input-group-text" id="inputGroup-sizing-default">주민등록번호</span>
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.social_num}" readonly>
+					</div>
+					<div class="input-group mb-3">
+					  <span class="input-group-text" id="inputGroup-sizing-default">연락처</span>
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.phone}" readonly>
+					</div>
+					<div class="input-group mb-3">
+					  <span class="input-group-text" id="inputGroup-sizing-default">우편번호</span>
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.zip_code}" readonly>
+					</div>
+					<div class="input-group mb-3">
+					  <span class="input-group-text" id="inputGroup-sizing-default">주소</span>
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.address}" readonly>
+					</div>
+
+					<div class="input-group mb-3">
+					  <span class="input-group-text" id="inputGroup-sizing-default">가입날짜</span>
+					  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${pvo.created}" readonly>
+					</div>
+				</div>
+			</div>
+			
+			<div>&nbsp;</div>
+		<button type="button" id="goUpdate" class="btn btn-primary">수정하기</button>
+			<div>&nbsp;</div>
+			<div>&nbsp;</div>
 		
-        <div class="container mt-5">
-            <div id="personresume">
-                <div>&nbsp;</div>
-                <h2>구직자 이력서</h2>
-                <div id="myresume" name="resume" class="linkDiv">
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">번호</th>
-                                <th scope="col">이력서 제목</th>
-                                <th scope="col">이름</th>
-                                <th scope="col">추천공고 보러가기</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            <c:forEach var="ro" items="${response.list}" varStatus="status">
-                                <tr>
-                                    <th scope="row">${status.count}</th>
-                                    <td class="td2"><a href="/Resume/View?resume_idx=${ro.resume_idx}">${ro.title}</a></td>
-                                    <td>${ro.created}</td>
-                                    <td>
-                                        <button name="recommendList" class="btn btn-primary">추천 공고 보러가기</button>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                <div>&nbsp;</div>
-                <button type="button" id="goWrite" class="btn btn-primary">이력서 작성하기</button>
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
-            <div class="d-flex justify-content-center paging-bottom-container">
-                <%@include file="/WEB-INF/pagination/personPaging.jsp" %>
-            </div>
-                </div>
-                </div>
-        </div>
-     </div> 
+		
+		</div>
 
-    <div class="tab-pane fade" id="apply" role="tabpanel" aria-labelledby="apply-tab">
-        <div class="container">
-        	<div id="personapply">
-            <div>&nbsp;</div>
-            <h2>내가 지원한 공고</h2>
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-            <div class="myapply">
-                <table class="table" class="linkDiv">
-                    <thead>
-                        <tr>
-                            <th scope="col">번호</th>
-                            <th scope="col">공고 제목</th>
-                            <th scope="col">연봉</th>
-                            <th scope="col">요구 경력</th>
-                            <th scope="col">담당자연락처</th>
-                            <th scope="col">더보기</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        <c:forEach var="po" items="${response1.list}" varStatus="status">
-                            <tr>
-                                <th scope="row">${status.count}</th>
-                                <td class="td2"><a href="/Post?post_idx=${po.post_idx}">${po.title}</a></td>
-                                <td>${po.salary}</td>
-                                <td>${po.career}</td>
-                                <td>${po.mphone}</td>
-                                <td class="td8">
-                                    <button name="apply" class="btn btn-primary">지원 현황</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <div class="output"></div>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div>
-            <div class="d-flex justify-content-center paging-bottom-container">
-                <%@include file="/WEB-INF/pagination/personApplyPaging.jsp" %>
-            </div>
-            </div>
-        </div>
-    </div>
+			
+	</div>
+	
+<!-- <div>=====================================================================================================================</div> -->
 
-    <div class="tab-pane fade" id="bookmark" role="tabpanel" aria-labelledby="bookmark-tab">
+	<div class="tab-content" id="resume" style="display: none;">
+	   <div class="container">
+	   <section>
+      <div>&nbsp;</div>
+      <h2>구직자 이력서</h2>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+      
+      <div name="resume" class="linkDiv">
+         <table class="table">
+           <thead>
+             <tr>
+               <th scope="col">번호</th>
+               <th scope="col">이력서 제목</th>
+               <th scope="col">이름</th>
+               <th scope="col">추천공고 보러가기</th>
+             </tr>
+           </thead>
+           <tbody class="table-group-divider">
+              <c:forEach var="ro" items="${response.list}" varStatus="status" >
+                <tr>
+                  <th scope="row">${status.count}</th>
+                  <td class ="td2"><a href="/Resume/View?resume_idx=${ro.resume_idx}">${ro.title}</a></td>
+                  <td>${ro.created}</td>
+                  <td>
+						<button name="recommendList" class="btn btn-primary">추천 공고 보러가기</button>
+                  </td>
+                </tr>
+             </c:forEach>
+           </tbody>
+         </table>
+      </div>
+      <div>&nbsp;</div>
+	<button type="button" id="goWrite" class="btn btn-primary">이력서 작성하기</button>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+	   </section>
+	   <div class="d-flex justify-content-center paging-bottom-container">
+	         <c:set var="startnum" value="${pagingVo.pagination.startPage}" />
+<c:set var="endnum" value="${pagingVo.pagination.endPage}" />
+<c:set var="totalpagecount" value="${pagingVo.pagination.totalPageCount}" />
+
+<div id="pagination">
+<nav aria-label="Page navigation" id="paging">
+    <ul class="pagination">
+        <c:if test="${personNowpage > 1}">
+            <li class="page-item"><a class="page-link" href="/MyPage?tab=person&personNowpage=1" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a></li>
+            <li class="page-item"><a class="page-link" href="/MyPage?tab=person&personNowpage=${personNowpage - 1}" aria-label="Previous">
+                <span aria-hidden="true">&lt;</span>
+            </a></li>
+        </c:if>
+        <c:forEach var="pagenum" begin="${startnum}" end="${endnum}" step="1">
+            <li class="page-item"><a class="page-link" href="/MyPage?tab=person&personNowpage=${pagenum}">${pagenum}</a></li>
+        </c:forEach>
+        <c:if test="${pagingVo.pagination.existNextPage}">
+            <li class="page-item"><a class="page-link" href="/MyPage?tab=person&personNowpage=${personNowpage + 1}" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+            </a></li>
+            <li class="page-item"><a class="page-link" href="/MyPage?tab=person&personNowpage=${totalpagecount}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a></li>
+        </c:if>
+    </ul>
+</nav>
+</div>
+	         </div>
+      </div>
+	
+		
+	</div>
+<!-- <div>=====================================================================================================================</div> -->
+	<div class="tab-content" id="apply" style="display: none;">
 	<div class="container">
-	<div id="personbookmark">
+	<div>&nbsp;</div>
+	<h2>내가 지원한 공고</h2>
+	<div>&nbsp;</div>
+	<div>&nbsp;</div>
+	<div>&nbsp;</div>
+	<div class="apply">
+		      <table class="table" class="linkDiv">
+	           <thead>
+	             <tr>
+	               <th scope="col">번호</th>
+	               <th scope="col">공고 제목</th>
+	               <th scope="col">연봉</th>
+	               <th scope="col">요구 경력</th>
+	               <th scope="col">담당자연락처</th>
+	               <th scope="col">더보기</th>
+	             </tr>
+	           </thead>
+	           <tbody class="table-group-divider">
+					<c:forEach var="po" items="${response1.list}" varStatus="status">
+					    <tr>
+					        <th scope="row">${status.count}</th>
+					        <td class="td2"><a href="/Post?post_idx=${po.post_idx}">${po.title}</a></td>
+					        <td>${po.salary}</td>
+					        <td>${po.career}</td>
+					        <td>${po.mphone}</td>
+					        <td class="td8">
+					            <button name="apply" class="btn btn-primary">지원 현황</button>
+					        </td>
+					    </tr>
+					    <tr>
+					        <td colspan="6"> <!-- 한 행에 있는 모든 셀을 병합 -->
+					            <div class="output"></div>
+					        </td>
+					    </tr>
+					</c:forEach>
+	           </tbody>
+	         </table>
+         	</div>
+         		   <div class="d-flex justify-content-center paging-bottom-container">
+	         <%@include file="/WEB-INF/pagination/personApplyPaging.jsp" %>
+	         </div>
+         		</div>
+         </div>
+         
+
+<!-- <div>=====================================================================================================================</div> -->
+	<div id="bookmark" class="tab-content" style="display: none;"> 
+		
+	<div class="container">
 	<div>&nbsp;</div>
 		<h2>내가 북마크한 공고</h2>
 		<div>&nbsp;</div>
 		<div>&nbsp;</div>
 		<div>&nbsp;</div>
-	<div class="mybookmark">
+	<div class="bookmark">
 		      <table class="table" class="linkDiv">
 	           <thead>
 	             <tr>
@@ -266,17 +300,15 @@ h1 {
 	           </thead>
 	           <tbody class="table-group-divider">
 					<c:forEach var="bo" items="${response2.list}" varStatus="status">
-					   <tr data-row-num="${status.count}" data-deleted="false">
-					        <th scope="row">${bo.row_num}</th>
+					   <tr data-row-num="${bo.row_num}" data-deleted="false">
+					        <th scope="row">${status.count}</th>
 					        <td class="td2"><a href="/Post?post_idx=${po.post_idx}">${bo.title}</a></td>
 					        <td>${bo.salary}</td>
 					        <td>${bo.career}</td>
 					        <td>${bo.mphone}</td>
 					        <td class="td8">
 					        	<input type="hidden" value="${bo.book_idx}">
-					                                             <img src="/img/fillmoew.png"
-                                      class="bookmark-icons" alt="북마크"
-                                       style="width: 24px; height: 24px;">
+					            <img class="bookmark-icon" src="/img/bookmark_fill.svg" alt="북마크 아이콘">
 					        </td>
 					    </tr>
 
@@ -284,13 +316,13 @@ h1 {
 	           </tbody>
 	         </table>
          	</div>
-         	            <div class="d-flex justify-content-center paging-bottom-container">
-                <%@include file="/WEB-INF/pagination/personBookmarkPaging.jsp" %>
-            </div>
          </div>
-         </div>
-    </div>
-</div>
+                  		   <div class="d-flex justify-content-center paging-bottom-container">
+	         <%@include file="/WEB-INF/pagination/personBookmarkPaging.jsp" %>
+	         </div>
+		</div>
+	
+	</div>
 
 
 
@@ -340,6 +372,141 @@ h1 {
 	
 
 	<%@include file="/WEB-INF/include/footer.jsp" %>
+	<script>
+    const tabs = document.querySelectorAll("#mypagetab .nav-link");
+
+    tabs.forEach(function (tab) {
+        tab.addEventListener("click", function (event) {
+            event.preventDefault();
+            const targetId = tab.getAttribute("data-target");
+            const targetContent = document.getElementById(targetId);
+
+            // 모든 탭 콘텐츠를 숨깁니다.
+            document.querySelectorAll(".tab-content").forEach(function (content) {
+                content.style.display = "none";
+            });
+
+            // 대상 탭 콘텐츠를 표시합니다.
+            targetContent.style.display = "block";
+
+            // 모든 탭에서 active 클래스를 제거합니다.
+            document.querySelectorAll("#mypagetab .nav-link").forEach(function (tab) {
+                tab.classList.remove("active");
+            });
+
+            // 클릭된 탭에 active 클래스를 추가합니다.
+            tab.classList.add("active");
+
+            // URL 매개변수로 현재 탭 설정
+            const url = new URL(window.location.href);
+            url.searchParams.set('tab', targetId);
+            history.pushState(null, '', url.toString());
+
+            // 활성 탭 데이터 로드
+            loadTabData(targetId, 1);
+        });
+    });
+
+    function addPaginationEventListeners() {
+        document.querySelectorAll(".pagination a").forEach(function (link) {
+            link.addEventListener("click", function (event) {
+                event.preventDefault();
+                const url = new URL(this.href);
+                const params = new URLSearchParams(url.search);
+
+                // 현재 활성 탭 확인
+                const activeTabContent = document.querySelector(".tab-content:not([style*='display: none'])");
+                const activeTabId = activeTabContent.getAttribute("id");
+
+                // 필요한 매개변수 추가
+                if (!params.has("nowpage")) {
+                    params.set("nowpage", "1");
+                }
+                params.set("tab", activeTabId);
+
+                // 활성 탭 데이터 로드
+                loadTabData(activeTabId, params.get("nowpage"));
+            });
+        });
+    }
+
+    function loadTabData(tabId, page) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', tabId);
+        url.searchParams.set('nowpage', page);
+
+        fetch(url.toString(), {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+
+            // 현재 활성 탭의 컨텐츠를 업데이트
+            const newContent = doc.querySelector(`#${tabId}`);
+            document.getElementById(tabId).innerHTML = newContent.innerHTML;
+
+            // 새로 로드된 콘텐츠에 이벤트 리스너를 다시 추가합니다.
+            addPaginationEventListeners();
+        })
+        .catch(error => console.error("Error:", error));
+    }
+
+    // 페이지 로드 시 URL 매개변수에 따라 탭 상태를 유지하고 데이터 로드
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTab = urlParams.get('tab') || 'userinfo';
+    const activeTabLink = document.querySelector(`#mypagetab .nav-link[data-target='${activeTab}']`);
+
+    if (activeTabLink) {
+        // 탭 클릭 이벤트 강제 호출
+        activeTabLink.click();
+    }
+
+    // 초기 이벤트 리스너 설정
+    addPaginationEventListeners();
+});
+</script>
+	<script>
+	
+// // 탭이동 스크립트	
+//     document.addEventListener("DOMContentLoaded", function () {
+//         const tabs = document.querySelectorAll("#mypagetab .nav-link");
+
+//         tabs.forEach(function (tab) {
+//             tab.addEventListener("click", function (event) {
+//                 event.preventDefault();
+//                 const targetId = tab.getAttribute("data-target");
+//                 const targetContent = document.getElementById(targetId);
+
+//                 // 모든 탭 콘텐츠를 숨깁니다.
+//                 document.querySelectorAll(".tab-content").forEach(function (content) {
+//                     content.style.display = "none";
+//                 });
+
+//                 // 대상 탭 콘텐츠를 표시합니다.
+//                 targetContent.style.display = "block";
+
+//                 // 모든 탭에서 active 클래스를 제거합니다.
+//                 document.querySelectorAll("#mypagetab .nav-link").forEach(function (tab) {
+//                     tab.classList.remove("active");
+//                 });
+
+//                 // 클릭된 탭에 active 클래스를 추가합니다.
+//                 tab.classList.add("active");
+//             });
+//         });
+
+//         // 페이지가 로드될 때 #userinfo 탭의 내용을 보이도록 설정합니다.
+//         const userinfoTab = document.querySelector("#mypagetab .nav-link[data-target='userinfo']");
+//         const userinfoContent = document.getElementById("userinfo");
+//         userinfoTab.classList.add("active");
+//         userinfoContent.style.display = "block";
+//     });
+ </script> 
+
 <script>
 
 
@@ -427,10 +594,8 @@ h1 {
 	
 // 내가 지원한 이력서 	
 
-	document.addEventListener('DOMContentLoaded', (e) => {
-		//alert("dd")
-		console.log(e)
-	    const applyBtns = document.querySelectorAll('.myapply .td8 button[name="apply"]');
+	document.addEventListener('DOMContentLoaded', () => {
+	    const applyBtns = document.querySelectorAll('.apply .td8 button[name="apply"]');
 	    const modalResult = document.getElementById('myModal');
 	    const modalState = document.getElementById('modalState1');
 	    const modalCloseBtns = document.querySelectorAll('[data-bs-dismiss="modal"]');
@@ -503,7 +668,6 @@ h1 {
 	                            
 	                            // tr 안에서 input[type=hidden] 요소를 찾아서 apply_idx 값을 가져오기
 	                            const apply_idx = tr.querySelector('input[type=hidden]').value;
-	                            alert(apply_idx)
 	                            
 	                            const modalData = document.getElementById('modalData');
 
@@ -787,7 +951,7 @@ h1 {
 	    let deletedRows = []; // 삭제된 행을 기록하는 배열
 	
 	    // 클릭 이벤트를 상위 요소에 등록하여 중첩 방지
-	    document.querySelector('.mybookmark .table-group-divider').addEventListener('click', (event) => {
+	    document.querySelector('.bookmark .table-group-divider').addEventListener('click', (event) => {
 	        const clickedElement = event.target;
 	        if (clickedElement.classList.contains('bookmark-icon')) {
 	            const bookmarkValue = clickedElement.closest('.td8').querySelector('[type=hidden]').value;
@@ -827,7 +991,7 @@ h1 {
 	                            html += '<td>'+bo.mphone+'</td>';
 	                            html += '<td class="td8">';
 	                            html += '<input type="hidden" value="'+bo.book_idx+'">';
-	                            html += '<img class="bookmark-icon" src="/img/fillmoew.png" alt="북마크 아이콘">';
+	                            html += '<img class="bookmark-icon" src="/img/bookmark_fill.svg" alt="북마크 아이콘">';
 	                            html += '</td>';
 	                            html += '</tr>';
 	

@@ -143,7 +143,9 @@
 			    })
 			})
 		</script>
+
    
+
    <script>
   		//평점
   		const icons = document.querySelectorAll('.star-icon')

@@ -10,6 +10,7 @@
 <nav aria-label="Page navigation" id="paging">
 	<ul class="pagination">
 		<c:if test="${nowpage > 1}">
+
 			<li class="page-item"><a class="page-link" id="postListPage"
 				href="/Company/MyPostList?nowpage=1" aria-label="Previous" aria-hidden="true" >
 					&laquo;
