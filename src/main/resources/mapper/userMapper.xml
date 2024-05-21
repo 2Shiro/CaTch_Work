@@ -18,7 +18,7 @@
 
 	<!-- idx로 회원 정보 가져오기, 현재는 컴퍼니 고정 -->
 	<select id="getUserInfoById">
-		SELECT USER_IDX, ID, PWD, EMAIL, TYPE FROM USER_TB WHERE USER_IDX = #{user_idx} AND TYPE = 1
+		SELECT USER_IDX, ID, PWD, EMAIL, TYPE FROM USER_TB WHERE USER_IDX = #{user_idx}
 	</select>
 
 	<!-- 회원 정보 수정 -->
@@ -67,5 +67,15 @@
 		SELECT USER_IDX
 		FROM USER_TB
 		WHERE ID = #{id} 
+	</select>
+	
+	<!-- 모든 유저 가져오기 -->
+	<select id="getAllUser">
+		SELECT USER_IDX,
+					 ID,
+					 PWD,
+					 TYPE,
+					 EMAIL
+		FROM USER_TB
 	</select>
 </mapper>
