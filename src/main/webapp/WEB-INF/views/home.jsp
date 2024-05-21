@@ -133,7 +133,7 @@
 				<div class="d-flex flex-wrap ms-3">
 					<c:forEach var="mainPageList" items="${mainPageList}">
 						<div class="cardinterval me-5 my-3">
-							<a href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&com_idx=${mainPageList.com_idx}">
+							<a href="/Company/Viewpost?post_idx=${mainPageList.post_idx}">
 								<div class="card" style="width: 20rem; height: 300px;">
 									<c:if test="${usertype.type == 2}">
 										<div class="bookmark-icon"

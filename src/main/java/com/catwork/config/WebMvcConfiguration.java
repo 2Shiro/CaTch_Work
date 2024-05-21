@@ -8,7 +8,6 @@ import com.catwork.interceptor.LoginCheckInterceptor;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
-
    @Override
    public void addInterceptors(InterceptorRegistry registry) {
       registry.addInterceptor(new LoginCheckInterceptor())

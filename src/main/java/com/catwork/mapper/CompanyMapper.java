@@ -93,4 +93,6 @@ public interface CompanyMapper {
 	List<PostVo> getPostListPaging(int offset, int pageSize, int user_idx);
 	
 	int getMyRate(int user_idx);
+	
+	CompanyVo getComId(int post_idx);
 }
