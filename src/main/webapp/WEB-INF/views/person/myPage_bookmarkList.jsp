@@ -26,6 +26,7 @@
 	<div class="container">
 	<div id="personbookmark">
 	<div>&nbsp;</div>
+	<div>&nbsp;</div>
 		<h2>내가 북마크한 공고</h2>
 		<div>&nbsp;</div>
 		<div>&nbsp;</div>

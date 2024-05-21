@@ -125,6 +125,10 @@ public interface ResumeMapper {
 
 
 
+	List<Resume_SkillVo> getSkillListById(int resume_idx);
+
+
+
 
 	//RateVo insertRate(RateVo rateVo);
 

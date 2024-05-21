@@ -9,6 +9,7 @@
         <div class="container">
         	<div id="personapply">
             <div>&nbsp;</div>
+            <div>&nbsp;</div>
             <h2>내가 지원한 공고</h2>
             <div>&nbsp;</div> 
             <div>&nbsp;</div>
@@ -55,10 +56,10 @@
  <script>
  $(document).ready(function() {
 	    console.dir(document);
-	    alert('asdfa');
+	    //alert('asdfa');
 
 	    $(function(e) {
-	        alert("두번째");
+	        //alert("두번째");
 	        console.log(e);
 	        const applyBtns = $('.myapply .td8 button[name="apply"]');
 	        const modalResult = $('#myModal');
@@ -67,7 +68,7 @@
 	        
 	        applyBtns.each(function() {
 	            $(this).on('click', function() {
-	                alert('sdfsadf');
+	                //alert('sdfsadf');
 	                const tr = $(this).closest('tr');
 	                const postLink = tr.find('.td2 a');
 	                const post_idx = postLink.attr('href').split('=')[1];
@@ -89,18 +90,20 @@
 	                        outputEl.html('');
 	                        $.each(resumeList, function(index, resume) {
 	                            let html = '<table class="table">';
-	                            html += '<tr>';
-	                            html += '<td>'+resume.row_num+'</td>';
-	                            html += '<td>'+resume.name+'</td>';
-	                            html += '<td>'+resume.rtitle+'</td>';
-	                            html += '<td>'+resume.phone+'</td>';
-	                            html += '<td>'+resume.created+'</td>';
-	                            html += '<td><button class="btn btn-primary result-btn">결과보기</button></td>';
-	                            html += '<td><button class="btn btn-danger rate-btn">기업평가</button></td>';
-	                            html += '<input type="hidden" value="'+resume.apply_idx+'" name="apply_idx">';
-	                            html += '<input type="hidden" value="'+resume.per_idx+'" name="per_idx">';
-	                            html += '</tr>';
-	                            html += '</table>';
+		                        html += '<tr>';
+			                       // html += '<td>'+resume.row_num+'</td>';
+			                       	html += ''
+			                       	html += '<td colspan="6">'+resume.name+'  님은 ' +resume.rtitle+'  이력서로  '+resume.created+'  에 지원하셨습니다'+'</td>'
+			                        
+			                       	if(resume.state != 0) {
+			                       		html += '<td><button class="btn btn-primary result-btn">결과보기</button></td>'; // 클래스 추가
+									}	                        
+			                       	
+			                       	html += '<td><button class="btn btn-danger rate-btn">기업평가</button></td>'; // 클래스 추가
+			                        html += '<input type="hidden" value="'+resume.apply_idx+'" name="apply_idx">'; // 클래스 추가
+			                        html += '<input type="hidden" value="'+resume.per_idx+'" name="per_idx">'; // 클래스 추가
+			                        html += '</tr>'; // 클래스 추가
+			                        html += '</table>';
 	                            
 	                            outputEl.append(html);
 	                        });

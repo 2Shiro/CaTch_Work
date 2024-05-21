@@ -226,6 +226,7 @@ public class HomeController {
 												comuser.getCtype(), comuser.getBdate()));
 				} else if (allUserList.get(i).getType() == 2) {
 					UserVo user = userMapper.getUserInfoById(allUserList.get(i).getUser_idx()); 
+					System.out.println("user: " + user);
 					PersonVo peruser = personMapper.getPersonDetail(allUserList.get(i).getUser_idx());
 					userList.add(new UserListVo(user.getUser_idx(), user.getId(), user.getPwd(), 
 												user.getType(), user.getEmail(),

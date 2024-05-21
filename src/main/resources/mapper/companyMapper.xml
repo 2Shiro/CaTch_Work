@@ -263,7 +263,7 @@
 	<!-- state 부분 추가 -->
 	<insert id="insertState">
 		INSERT INTO STATE_TB (STATE_IDX, RESUME_IDX, APPLY_IDX, SCORE, COMMENTS, USER_IDX)
-		VALUES((SELECT (MAX(STATE_IDX) + 1) STATE_IDX FROM STATE_TB), #{resume_idx}, #{apply_idx},
+		VALUES((SELECT (NVL(MAX(STATE_IDX),0) + 1) STATE_IDX FROM STATE_TB), #{resume_idx}, #{apply_idx},
 						#{score}, #{comments}, #{user_idx})
 	</insert>
 	
@@ -332,8 +332,7 @@
 	<select id="getAddress">
 		SELECT ADDRESS FROM COMPANY_TB WHERE USER_IDX = #{user_idx}
 	</select>
-	
-   <!-- 기업회원 가입 -->
+      <!-- 기업회원 가입 -->
    <insert id="insert">      
       INSERT ALL
       INTO user_tb (user_idx,id, pwd ,email,type)

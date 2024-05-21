@@ -231,6 +231,17 @@ OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
    
    </select>
    
+   <select id="getSkillListById">
+   		select
+		    rs.skill_idx,
+		    s.name
+		from resume_skill_tb rs
+		join skill_tb s on rs.skill_idx = s.skill_idx  
+		
+		where rs.resume_idx=#{arg0}
+   
+   </select>
+   
    <select id="getView">
 		SELECT 
     PE.NAME,
@@ -407,7 +418,7 @@ FROM (
         A.RESUME_IDX,
         A.POST_IDX,
         A.STATE,
-        A.CREATED,
+        TO_CHAR(A.CREATED, 'YY"년 "MM"월 "DD"일"') AS CREATED,
         U.USER_IDX,
         P.TITLE,
         R.TITLE RTITLE,

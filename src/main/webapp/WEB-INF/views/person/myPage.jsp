@@ -107,6 +107,7 @@ h1 {
     <div class="tab-pane fade show active" id="personinfo" role="tabpanel" aria-labelledby="personinfo-tab">
         <div class="container">
             <div>&nbsp;</div>
+            <div>&nbsp;</div>
             <h2>회원 정보</h2>
             <div>&nbsp;</div>
             <div id="total">
@@ -156,8 +157,7 @@ h1 {
 		
         <div class="container mt-5">
             <div id="personresume">
-                <div>&nbsp;</div>
-                <h2>구직자 이력서</h2>
+                <h2>구직자 이력서11</h2>
                 <div id="myresume" name="resume" class="linkDiv">
                 <div>&nbsp;</div>
                 <div>&nbsp;</div>
@@ -167,7 +167,7 @@ h1 {
                             <tr>
                                 <th scope="col">번호</th>
                                 <th scope="col">이력서 제목</th>
-                                <th scope="col">이름</th>
+                                <th scope="col">작성일</th>
                                 <th scope="col">추천공고 보러가기</th>
                             </tr>
                         </thead>
@@ -199,6 +199,7 @@ h1 {
     <div class="tab-pane fade" id="apply" role="tabpanel" aria-labelledby="apply-tab">
         <div class="container">
         	<div id="personapply">
+            <div>&nbsp;</div>
             <div>&nbsp;</div>
             <h2>내가 지원한 공고</h2>
             <div>&nbsp;</div>
@@ -247,6 +248,7 @@ h1 {
     <div class="tab-pane fade" id="bookmark" role="tabpanel" aria-labelledby="bookmark-tab">
 	<div class="container">
 	<div id="personbookmark">
+	<div>&nbsp;</div>
 	<div>&nbsp;</div>
 		<h2>내가 북마크한 공고</h2>
 		<div>&nbsp;</div>
@@ -300,7 +302,7 @@ h1 {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title">지원 결과</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="modalData">
@@ -479,13 +481,15 @@ h1 {
 // 	                        html += '</td>';
 // 	                        html += '</tr>';
 	                        html += '<tr>';
-	                        html += '<td>'+resume.row_num+'</td>';
-	                        html += '<td>'+resume.name+'</td>';
-	                        html += '<td>'+resume.rtitle+'</td>';
-	                        html += '<td>'+resume.phone+'</td>';
-	                        html += '<td>'+resume.created+'</td>';
-	                        html += '<td><button class="btn btn-primary result-btn">결과보기</button></td>'; // 클래스 추가
-	                        html += '<td><button class="btn btn-danger rate-btn">기업평가</button></td>'; // 클래스 추가
+	                       // html += '<td>'+resume.row_num+'</td>';
+	                       	html += ''
+	                       	html += '<td colspan="6">'+resume.name+'  님은 ' +resume.rtitle+'  이력서로  '+resume.created+'  에 지원하셨습니다'+'</td>'
+	                        
+	                       	if(resume.state != 0) {
+	                       		html += '<td><button class="btn btn-primary result-btn">결과보기</button></td>'; // 클래스 추가
+							}	                        
+	                       	
+	                       	html += '<td><button class="btn btn-danger rate-btn">기업평가</button></td>'; // 클래스 추가
 	                        html += '<input type="hidden" value="'+resume.apply_idx+'" name="apply_idx">'; // 클래스 추가
 	                        html += '<input type="hidden" value="'+resume.per_idx+'" name="per_idx">'; // 클래스 추가
 	                        html += '</tr>'; // 클래스 추가
@@ -516,9 +520,32 @@ h1 {
 	                                .then(response => response.json())
 	                                .then(vo => {
 	                                    modalData.innerHTML = ''; // 초기화
-	                            
-	                                    let modalHtml = '<p>점수:'+vo.score+'</p>';
+	                            		
+	                                    let state = vo.state
+	                                    alert('state' + state)
+	                                    let stateresult = ''
+	                                    if(state == 1) {
+	                                    	stateresult += '합격'
+	                                    } else if(state == 2) {
+	                                    	stateresult += '불합격'
+	                                    } else if (state == 0) {
+	                                    	stateresult += '대기'
+	                                    }
+	                                   	alert(stateresult)
+	                                    
+	                                    let comments = ''
+	                                
+	                                    if(vo.comments === null) {
+	                                    	comments += '대기중입니다. '
+	                                    } else{
+	                                    	comments += vo.comments
+	                                    }
+	                                   	alert(comments)
+	                                    
+	                              
+	                                    let modalHtml = '<p>상태:'+stateresult+'</p>'
 	                                    modalHtml += '<p>코멘트:'+vo.comments+'</p>';
+	                                    
 	                                    modalData.innerHTML += modalHtml;
 	                                    
 	                                })
@@ -788,7 +815,7 @@ h1 {
 	
 	    // 클릭 이벤트를 상위 요소에 등록하여 중첩 방지
 	    document.querySelector('.mybookmark .table-group-divider').addEventListener('click', (event) => {
-	    	//alert('ddd')
+	    	alert('북마크가 해제되었습니다')
 	        const clickedElement = event.target;
 	    	console.log(clickedElement)
 	        if (clickedElement.classList.contains('bookmark-icons')) {

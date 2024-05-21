@@ -21,7 +21,7 @@
    <%@include file="/WEB-INF/views/company/resume/resumeForm.jsp" %>
    <div class="container">
    	<c:if test="${usertype.type == 0}">
-		  <a type="button" class="btn btn-danger" href="/Person/Resume/Delete?resume_idx=${vo.resume_idx}">삭제</a>
+		  <a type="button" class="btn btn-danger" href="/ResumeList/Delete?resume_idx=${vo.resume_idx}">삭제</a>
    	</c:if>
 	  <a type="button" class="btn btn-secondary" href="javascript:window.history.back();">뒤로</a>
    </div>
