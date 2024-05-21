@@ -62,4 +62,22 @@ public interface PersonMapper {
 	List<Integer> getBookmarked(int user_idx);
 
 	boolean isBookmarked(@Param("user_idx") int user_idx, @Param("post_idx") int post_idx);
+
+	PersonVo getPersonInfo(PersonVo personVo, String id);
+
+	List<ResumeVo> getResumeList(ResumeVo resumeVo, String id);
+
+	List<PersonApplyVo> getApplyList(PersonApplyVo personApplyVo, int user_idx);
+
+	List<PersonBookmarkVo> getBookmarkList(PersonBookmarkVo personbookmarkVo, int user_idx);
+
+	PersonVo getPwd(int user_idx);
+
+
+
+
+	void updateMyInfo(PersonVo personVo, String id);
+
+	void updateMyInfo2(PersonVo personVo, int user_idx);
+
 }

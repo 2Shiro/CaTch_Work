@@ -27,6 +27,7 @@
           <a class="nav-link" href="/MyPage?nowpage=1">개인페이지</a>
         </li>
         </c:if>
+        <button id ="btnbtn">${ usertype.type }</button>
       </ul>
     </div>
   </div>

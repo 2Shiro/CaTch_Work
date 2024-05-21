@@ -7,21 +7,21 @@
 <nav aria-label="Page navigation" id="paging">
 	<ul class="pagination">
 		<c:if test="${bookmarkNowpage > 1}">
-			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=1" aria-label="Previous"  name="personbookmark"  aria-hidden="true">
+			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=1" data-page="1" aria-label="Previous"  name="personbookmark"  aria-hidden="true">
 				&laquo;
 			</a></li>
-			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=${bookmarkNowpage - 1}" aria-label="Previous" name="personbookmark"  aria-hidden="true">
+			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=${bookmarkNowpage - 1}" data-page="${bookmarkNowpage - 1}" aria-label="Previous" name="personbookmark"  aria-hidden="true">
 				&lt;
 			</a></li>
 		</c:if>
 		<c:forEach var="pagenum" begin="${startnum}" end="${endnum}" step="1" >
-			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=${pagenum}" name="personbookmark"  aria-hidden="true">${pagenum}</a></li>
+			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=${pagenum}" name="personbookmark" data-page="${pagenum}"  aria-hidden="true">${pagenum}</a></li>
 		</c:forEach>
 		<c:if test="${pagingVo2.pagination.existNextPage}">
-			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=${bookmarkNowpage + 1}" aria-label="Next" name="personbookmark"  aria-hidden="true">
+			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=${bookmarkNowpage + 1}"  data-page="${bookmarkNowpage + 1}" aria-label="Next" name="personbookmark"  aria-hidden="true">
 				&gt;
 			</a></li>
-			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=${totalpagecount}" aria-label="Next" name="personbookmark"  aria-hidden="true">
+			<li class="page-item"><a class="page-link" href="/Person/Mypage/Bookmark?bookmarkNowpage=${totalpagecount}" data-page="${totalpagecount}" aria-label="Next" name="personbookmark"  aria-hidden="true">
 				&raquo;
 			</a></li>
 		</c:if>
