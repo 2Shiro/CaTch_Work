@@ -133,25 +133,26 @@
 				<div class="d-flex flex-wrap ms-3">
 					<c:forEach var="mainPageList" items="${mainPageList}">
 						<div class="cardinterval me-5 my-3">
-							<a
-								href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&com_idx=${mainPageList.com_idx}">
+							<a href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&com_idx=${mainPageList.com_idx}">
 								<div class="card" style="width: 20rem; height: 300px;">
-									<div class="bookmark-icon"
-										style="position: absolute; right: 10px; top: 10px; z-index: 10;"
-										onclick="toggleBookmark(event, ${mainPageList.post_idx})">
-										<c:choose>
-											<c:when test="${mainPageList.bookmarked}">
-												<img src="/img/moew_on.png"
-													id="bookmark_${mainPageList.post_idx}" alt="북마크"
-													style="width: 24px; height: 24px;">
-											</c:when>
-											<c:otherwise>
-												<img src="/img/moew_off.png"
-													id="bookmark_${mainPageList.post_idx}" alt="북마크"
-													style="width: 24px; height: 24px;">
-											</c:otherwise>
-										</c:choose>
-									</div>
+									<c:if test="${usertype.type == 2}">
+										<div class="bookmark-icon"
+											style="position: absolute; right: 10px; top: 10px; z-index: 10;"
+											onclick="toggleBookmark(event, ${mainPageList.post_idx})">
+											<c:choose>
+												<c:when test="${mainPageList.bookmarked}">
+													<img src="/img/moew_on.png"
+														id="bookmark_${mainPageList.post_idx}" alt="북마크"
+														style="width: 24px; height: 24px;">
+												</c:when>
+												<c:otherwise>
+													<img src="/img/moew_off.png"
+														id="bookmark_${mainPageList.post_idx}" alt="북마크"
+														style="width: 24px; height: 24px;">
+												</c:otherwise>
+											</c:choose>
+										</div>
+									</c:if>
 									<img src="${mainPageList.logo}" class="card-img-top" alt="회사로고"
 										style="height: 150px;">
 									<div class="card-body">
@@ -200,17 +201,25 @@ document.addEventListener('DOMContentLoaded', function() {
             if(this.status >= 200 && this.status < 300) {
                 var response = JSON.parse(this.responseText);
                 var resultHTML = '';
-                if(response.length > 0) {
-                    response.forEach(function(item) {
-                    	resultHTML += '<div class="cardinterval me-5 my-3">' +
+                var usertype = response.usertype; // 서버에서 받은 유저 타입
+                var searchResults = response.searchResults;
+
+                if(searchResults.length > 0) {
+                    searchResults.forEach(function(item) {
+                        resultHTML += '<div class="cardinterval me-5 my-3">' +
                         '<a href="/Company/Viewpost?post_idx=' + item.post_idx + '&com_idx=' + item.com_idx + '">' +
-                            '<div class="card" style="width: 20rem; height: 300px;">' +
-                                '<div class="bookmark-icon" style="position: absolute; right: 10px; top: 10px; z-index: 10;" onclick="toggleBookmark(event, ' + item.post_idx + ')">' + 
-                                    (item.bookmarked ? 
-                                        '<img src="/img/moew_on.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">' :
-                                        '<img src="/img/moew_off.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">') + 
-                                '</div>' +
-                                '<img src="' + item.logo + '" class="card-img-top" alt="회사로고" style="height: 150px;">' +
+                            '<div class="card" style="width: 20rem; height: 300px;">';
+                        
+                        // 유저 타입이 2일 때만 북마크 아이콘을 추가
+                        if (usertype == 2) {
+                            resultHTML += '<div class="bookmark-icon" style="position: absolute; right: 10px; top: 10px; z-index: 10;" onclick="toggleBookmark(event, ' + item.post_idx + ')">' + 
+                                (item.bookmarked ? 
+                                    '<img src="/img/moew_on.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">' :
+                                    '<img src="/img/moew_off.png" id="bookmark_' + item.post_idx + '" alt="북마크" style="width: 24px; height: 24px;">') + 
+                            '</div>';
+                        }
+
+                        resultHTML += '<img src="' + item.logo + '" class="card-img-top" alt="회사로고" style="height: 150px;">' +
                                 '<div class="card-body">' +
                                     '<p class="card-company">' + item.name + '</p>' +
                                     '<h5 class="card-title">' + item.title + '</h5>' +
@@ -219,7 +228,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             '</div>' +
                         '</a>' +
                     '</div>';
-
                     });
                 } else {
                     resultHTML = '<p>검색 결과가 없습니다.</p>';
@@ -245,7 +253,7 @@ function toggleBookmark(event, post_idx) {
     event.preventDefault(); // 링크 기본 동작 방지
     event.stopPropagation(); // 이벤트 버블링 방지
 
-    var bookmarkIcon = document.getElementById('bookmark_' + post_idx);
+    var bookmarkIcon = event.target;
     var isBookmarked = bookmarkIcon.src.includes('moew_on.png'); // 북마크 상태 확인
 
     // AJAX 요청을 통해 서버에 북마크 상태 업데이트

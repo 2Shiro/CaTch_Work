@@ -343,7 +343,6 @@
       SELECT *
       FROM DUAL
    </insert>
-
 	
 	<!-- 평점 가져오기 -->
 	<select id="getMyRate">

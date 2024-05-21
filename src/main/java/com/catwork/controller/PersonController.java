@@ -820,36 +820,32 @@ public class PersonController {
 			mv.setViewName("login");
 			return mv;
 		}
-    @RequestMapping("/Person/AddBookmark")
-    public ResponseEntity<?> addBookmark(@RequestBody BookmarkVo bookmarkVo) {
-        // user_idx를 임시로 1로 설정합니다. 나중에 세션으로 변경
-        bookmarkVo.setUser_idx(1);
-        
-        // POST_IDX 값이 제대로 설정되었는지 로그로 확인
-        System.out.println("POST_IDX: " + bookmarkVo.getPost_idx());
+		
+	    @RequestMapping("/Person/AddBookmark")
+	    public ResponseEntity<?> addBookmark(@SessionAttribute("login") UserVo userVo, @RequestBody BookmarkVo bookmarkVo) {
 
-        boolean success = personMapper.addBookmark(bookmarkVo);
-        if (success) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
-        }
-    }
-    
-    @RequestMapping("/Person/RemoveBookmark")
-    public ResponseEntity<?> removeBookmark(@RequestBody BookmarkVo bookmarkVo) {
-    	// user_idx를 임시로 1로 설정합니다. 나중에 세션으로 변경
-    	bookmarkVo.setUser_idx(1);
-    	
-    	// POST_IDX 값이 제대로 설정되었는지 로그로 확인
-    	System.out.println("POST_IDX: " + bookmarkVo.getPost_idx());
-    	
-    	boolean success = personMapper.removeBookmark(bookmarkVo);
-    	if (success) {
-    		return ResponseEntity.ok().build();
-    	} else {
-    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
-    	}
-    }
+	    	int user_idx = userMapper.getUser_idx(userVo.getId());
+
+	    	boolean success = personMapper.addBookmark(user_idx, bookmarkVo.getPost_idx());
+	    	if (success) {
+	    		return ResponseEntity.ok().build();
+	    	} else {
+	    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
+	    	}
+	    }
+
+	    // Remove Bookmark
+	    @RequestMapping("/Person/RemoveBookmark")
+	    public ResponseEntity<?> removeBookmark(@SessionAttribute("login") UserVo userVo, @RequestBody BookmarkVo bookmarkVo) {
+	    	
+	    	int user_idx = userMapper.getUser_idx(userVo.getId());
+
+	        boolean success = personMapper.removeBookmark(user_idx, bookmarkVo.getPost_idx());
+	        if (success) {
+	            return ResponseEntity.ok().build();
+	        } else {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
+	        }
+	    }
 
 }
