@@ -91,11 +91,11 @@
 						</div>
 						<div class="my-1 mx-auto row">
 							<label for="skills" class="form-label">기술스택</label>
-							<div class="mt-3 mx-auto row" id="skills">
-										<input type="text" class="form-control" id="address" name="address"
-										readonly="readonly" value="${ vo.skill_names }">
-
-							</div>
+								<c:forEach var="skill" items="${skillList}">
+									<div class="col-auto">
+										<button type="button" class="btn btn-primary">${skill.name}</button>
+									</div>
+								</c:forEach>
 						</div>
 						<div class="my-1 mx-auto row">
 							<label for="self-intro" class="form-label">업무 소개</label>

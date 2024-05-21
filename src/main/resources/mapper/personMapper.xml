@@ -6,6 +6,7 @@
 	SELECT
 		U.ID,
 		U.PWD,
+		U.EMAIL,
 		U.TYPE, 
 		P.PER_IDX,
 		P.USER_IDX,

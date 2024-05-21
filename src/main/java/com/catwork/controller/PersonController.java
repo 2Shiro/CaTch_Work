@@ -411,13 +411,15 @@ public class PersonController {
 	}
 
 	@GetMapping("/MyPage/Resume/WriteForm")
-	public ModelAndView resumeWriteForm(@SessionAttribute("login") UserVo userVo,SkillVo skillVo) {
+	public ModelAndView resumeWriteForm(@SessionAttribute("login") UserVo userVo,SkillVo skillVo,PersonVo personVo) {
 		
 		List<SkillVo> skillList = resumeMapper.getSkillList(skillVo);
 		int user_idx = userMapper.getUser_idx(userVo.getId());
 		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		PersonVo pvo = personMapper.getPersonInfo(personVo,usertype.getId());
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("usertype",usertype);
+		mv.addObject("pvo",pvo);
 		mv.addObject("skillList",skillList);
 		mv.setViewName("/person/resume_WriteForm");
 		return mv;
@@ -425,7 +427,65 @@ public class PersonController {
 	}
 
 	@PostMapping("/MyPage/Resume/Write")
-	public ModelAndView resumeWrite(@SessionAttribute("login") UserVo userVo,ResumeVo resumeVo) {
+	public ModelAndView resumeWrite(@SessionAttribute("login") UserVo userVo,ResumeVo resumeVo,@RequestParam("file") MultipartFile file,
+			@Value("${file.upload-dir}") String uploadDir) {
+		
+		if (file != null && !file.isEmpty()) {
+			try {
+				// 파일 저장 경로 구성
+				String baseDir = System.getProperty("user.dir");
+				String imagesDirPath = baseDir + uploadDir; // application.properties에서 설정된 값을 사용
+
+				File directory = new File(imagesDirPath);
+				if (!directory.exists()) {
+					directory.mkdirs();
+				}
+				DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyyMMdd");
+				ZonedDateTime current = ZonedDateTime.now();
+				String namePattern = current.format(format);
+
+				// 파일의 원래 이름을 가져옵니다.
+				String originalFileName = file.getOriginalFilename();
+				// 파일 확장자를 추출합니다.
+				String extension = "";
+				if (originalFileName != null && originalFileName.contains(".")) {
+					extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+				}
+
+				// System.out.println(namePattern);
+				String fileName = namePattern + "_" + originalFileName; //??
+				//String fileName = originalFileName; //??
+				String filePath = Paths.get(imagesDirPath, fileName).toString();
+
+				// 파일 저장 //여기 문제 있음
+				Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+
+				// 데이터베이스에 저장할 파일 경로 설정
+				String relativePath = "/img/" + fileName;
+				resumeVo.setImage(relativePath);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+				// 에러 처리 로직
+			}
+		} else {
+			// 파일이 선택되지 않았거나 비어 있는 경우, 기본 이미지 경로를 사용
+			String relativePath = "/img/logo_default.jpg";
+			resumeVo.setImage(relativePath);
+		
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		System.out.println("===-----------------------======" + resumeVo);
 		
@@ -453,11 +513,15 @@ public class PersonController {
 	}
 
 	@GetMapping("/Resume/View")
-	public ModelAndView resumeView(ResumeVo resumeVo) {
-
+	public ModelAndView resumeView(ResumeVo resumeVo,Resume_SkillVo resumeSkillVo) {
+		
 		ResumeVo vo = resumeMapper.getView(resumeVo);
+		
+		List<Resume_SkillVo> skillList = resumeMapper.getSkillListById(resumeVo.getResume_idx());
+		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("vo", vo);
+		mv.addObject("skillList", skillList);
 		mv.setViewName("/person/resume_View");
 		return mv;
 	}
@@ -585,7 +649,7 @@ public class PersonController {
 
 
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("redirect:/MyPage");
+		mv.setViewName("redirect:/MyPage?nowpage=1");
 		return mv;
 
 	}
@@ -595,10 +659,21 @@ public class PersonController {
 
 		resumeMapper.resumeDelete(resumeVo);
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("redirect:/MyPage");
+		mv.setViewName("redirect:/MyPage?nowpage=1");
 		return mv;
 
 	}
+	
+	@GetMapping("/ResumeList/Delete")
+	public ModelAndView resumeListDelete(ResumeVo resumeVo) {
+
+		resumeMapper.resumeDelete(resumeVo);
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/Company/ResumeList?nowpage=1");
+		return mv;
+
+	}
+	
 	@GetMapping("/Resume/GetrecommendList")
 	public ModelAndView resumeRecommendList(RecommendPostVo recommendPostVo, ResumeVo resumeVo, @RequestParam(value = "nowpage") int nowpage) {
 	    ResumeVo vo = resumeMapper.getResumeDetailView(resumeVo);

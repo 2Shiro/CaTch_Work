@@ -19,7 +19,7 @@
 	<div class="container mt-5">
             <div id="personresume">
                 <div>&nbsp;</div>
-                <h2>구직자 이력서</h2>
+                <h2>구직자 이력서입니다</h2>
                 <div id="myresume" name="resume" class="linkDiv">
                 <div>&nbsp;</div>
                 <div>&nbsp;</div>
@@ -29,7 +29,7 @@
                             <tr>
                                 <th scope="col">번호</th>
                                 <th scope="col">이력서 제목</th>
-                                <th scope="col">이름</th>
+                                <th scope="col">작성일</th>
                                 <th scope="col">추천공고 보러가기</th>
                             </tr>
                         </thead>
@@ -61,6 +61,13 @@
 
  
  <script>
+ 
+ $(document).ready(function() {
+	    $('#goWrite').on('click', function() {
+			alert('dd')
+	        location.href = '/MyPage/Resume/WriteForm';
+	    });
+	});
 //해당 이력서의 추천공고 보러가기
 // 	const recommendListEls = document.getElementsByName('recommendList');
 	
@@ -124,7 +131,7 @@ $(document).ready(function() {
     }
 });
 	
- 
+
  </script>
 </body>
 </html>
