@@ -19,8 +19,29 @@
 <h2>CaTch 프로젝트</h2>
 
 </body>
+	<div>
+		<a href="/LoginForm">로그인</a>
+	</div>
+
+	<div>
+		<a href="/Company/ResumeList">이력서 리스트</a>
+	</div>
+	<div>
+		<a href="/Person/JoinForm">개인 회원가입</a>
+	</div>
+	<div>
+		<a href="/Company/JoinForm">기업 회원가입</a>
+	</div>
+	<div>
+		<a href="/Board?nowpage=1">Board</a>
+	</div>
 
 </html>
+
+
+
+
+
 
 
 
