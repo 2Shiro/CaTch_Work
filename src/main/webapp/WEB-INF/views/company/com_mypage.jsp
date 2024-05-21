@@ -6,7 +6,10 @@
 <meta charset="UTF-8">
 <title>마이페이지</title>
 <link rel="stylesheet" href="/css/common.css" />
+<link rel="stylesheet" href="/css/rating.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <style>
@@ -18,7 +21,7 @@
 	}
 	#profile {
 		width: 500px;
-		margin-right: 20px;
+		margin-left: 100px;
 	}
 	#info {
 		margin-left: 20px;
@@ -29,6 +32,9 @@
 	}
 	#info > div > input {
 		width: 350px;
+	}
+	#info {
+		margin-left: 70px;
 	}
 </style>
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
@@ -98,8 +104,7 @@
    <%@include file="/WEB-INF/include/com_mypage_nav.jsp" %>
 <!--    <div class="tab-content" id="ex1-content"> -->
    
-   
-   
+   <input type="hidden" name="id" value="${ sessionScope.login.id }">
    <div class="tab-content" id="myTabContent">
 		<div class="tab-pane fade show active" id="userinfo" role="tabpanel"
 			aria-labelledby="userinfo-tab">
@@ -138,33 +143,21 @@
 			    })
 			})
 		</script>
-		
-		<script>
-   		const pagingEls = document.querySelectorAll('#postListPage')
-   		
-   		const userinfotab = document.getElementById('userinfo-tab')
-   		const myreviewtab = document.getElementById('myreview-tab')
-   		
-   		const userinfo = document.getElementById('userinfo')
-   		const myreview = document.getElementById('myreview')
+
    
-		   pagingEls.forEach(pagingEl => {
-			    pagingEl.addEventListener('click', (e) => {
-			    	e.preventDefault()
-			    	
-						$("#userinfo-tab").removeClass("active");
-						$("#myreview-tab").addClass("active");
-						
-						$("#userinfo").removeClass("show active");
-						$("#myreview").addClass("show active");
-			    	
-			    	const href = e.target.href
-			    	//alert(href)
-			    	//document.load(href)
-			    	$('#mypostList').load(href)
-			    })
+
+   <script>
+  		//평점
+  		const icons = document.querySelectorAll('.star-icon')
+			const check = document.querySelector('#star').value
+			
+			window.addEventListener('load', () => {
+				for (let i = 0; i < check; i++) {
+			    	icons[i].classList.add('filled')
+			    }
 			})
-   	//$('#mypost').load()
    </script>
+   
+   
 </body>
 </html>

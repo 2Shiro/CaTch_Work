@@ -33,21 +33,23 @@
 									<h2 class="form-control mb-0" id="title" name="title"
 										style="flex-grow: 1;">${postvo.title}</h2>
 									<!-- Bookmark Icon -->
-									<div class="bookmark-icon ms-3"
-										onclick="toggleBookmark(event, ${postvo.post_idx})">
-										<c:choose>
-											<c:when test="${isBookmarked}">
-												<img src="/img/moew_on.png"
-													id="bookmark_${postvo.post_idx}" alt="북마크"
-													style="width: 50px; height: 50px;">
-											</c:when>
-											<c:otherwise>
-												<img src="/img/moew_off.png"
-													id="bookmark_${postvo.post_idx}" alt="북마크"
-													style="width: 50px; height: 50px;">
-											</c:otherwise>
-										</c:choose>
-									</div>
+									<c:if test="${usertype.type == 2}">
+										<div class="bookmark-icon ms-3"
+											onclick="toggleBookmark(event, ${postvo.post_idx})">
+											<c:choose>
+												<c:when test="${isBookmarked}">
+													<img src="/img/moew_on.png"
+														id="bookmark_${postvo.post_idx}" alt="북마크"
+														style="width: 50px; height: 50px;">
+												</c:when>
+												<c:otherwise>
+													<img src="/img/moew_off.png"
+														id="bookmark_${postvo.post_idx}" alt="북마크"
+														style="width: 50px; height: 50px;">
+												</c:otherwise>
+											</c:choose>
+										</div>
+									</c:if>
 								</div>
 							</div>
 							<hr>
@@ -152,41 +154,51 @@
 		</div>
 		<div class="my-3 d-flex justify-content-center">
 			<!-- 개인회원일때 -->
-			<%-- <c:if test="${sessionVo.type == 2}"> --%>
-			<c:if test="${!alreadyApplied}">
-				<form action="/Person/JoinPost" method="POST">
-					<input type="hidden" name="user_idx" value="${user_idx}" /> <input
-						type="hidden" name="post_idx" value="${postvo.post_idx}" /> <input
-						type="hidden" name="com_idx" value="${companyvo.com_idx}" />
-					<div class="input-group mb-3 resume">
-						<label class="input-group-text" for="inputGroupSelect01">이력서</label>
-						<select name="resume_idx" class="form-select" id="presumeSelect">
-							<option selected>==선택==</option>
-							<c:forEach var="resumevo" items="${resumevo}">
-								<option value="${resumevo.resume_idx}">${resumevo.title}</option>
-							</c:forEach>
-						</select>
-					</div>
-					<div class="my-3 d-flex justify-content-center">
-						<button type="submit" class="btn btn-primary mx-3">지원하기</button>
-						<div>
-							<a href="/" id="btn-list" class="btn btn-outline-secondary mx-3">메인으로</a>
+			<c:if test="${usertype.type == 2}">
+				<c:if test="${!alreadyApplied}">
+					<form action="/Person/JoinPost" method="POST">
+						<input type="hidden" name="user_idx" value="${user_idx}" /> <input
+							type="hidden" name="post_idx" value="${postvo.post_idx}" /> <input
+							type="hidden" name="com_idx" value="${companyvo.com_idx}" />
+						<div class="input-group mb-3 resume">
+							<label class="input-group-text" for="inputGroupSelect01">이력서</label>
+							<select name="resume_idx" class="form-select" id="presumeSelect">
+								<option selected>==선택==</option>
+								<c:forEach var="resumevo" items="${resumevo}">
+									<option value="${resumevo.resume_idx}">${resumevo.title}</option>
+								</c:forEach>
+							</select>
 						</div>
-					</div>
-				</form>
+						<div class="my-3 d-flex justify-content-center">
+							<button type="submit" class="btn btn-primary mx-3">지원하기</button>
+							<div>
+								<a href="/" id="btn-list" class="btn btn-outline-secondary mx-3">메인으로</a>
+							</div>
+						</div>
+					</form>
+				</c:if>
+				<c:if test="${alreadyApplied}">
+					<p>이미 이 공고에 지원하셨습니다.</p>
+				</c:if>
 			</c:if>
-			<c:if test="${alreadyApplied}">
-				<p>이미 이 공고에 지원하셨습니다.</p>
-			</c:if>
-			<%-- </c:if> --%>
 			<!-- 기업회원일때 -->
-			<%-- <c:if test="${sessionVo.type == 1}"> --%>
-			<div class="my-3 d-flex justify-content-center">
-				<a href="/Company/MyPost?user_id=${sessionVo.user_id}&nowpage=1"
-					class="btn btn-primary mx-3">등록 공고 관리</a> <a href="/" id="btn-list"
-					class="btn btn-outline-secondary mx-3">메인으로</a>
-			</div>
-			<%-- </c:if> --%>
+			<c:if test="${usertype.type == 1}">
+				<div class="my-3 d-flex justify-content-center">
+					<a href="/Company/MyPost?user_id=${sessionVo.user_id}&nowpage=1"
+						class="btn btn-primary mx-3">등록 공고 관리</a> <a href="/" id="btn-list"
+						class="btn btn-outline-secondary mx-3">메인으로</a>
+				</div>
+			</c:if>
+			<c:if test="${usertype.type == 0}">
+				<a href="/" id="btn-list"
+						class="btn btn-outline-secondary mx-3">삭제</a>
+				<a href="/" id="btn-list"
+						class="btn btn-outline-secondary mx-3">메인으로</a>
+			</c:if>
+			<c:if test="${usertype.type eq null}">
+				<a href="/" id="btn-list"
+						class="btn btn-outline-secondary mx-3">메인으로</a>
+			</c:if>
 			<!-- history back 사용? -->
 			<!-- 세션별로 다르게 -->
 		</div>
@@ -240,14 +252,7 @@ function toggleBookmark(event, post_idx) {
     event.preventDefault(); // 링크 기본 동작 방지
     event.stopPropagation(); // 이벤트 버블링 방지
 
-    var bookmarkIcon = document.getElementById('bookmark_' + post_idx);
-    
-    // bookmarkIcon이 null인지 확인
-    if (!bookmarkIcon) {
-        console.error('Bookmark icon element not found for post index: ' + post_idx);
-        return;
-    }
-
+    var bookmarkIcon = event.target;
     var isBookmarked = bookmarkIcon.src.includes('moew_on.png'); // 북마크 상태 확인
 
     // AJAX 요청을 통해 서버에 북마크 상태 업데이트

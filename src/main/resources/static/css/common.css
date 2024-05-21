@@ -72,6 +72,10 @@
 	  }  
   }
   
+  #loginimg, #logoutimg, #joinimg {
+  	height: 30px;
+  }
+  
  
   
   

@@ -2,6 +2,7 @@ package com.catwork.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -14,8 +15,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -39,6 +42,10 @@ import com.catwork.mapper.PersonMapper;
 import com.catwork.mapper.UserMapper;
 
 import io.micrometer.common.util.StringUtils;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @RequestMapping("/Company")
@@ -57,9 +64,44 @@ public class CompanyController {
 	//기업에서 개인의 이력서 중 공개된 이력서 리스트
 	@RequestMapping("/ResumeList")
 	public ModelAndView resumeList(@RequestParam(value = "nowpage") int nowpage
-			, @RequestParam(value = "searchword", defaultValue = "none") String searchword) {
+			, @RequestParam(value = "searchword", defaultValue = "none") String searchword,
+			@SessionAttribute("login") UserVo userVo) {	
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		//int user_idx = (Integer)session.getAttribute("user_idx");
+		//int user_idx = userVo.getUser_idx();
+		
+		//System.out.println("user_idx: " + user_idx);
+		
+		//회원 정보 가져오기(현재는 특정 회원 고정)
+		//CompanyVo cvo = companyMapper.getCompanyById(user_idx);
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
 		// session에서 id를 가져옴
 		//String id = comVo.getId();
+		
+		String originword = searchword;
+		
+		//검색어 공백 제거
+		searchword = searchword.replaceAll(" ", "");
+		
+		//검색어 치환 한국어
+		if(searchword.equals("자바")) {
+			searchword = "JAVA";
+		} else if (searchword.equals("스프링")) {
+			searchword = "SPRING";
+		} else if (searchword.equals("부트")) {
+			searchword = "BOOT";
+		} else if (searchword.equals("스프링부트")) {
+			searchword = "SPRING";
+		} else if (searchword.equals("레거시")) {
+			searchword = "LEGACY";
+		} else if (searchword.equals("디비") || searchword.equals("데이터베이스") || searchword.equals("데이터")) {
+			searchword = "DB";
+		} else if (searchword.equals("스크립트")) {
+			searchword = "SCRIPT";
+		} else if (searchword.equals("자바스크립트")) {
+			searchword = "JAVASCRIPT";
+		} 
 		
 		//정보를 담을 리스트
 		List<ResumeInfoVo> resumeListInfo = new ArrayList<ResumeInfoVo>();
@@ -69,7 +111,7 @@ public class CompanyController {
 		//이력서 목록 가져오기
 		List<ResumeVo> resumeList = companyMapper.getResumeList();
 		
-		System.out.println("searchword" + searchword);
+		//System.out.println("searchword" + searchword);
 		
 		//log.info("[==resumeList==] : ", resumeList);
 		//System.out.println("resumeList: " + resumeList);
@@ -149,12 +191,16 @@ public class CompanyController {
 		
 		System.out.println("list: " + response.getList());
 		
+		//검색어 원래 값으로 돌리기
+		searchword = originword;
+		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("resumeList", resumeList);
 		mv.addObject("response", response);
 		mv.addObject("pagingVo", pagingVo);
 		mv.addObject("searchword", searchword);
 		mv.addObject("nowpage", nowpage);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("company/resumeList");
 		
 		return mv;
@@ -162,7 +208,18 @@ public class CompanyController {
 	
 	//이력서 목록에서 이력서 상세 보기
 	@RequestMapping("/ResumeDetail")
-	public ModelAndView resumeDetail(ResumeVo resume) {
+	public ModelAndView resumeDetail(ResumeVo resume, 
+			@SessionAttribute("login") UserVo userVo) {	
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		//int user_idx = (Integer)session.getAttribute("user_idx");
+		//int user_idx = userVo.getUser_idx();
+		
+		//System.out.println("user_idx: " + user_idx);
+		
+		//회원 정보 가져오기(현재는 특정 회원 고정)
+		//CompanyVo cvo = companyMapper.getCompanyById(user_idx);
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
 		//이력서 내용 가져오기
 		ResumeVo vo = personMapper.getResume(resume.getResume_idx());
 		
@@ -184,6 +241,7 @@ public class CompanyController {
 		mv.addObject("vo", vo);
 		mv.addObject("info", info);
 		mv.addObject("skill", skill);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("/company/resume_detail");
 		
 		return mv;
@@ -191,17 +249,34 @@ public class CompanyController {
 	
 	//기업의 마이페이지
 	@RequestMapping("/MyPage")
-	public ModelAndView myPage(@RequestParam(value = "nowpage") int nowpage) {
-		//회원 정보
+	public ModelAndView myPage(@RequestParam(value = "nowpage") int nowpage, 
+			@SessionAttribute("login") UserVo userVo) {	
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		//int user_idx = (Integer)session.getAttribute("user_idx");
+		//int user_idx = userVo.getUser_idx();
+		
+		//System.out.println("user_idx: " + user_idx);
+		
 		//회원 정보 가져오기(현재는 특정 회원 고정)
-		CompanyVo cvo = companyMapper.getCompanyById(9);
-		UserVo vo = userMapper.getUserInfoById(9);
+		//CompanyVo cvo = companyMapper.getCompanyById(user_idx);
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		//회원 정보 세션 가져오기
+		
+		//System.out.println("user_idx: " + user_idx);
+		
+		//회원 정보 가져오기(현재는 특정 회원 고정)
+		CompanyVo cvo = companyMapper.getCompanyById(user_idx);
+		UserVo vo = userMapper.getUserInfoById(user_idx);
+		
+		//평점 가져오기
+		int rate = companyMapper.getMyRate(user_idx);
 		
 		//특정 기업 공고 리스트 가져오기
-		List<PostVo> postList = companyMapper.getMyPost(9);
+		List<PostVo> postList = companyMapper.getMyPost(user_idx);
 		
 		//공고 리스트 페이징
-		int count = companyMapper.countPostList(postList);
+		int count = postList.size();
 		//int count = resumeListInfo.size();
 		PagingResponse<PostVo> response = null;
 		if (count < 1) {
@@ -220,7 +295,7 @@ public class CompanyController {
 		int offset = pagingVo.getOffset();
 		int pageSize = pagingVo.getPageSize();
 
-		List<PostVo> pagingList = companyMapper.getPostListPaging(offset, pageSize);
+		List<PostVo> pagingList = companyMapper.getPostListPaging(offset, pageSize, user_idx);
 		response = new PagingResponse<>(pagingList, pagination);
 		
 		//새공고 쓰기에서 스킬 테이블 가져오기
@@ -229,11 +304,13 @@ public class CompanyController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("vo", vo);
 		mv.addObject("cvo", cvo);
+		mv.addObject("rate", rate);
 		//mv.addObject("postList", postList);
 		mv.addObject("skill", skill);
 		mv.addObject("response", response);
 		mv.addObject("pagingVo", pagingVo);
 		mv.addObject("nowpage", nowpage);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("company/com_mypage");
 		
 		return mv;
@@ -241,17 +318,30 @@ public class CompanyController {
 	
 	//공고 리스트만
 	@RequestMapping("/MyPostList")
-	public ModelAndView myPostList(@RequestParam(value = "nowpage") int nowpage) {
-		//회원 정보
+	public ModelAndView myPostList(@RequestParam(value = "nowpage") int nowpage, 
+			@SessionAttribute("login") UserVo userVo) {	
+		/*
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		
+		System.out.println("user_idx: " + user_idx);
+		
 		//회원 정보 가져오기(현재는 특정 회원 고정)
-		CompanyVo cvo = companyMapper.getCompanyById(9);
-		UserVo vo = userMapper.getUserInfoById(9);
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+				
+		//회원 정보 가져오기
+		CompanyVo cvo = companyMapper.getCompanyById(user_idx);
+		UserVo vo = userMapper.getUserInfoById(user_idx);
 		
 		//특정 기업 공고 리스트 가져오기
-		List<PostVo> postList = companyMapper.getMyPost(9);
+		List<PostVo> postList = companyMapper.getMyPost(user_idx);
+		
+		//System.out.println("postList: " + postList);
 		
 		//공고 리스트 페이징
-		int count = companyMapper.countPostList(postList);
+		int count = postList.size();
+		System.out.println("count: " + count);
+		
 		//int count = resumeListInfo.size();
 		PagingResponse<PostVo> response = null;
 		if (count < 1) {
@@ -260,8 +350,8 @@ public class CompanyController {
 		// 페이징을 위한 초기 설정값
 		PagingVo pagingVo = new PagingVo();
 		pagingVo.setPage(nowpage);
-		pagingVo.setPageSize(7);
-		pagingVo.setRecordSize(7);
+		pagingVo.setPageSize(3);
+		pagingVo.setRecordSize(3);
 
 		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
 		Pagination pagination = new Pagination(count, pagingVo);
@@ -270,13 +360,13 @@ public class CompanyController {
 		int offset = pagingVo.getOffset();
 		int pageSize = pagingVo.getPageSize();
 
-		List<PostVo> pagingList = companyMapper.getPostListPaging(offset, pageSize);
+		List<PostVo> pagingList = companyMapper.getPostListPaging(offset, pageSize, user_idx);
 		response = new PagingResponse<>(pagingList, pagination);
 		
 		//새공고 쓰기에서 스킬 테이블 가져오기
 		List<SkillVo> skill = companyMapper.getSkills();
 		
-		//System.out.println("list" + response.getList());
+		System.out.println("mtpostlist" + response.getList());
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("vo", vo);
@@ -286,23 +376,91 @@ public class CompanyController {
 		mv.addObject("response", response);
 		mv.addObject("pagingVo", pagingVo);
 		mv.addObject("nowpage", nowpage);
-		mv.setViewName("company/my/mypostlist");
+		mv.addObject("usertype", usertype);
+		*/
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		//int user_idx = (Integer)session.getAttribute("user_idx");
+		//int user_idx = userVo.getUser_idx();
+		
+		//System.out.println("user_idx: " + user_idx);
+		
+		//회원 정보 가져오기(현재는 특정 회원 고정)
+		//CompanyVo cvo = companyMapper.getCompanyById(user_idx);
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		//회원 정보 세션 가져오기
+		
+		//System.out.println("user_idx: " + user_idx);
+		
+		//회원 정보 가져오기(현재는 특정 회원 고정)
+		CompanyVo cvo = companyMapper.getCompanyById(user_idx);
+		UserVo vo = userMapper.getUserInfoById(user_idx);
+		
+		//평점 가져오기
+		int rate = companyMapper.getMyRate(user_idx);
+		
+		//특정 기업 공고 리스트 가져오기
+		List<PostVo> postList = companyMapper.getMyPost(user_idx);
+		
+		//공고 리스트 페이징
+		int count = postList.size();
+		//int count = resumeListInfo.size();
+		PagingResponse<PostVo> response = null;
+		if (count < 1) {
+			response = new PagingResponse<>(Collections.emptyList(), null);
+		}
+		// 페이징을 위한 초기 설정값
+		PagingVo pagingVo = new PagingVo();
+		pagingVo.setPage(nowpage);
+		pagingVo.setPageSize(3);
+		pagingVo.setRecordSize(3);
+
+		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
+		Pagination pagination = new Pagination(count, pagingVo);
+		pagingVo.setPagination(pagination);
+
+		int offset = pagingVo.getOffset();
+		int pageSize = pagingVo.getPageSize();
+
+		List<PostVo> pagingList = companyMapper.getPostListPaging(offset, pageSize, user_idx);
+		response = new PagingResponse<>(pagingList, pagination);
+		
+		//새공고 쓰기에서 스킬 테이블 가져오기
+		//List<SkillVo> skill = companyMapper.getSkills();
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("vo", vo);
+		mv.addObject("cvo", cvo);
+		mv.addObject("rate", rate);
+		//mv.addObject("postList", postList);
+		//mv.addObject("skill", skill);
+		mv.addObject("response", response);
+		mv.addObject("pagingVo", pagingVo);
+		mv.addObject("nowpage", nowpage);
+		mv.addObject("usertype", usertype);
+				
+		
+		mv.setViewName("/company/my/mypostlist");
 		
 		return mv;
 	}
 	
 	//공고 등록하기
 	@RequestMapping("/MyPostWrite")
-	public ModelAndView writeMyPost(@RequestParam("skillIdx") List<Integer> skillIdxList, PostVo postVo) {
-		//@SessionAttribute("login") CompanyVo comVo
+	public ModelAndView writeMyPost(@RequestParam("skillIdx") List<Integer> skillIdxList, PostVo postVo, 
+									@SessionAttribute("login") UserVo userVo) {
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
 		
 		ModelAndView mv = new ModelAndView();
 		//String id = comVo.getId();
-		String id = "com1";
 		
 		// 기술자격 데이터를 넣기 위해 미리 post_idx를 확정함
 		int post_idx = companyMapper.selectpostidxmax();
 		postVo.setPost_idx(post_idx);
+		postVo.setUser_idx(user_idx);
 
 		// 공고 등록 모달에서 입력한 데이터를 데이터베이스 insert
 		companyMapper.insertpost(postVo);
@@ -315,6 +473,7 @@ public class CompanyController {
 			companyMapper.insertskills(skillVo);
 		}
 		
+		mv.addObject("usertype", usertype);
 		mv.setViewName("redirect:/Company/MyPage?nowpage=1");
 		//mv.setViewName("redirect:/Company/MyPost?id=" + id + "&nowpage=1");
 		return mv;
@@ -333,7 +492,11 @@ public class CompanyController {
 	//공고 상세 보기
 	//지원 현황 및 추천
 	@RequestMapping("/PostDetail")
-	public ModelAndView postDetail(PostVo postidx) {
+	public ModelAndView postDetail(PostVo postidx, @SessionAttribute("login") UserVo userVo) {
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
 		//특정 공고 정보 담기
 		PostVo post = companyMapper.getPostDetail(postidx.getPost_idx());
 		
@@ -380,6 +543,9 @@ public class CompanyController {
 												  person.getName(),
 												  state));
 		}
+		
+		//지원 현황 페이징
+		
 		
 		
 		//추천 이력서 리스트 가져오기
@@ -457,13 +623,19 @@ public class CompanyController {
 		mv.addObject("post_idx", postidx);
 		mv.addObject("participateList", participateList);
 		mv.addObject("resumeListInfo", resumeListInfo);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("company/post_detail");
 		
 		return mv;
 	}
 	
 	@RequestMapping("/ParticipateDetail")
-	public ModelAndView participateDetail(ApplyVo apply) {
+	public ModelAndView participateDetail(ApplyVo apply, @SessionAttribute("login") UserVo userVo) {
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		
 		ModelAndView mv = new ModelAndView();
 		//apply_idx로 지원현황 가져오기
 		ApplyVo applydetail = companyMapper.getApply(apply.getApply_idx());
@@ -501,13 +673,19 @@ public class CompanyController {
 		mv.addObject("skill", skill);
 		mv.addObject("apply", apply);
 		mv.addObject("applydetail", applydetail);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("/company/apply_detail");
 		
 		return mv;
 	}
 	
 	@RequestMapping("/PostUpdateForm")
-	public ModelAndView postUpdateForm(PostVo post_idx) {
+	public ModelAndView postUpdateForm(PostVo post_idx, @SessionAttribute("login") UserVo userVo) {
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		
 		//post 정보 가져오기
 		PostVo post = companyMapper.getPostDetail(post_idx.getPost_idx());
 		
@@ -524,13 +702,20 @@ public class CompanyController {
 		mv.addObject("post", post);
 		mv.addObject("skill", skill);
 		mv.addObject("postSkills", postSkills);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("company/postupdateform");
 		
 		return mv;
 	}
 	
 	@RequestMapping("/PostUpdate")
-	public ModelAndView postUpdate(@RequestParam("skillIdx") List<Integer> skillIdxList, PostVo post) {
+	public ModelAndView postUpdate(@RequestParam("skillIdx") List<Integer> skillIdxList, PostVo post,
+			@SessionAttribute("login") UserVo userVo) {
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		
 		//String id = comVo.getId();
 		// 해당 공고의 post_idx를 확정
 		int post_idx = post.getPost_idx();
@@ -559,6 +744,7 @@ public class CompanyController {
 		//System.out.println("post4: " + post);
 		
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("usertype", usertype);
 		mv.setViewName("redirect:/Company/PostDetail?post_idx=" + post.getPost_idx());
 		
 		return mv;
@@ -566,13 +752,20 @@ public class CompanyController {
 	
 	//회원 정보 수정
 	@RequestMapping("/InfoUpdateForm")
-	public ModelAndView infoUpdateform(UserVo infoUser, CompanyVo infoCompany) {
+	public ModelAndView infoUpdateform(UserVo infoUser, CompanyVo infoCompany,
+			@SessionAttribute("login") UserVo userVo) {
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		
 		UserVo user = userMapper.getUserInfoById(infoUser.getUser_idx());
 		CompanyVo company = companyMapper.getCompanyById(user.getUser_idx());
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("user", user);
 		mv.addObject("company", company);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("/company/infoupdateform");
 		
 		return mv;
@@ -582,7 +775,13 @@ public class CompanyController {
 									@RequestParam("address2") String address2, //상세 주소
 									@RequestParam("tbpwd") String tbpwd, //기존 비밀 번호
 									@RequestParam("file") MultipartFile file, 
-									@Value("${file.upload-dir}") String uploadDir) { 
+									@Value("${file.upload-dir}") String uploadDir,
+									@SessionAttribute("login") UserVo loginuserVo) {
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(loginuserVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		
 		ModelAndView mv = new ModelAndView();
 		
 		if (file != null && !file.isEmpty()) {
@@ -663,6 +862,7 @@ public class CompanyController {
 		    userMapper.updatePassword(userVo);
 		}
   
+		mv.addObject("usertype", usertype);
 		mv.setViewName("redirect:/Company/MyPage?nowpage=1");
 		return mv;
 	      
@@ -670,7 +870,13 @@ public class CompanyController {
 	
 	//특정 공고의 추천 이력서에서 이력서 보기
 	@RequestMapping("/PersonResume")
-	public ModelAndView personResume(ResumeVo resume) {
+	public ModelAndView personResume(ResumeVo resume, 
+			@SessionAttribute("login") UserVo userVo) {
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		
 		//이력서 내용 가져오기
 		ResumeVo vo = personMapper.getResume(resume.getResume_idx());
 		
@@ -696,8 +902,67 @@ public class CompanyController {
 		mv.addObject("info", info);
 		mv.addObject("user", user);
 		mv.addObject("skill", skill);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("/company/resume_detail");
 		
 		return mv;
 	}
+	
+	// 기업회원 로그인
+		@PostMapping("/Login")
+		public String companyLogin(HttpServletRequest request, UserVo userVo,
+		                           HttpServletResponse response) throws IOException, ServletException {
+			
+		      
+		String id = request.getParameter("id");
+		String pwd = request.getParameter("pwd");
+		
+	    userVo = userMapper.login1(id,pwd);
+	    
+	    
+		 if(userVo != null) {//아이디와 암호 일치시 수행
+			 HttpSession session = request.getSession();
+			 session.setMaxInactiveInterval(60*60); //60분동안 로그인 유지
+			 session.setAttribute("login", userVo); //사용자 정보 세션에 저장
+			 session.setAttribute("isLoggedIn", true);
+			 return "redirect:/";           
+		 }
+		 else {//로그인 실패시
+			  PrintWriter out = response.getWriter();
+			  response.setCharacterEncoding("UTF-8");
+			  response.setContentType("text/html; charset=UTF-8;");
+		      out.println("<script> alert('Please Check Your ID and Password');");
+		      out.println("history.go(-1); </script>"); 
+		      out.close();             
+		      return "redirect:/LoginForm";
+		      }
+		   }
+		
+		// 기업회원가입 폼
+		@RequestMapping("/JoinForm")
+		public String ComJoin() {
+			return "comjoin";
+		}
+		
+		// 기업회원가입
+		@RequestMapping("/Join")
+		public ModelAndView ComJoin(CompanyVo comVo, HttpServletRequest request) {
+			
+			StringBuilder add = new StringBuilder();
+			
+			String add1 = request.getParameter("address1");
+			String add2 = request.getParameter("address2");
+			
+			String address = add.append(add1).append(",").append(add2).toString();
+			
+			comVo.setAddress(address);
+			
+			// System.out.println("comVo" + companyVo);
+			
+			ModelAndView mv = new ModelAndView();
+			companyMapper.insert(comVo);
+			
+			mv.setViewName("login");
+			return mv;
+		}
 }

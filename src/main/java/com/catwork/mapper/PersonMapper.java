@@ -46,10 +46,18 @@ public interface PersonMapper {
 
 	PersonVo getPwd(PersonVo personVo);
 
+	int countApplyList(List<PersonApplyVo> applyList);
+
+	int countBookmarkList(List<PersonBookmarkVo> bookmarkList);
+
+	void insert(PersonVo perVo);
+
+	int getUser_idx(String id);
+
 	// 북마크 등록
-	boolean addBookmark(BookmarkVo bookmarkVo);
+	boolean addBookmark(int user_idx, int post_idx);
 	// 북마크 삭제
-	boolean removeBookmark(BookmarkVo bookmarkVo);
+	boolean removeBookmark(int user_idx, int post_idx);
 	// 북마크 여부
 	List<Integer> getBookmarked(int user_idx);
 

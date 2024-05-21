@@ -38,9 +38,9 @@
              </tr>
            </thead>
            <tbody class="table-group-divider">
-              <c:forEach var="po" items="${postList}">
+              <c:forEach var="po" items="${response.list}" varStatus="status">
                 <tr>
-                  <th scope="row">${po.row_num}</th>
+                  <th scope="row">${status.count}</th>
                   <td><a href="/Company/1/PersonResume">${po.title}</a></td>
                   <td>${po.created}</td>
                   <td>${po.skill_names}</td>
@@ -50,7 +50,9 @@
          </table>
 			
 	</div>
-	
+		   <div class="d-flex justify-content-center paging-bottom-container">
+	         <%@include file="/WEB-INF/pagination/personRecommendPaging.jsp" %>
+	         </div>
 	</div>
 	</div>
 

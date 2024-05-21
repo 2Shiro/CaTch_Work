@@ -18,7 +18,7 @@
 
 	<!-- idx로 회원 정보 가져오기, 현재는 컴퍼니 고정 -->
 	<select id="getUserInfoById">
-		SELECT USER_IDX, ID, PWD, EMAIL, TYPE FROM USER_TB WHERE USER_IDX = #{user_idx} AND TYPE = 1
+		SELECT USER_IDX, ID, PWD, EMAIL, TYPE FROM USER_TB WHERE USER_IDX = #{user_idx}
 	</select>
 
 	<!-- 회원 정보 수정 -->
@@ -38,4 +38,34 @@
 	<delete id="deleteUser">
 		DELETE USER_TB WHERE USER_IDX = #{user_idx}
 	</delete>
+	
+	<!-- 기업회원 로그인 -->
+	<select id="login1">
+		SELECT id,pwd
+		FROM user_tb
+		WHERE id=#{arg0} AND pwd=#{arg1} 
+			  And (type=1 OR type=0) 
+	</select>
+	
+	<!-- 개인회원 로그인 -->
+	<select id="login2">
+		SELECT id,pwd
+		FROM user_tb
+		WHERE id=#{arg0} AND pwd=#{arg1} 
+			  And (type=2 OR type=0)
+	</select>
+	
+	<!-- 아이디 중복체크 -->
+	<select id="checkId" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM   USER_TB
+		WHERE  ID = #{arg0}
+	</select>
+	
+	<!-- 댓글용 user_idx 가져오기 -->
+	<select id="getUser_idx">
+		SELECT USER_IDX
+		FROM USER_TB
+		WHERE ID = #{id} 
+	</select>
 </mapper>

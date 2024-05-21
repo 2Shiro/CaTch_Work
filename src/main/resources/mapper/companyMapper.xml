@@ -129,6 +129,7 @@
 	<select id="getMyPost">
 		SELECT POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, TO_CHAR(DEADLINE, 'YYYY-MM-DD') DEADLINE, INTRO, EXPLAIN, MANAGER, MPHONE, 
 		TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, JOBTYPE, DEPARTMENT FROM POST_TB
+		WHERE USER_IDX = #{arg0}
 	</select>
 	
 	<!-- 페이징 특정 공고 리스트 -->
@@ -143,6 +144,7 @@
 		    JOBTYPE, DEPARTMENT
 		FROM 
 		    POST_TB
+		WHERE USER_IDX = #{arg2}
 		ORDER BY
 		    DEADLINE
 		OFFSET #{arg0} ROWS FETCH NEXT #{arg1}
@@ -167,7 +169,7 @@
 		(POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, DEADLINE, 
 		 INTRO, EXPLAIN, MANAGER, MPHONE, JOBTYPE, DEPARTMENT)
 		VALUES
-		((SELECT NVL(MAX(POST_IDX),0) + 1 FROM POST_TB), 9,
+		((SELECT NVL(MAX(POST_IDX),0) + 1 FROM POST_TB), ${user_idx},
 		#{title}, #{career}, #{gowork}, #{gohome}, #{salary},
 		#{deadline}, #{intro}, #{explain},
 		#{manager}, #{mphone}, #{jobtype}, #{department})
@@ -247,7 +249,7 @@
 		    r.RESUME_IDX,
 		    R.TITLE,
 		    P.NAME
-		HAVING UPPER(LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX)) LIKE '%' || UPPER(#{arg2}) || '%'
+		HAVING REPLACE(UPPER(LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX)), ' ', '') LIKE '%' || REPLACE(UPPER(#{arg2}), ' ', '') || '%'
 		ORDER BY
 		    r.RESUME_IDX
 		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
@@ -325,5 +327,25 @@
 	<!-- 디비에서 주소 가져오기 -->
 	<select id="getAddress">
 		SELECT ADDRESS FROM COMPANY_TB WHERE USER_IDX = #{user_idx}
+	</select>
+	
+   <!-- 기업회원 가입 -->
+   <insert id="insert">      
+      INSERT ALL
+      INTO user_tb (user_idx,id, pwd ,email,type)
+      VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},1)      
+      INTO company_tb (com_idx,user_idx,type,name,logo,cnum,representative,zip_code,address,ctype,bdate,created)
+      VALUES
+      ((SELECT MAX(NVL(com_idx,0)+1) FROM company_tb),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
+         1,#{name}, '/', #{cnum}, #{representative},#{zip_code},#{address},#{ctype},#{bdate},sysdate)
+      SELECT *
+      FROM DUAL
+   </insert>
+	
+	<!-- 평점 가져오기 -->
+	<select id="getMyRate">
+		SELECT CAST(COALESCE(AVG(RATING), 0) AS INT) AS AVERAGE_RATING
+		FROM RATE_TB 
+		WHERE COM_IDX = #{arg0}
 	</select>
 </mapper>

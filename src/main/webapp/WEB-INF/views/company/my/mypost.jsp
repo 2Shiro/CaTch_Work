@@ -29,16 +29,19 @@
                </c:forEach>
              </tbody>
            </table>
+       
         </div>
-        </div>
+        
 
 		      <div class="d-flex justify-content-center paging-bottom-container">
 			      <%@include file="/WEB-INF/pagination/postListPaging.jsp" %>
 			    </div>
+			     </div>
 		      <div id="buttongroup" class="d-flex justify-content-md-end container">
 		      	<button type="button" class="btn btn-primary d-flex flex-row-reverse" id="newpostbtn" data-bs-toggle="modal" data-bs-target="#newpost">새공고 등록</button>
 		      	<%@include file="/WEB-INF/views/company/my/newpostmodal.jsp" %>
 		      </div>
-      </div>
+			    </div>
+        </div>
      
 

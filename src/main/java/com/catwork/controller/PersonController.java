@@ -2,6 +2,7 @@ package com.catwork.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,6 +45,11 @@ import com.catwork.mapper.PersonMapper;
 import com.catwork.mapper.ResumeMapper;
 import com.catwork.mapper.UserMapper;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class PersonController {
 
@@ -55,7 +63,13 @@ public class PersonController {
 	private ResumeMapper resumeMapper;
 
 	@GetMapping("/MyPage")
-	public ModelAndView personMypage(UserVo userVo, PersonVo personVo, ResumeVo resumeVo, PersonApplyVo personApplyVo, PersonBookmarkVo personbookmarkVo,@RequestParam(value = "nowpage") int nowpage) {
+	public ModelAndView personMypage(UserVo userVo, PersonVo personVo, ResumeVo resumeVo, PersonApplyVo personApplyVo, PersonBookmarkVo personbookmarkVo,
+			@RequestParam(value = "nowpage") int nowpage
+			,@RequestParam(value = "personNowpage", defaultValue = "1") int personNowpage,
+            @RequestParam(value = "resumeNowpage", defaultValue = "1") int resumeNowpage,
+            @RequestParam(value = "applyNowpage", defaultValue = "1") int applyNowpage,
+            @RequestParam(value = "bookmarkNowpage", defaultValue = "1") int bookmarkNowpage)
+	{
 		
 		PersonVo pvo = personMapper.getPersonInfo(personVo,userVo);
 		
@@ -63,42 +77,96 @@ public class PersonController {
 
 		List<ResumeVo> resumeList = personMapper.getResumeList(resumeVo);
 		
-		
-		//공고 리스트 페이징
+		List<PersonApplyVo> applyList = personMapper.getApplyList(personApplyVo);
+
+		List<PersonBookmarkVo> bookmarkList = personMapper.getBookmarkList(personbookmarkVo);
+		//이력서 리스트 페이징
 				int count = resumeMapper.countResumeList(resumeList);
-				//int count1 = resumeMapper.countRecommensPostList(resumeList);
-				//int count = resumeMapper.countResumeList(resumeList);
-				
-				//int count = resumeListInfo.size();
+				int count1 = resumeMapper.countApplyList(applyList);
+				int count2 = resumeMapper.countBookmarkList(bookmarkList);
 				PagingResponse<ResumeVo> response = null;
+				
+				PagingResponse<PersonApplyVo> response1 = null;
+				
+				PagingResponse<PersonBookmarkVo> response2 = null;
+				PagingResponse<ResumeVo> response3 = null;
 				if (count < 1) {
+					response = new PagingResponse<>(Collections.emptyList(), null);
+				}
+				if (count1 < 1) {
+					response = new PagingResponse<>(Collections.emptyList(), null);
+				}
+				if (count2 < 1) {
 					response = new PagingResponse<>(Collections.emptyList(), null);
 				}
 				// 페이징을 위한 초기 설정값
 				PagingVo pagingVo = new PagingVo();
-				pagingVo.setPage(nowpage);
+				pagingVo.setPage(resumeNowpage);
+				//pagingVo.setPage(personNowpage);
+				//pagingVo.setPage(nowpage);
 				pagingVo.setPageSize(3);
 				pagingVo.setRecordSize(3);
 
+				PagingVo pagingVo1 = new PagingVo();
+				//pagingVo1.setPage(nowpage);
+				pagingVo1.setPage(applyNowpage);
+				pagingVo1.setPageSize(2);
+				pagingVo1.setRecordSize(2);
+				
+				PagingVo pagingVo2 = new PagingVo();
+				//pagingVo2.setPage(nowpage);
+				pagingVo2.setPage(bookmarkNowpage);
+				pagingVo2.setPageSize(2);
+				pagingVo2.setRecordSize(2);
+				
+				PagingVo pagingVo3 = new PagingVo();
+				//pagingVo2.setPage(nowpage);
+				pagingVo3.setPage(nowpage);
+				pagingVo3.setPageSize(2);
+				pagingVo3.setRecordSize(2);
+				
 				// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
 				Pagination pagination = new Pagination(count, pagingVo);
 				pagingVo.setPagination(pagination);
+				
+				Pagination pagination1 = new Pagination(count1, pagingVo1);
+				pagingVo1.setPagination(pagination1);
+				
+				Pagination pagination2 = new Pagination(count2, pagingVo2);
+				pagingVo2.setPagination(pagination2);
+				
+
 
 				int offset = pagingVo.getOffset();
 				System.out.println(offset);
 				int pageSize = pagingVo.getPageSize();
 				System.out.println(pageSize);
 				
+				int offset1 = pagingVo1.getOffset();
+				System.out.println(offset1);
+				int pageSize1 = pagingVo1.getPageSize();
+				System.out.println(pageSize1);
+				
+				int offset2 = pagingVo2.getOffset();
+				System.out.println(offset2);
+				int pageSize2 = pagingVo2.getPageSize();
+				System.out.println(pageSize2);
+				
 				
 				
 				List<ResumeVo> pagingList = resumeMapper.getResumeListPaging(offset, pageSize);
-				response = new PagingResponse<>(pagingList, pagination);
+				//response = new PagingResponse<>(pagingList, pagination);
+				 response = new PagingResponse<>(pagingList, pagination);
+				
+				List<PersonApplyVo> pagingList1 = resumeMapper.getApplyListPaging(offset1, pageSize1);
+				response1 = new PagingResponse<>(pagingList1, pagination1);
+				
+				List<PersonBookmarkVo> pagingList2 = resumeMapper.getBookmarkListPaging(offset2, pageSize2);
+				response2 = new PagingResponse<>(pagingList2, pagination2);
 				
 		
 
-		List<PersonApplyVo> applyList = personMapper.getApplyList(personApplyVo);
 
-		List<PersonBookmarkVo> bookmarkList = personMapper.getBookmarkList(personbookmarkVo);
 
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("pvo",pvo);
@@ -107,12 +175,225 @@ public class PersonController {
 		mv.addObject("applyList",applyList);
 		mv.addObject("response", response);
 		mv.addObject("pagingVo", pagingVo);
+		mv.addObject("response1", response1);
+		mv.addObject("pagingVo1", pagingVo1);
+		mv.addObject("response2", response2);
+		mv.addObject("pagingVo2", pagingVo2);
 		mv.addObject("nowpage", nowpage);
+		mv.addObject("personNowpage", personNowpage);
+		mv.addObject("applyNowpage", applyNowpage);
+		mv.addObject("bookmarkNowpage", bookmarkNowpage);
 
 		mv.setViewName("/person/myPage");
 
 		return mv;
 	}
+
+	@GetMapping("/Person/Mypage/Resume")
+	public ModelAndView getPersonMyPageResume(@RequestParam(value = "resumeNowpage") int resumeNowpage, ResumeVo resumeVo, PersonVo personVo,UserVo userVo) {
+		PersonVo pvo = personMapper.getPersonInfo(personVo,userVo);
+		
+
+
+		List<ResumeVo> resumeList = personMapper.getResumeList(resumeVo);
+		PagingResponse<ResumeVo> response = null;
+		
+		int count = resumeMapper.countResumeList(resumeList);
+		
+		if (count < 1) {
+			response = new PagingResponse<>(Collections.emptyList(), null);
+		}
+		PagingVo pagingVo = new PagingVo();
+		pagingVo.setPage(resumeNowpage);
+		//pagingVo.setPage(personNowpage);
+		//pagingVo.setPage(nowpage);
+		pagingVo.setPageSize(3);
+		pagingVo.setRecordSize(3);
+		
+		Pagination pagination = new Pagination(count, pagingVo);
+		pagingVo.setPagination(pagination);
+		
+		int offset = pagingVo.getOffset();
+		System.out.println(offset);
+		int pageSize = pagingVo.getPageSize();
+		System.out.println(pageSize);
+		
+		List<ResumeVo> pagingList = resumeMapper.getResumeListPaging(offset, pageSize);
+		//response = new PagingResponse<>(pagingList, pagination);
+		 response = new PagingResponse<>(pagingList, pagination);
+			ModelAndView mv = new ModelAndView();
+			mv.addObject("pvo",pvo);
+			mv.addObject("resumeList",resumeList);
+			mv.addObject("response", response);
+			mv.addObject("pagingVo", pagingVo);
+			mv.addObject("resumeNowpage", resumeNowpage);
+			mv.setViewName("/person/mypageresumelist");
+			
+		return mv;	
+	}
+	
+	@GetMapping("/Person/Mypage/Apply")
+	public ModelAndView getPersonMyPageApply(@RequestParam(value = "applyNowpage") int applyNowpage, PersonApplyVo personApplyVo, PersonVo personVo,UserVo userVo) {
+		PersonVo pvo = personMapper.getPersonInfo(personVo,userVo);
+		
+		
+		
+		List<PersonApplyVo> applyList = personMapper.getApplyList(personApplyVo);
+		int count1 = resumeMapper.countApplyList(applyList);
+		PagingResponse<PersonApplyVo> response1 = null;
+
+				if (count1 < 1) {
+					response1 = new PagingResponse<>(Collections.emptyList(), null);
+				}
+
+				PagingVo pagingVo1 = new PagingVo();
+				//pagingVo1.setPage(nowpage);
+				pagingVo1.setPage(applyNowpage);
+				pagingVo1.setPageSize(2);
+				pagingVo1.setRecordSize(2);
+
+				Pagination pagination1 = new Pagination(count1, pagingVo1);
+				pagingVo1.setPagination(pagination1);
+
+
+				int offset1 = pagingVo1.getOffset();
+				System.out.println(offset1);
+				int pageSize1 = pagingVo1.getPageSize();
+				System.out.println(pageSize1);
+
+				List<PersonApplyVo> pagingList1 = resumeMapper.getApplyListPaging(offset1, pageSize1);
+				response1 = new PagingResponse<>(pagingList1, pagination1);
+				ModelAndView mv = new ModelAndView();
+				mv.addObject("response1", response1);
+				mv.addObject("pagingVo1", pagingVo1);
+
+				mv.addObject("applyNowpage", applyNowpage);
+
+				mv.setViewName("/person/myPage_applyList");
+				return mv;	
+	}
+	
+	@GetMapping("/Person/Mypage/Bookmark")
+	public ModelAndView getPersonMyPageBookmark(@RequestParam(value = "bookmarkNowpage") int bookmarkNowpage, PersonBookmarkVo personbookmarkVo, PersonVo personVo,UserVo userVo) {
+		PersonVo pvo = personMapper.getPersonInfo(personVo,userVo);
+
+
+		List<PersonBookmarkVo> bookmarkList = personMapper.getBookmarkList(personbookmarkVo);
+
+
+		int count2 = resumeMapper.countBookmarkList(bookmarkList);
+
+
+		PagingResponse<PersonBookmarkVo> response2 = null;
+
+
+						if (count2 < 1) {
+							response2 = new PagingResponse<>(Collections.emptyList(), null);
+						}
+
+
+						PagingVo pagingVo2 = new PagingVo();
+						//pagingVo2.setPage(nowpage);
+						pagingVo2.setPage(bookmarkNowpage);
+						pagingVo2.setPageSize(2);
+						pagingVo2.setRecordSize(2);
+
+
+						Pagination pagination2 = new Pagination(count2, pagingVo2);
+						pagingVo2.setPagination(pagination2);
+
+
+						int offset2 = pagingVo2.getOffset();
+						System.out.println(offset2);
+						int pageSize2 = pagingVo2.getPageSize();
+						System.out.println(pageSize2);
+
+						
+						List<PersonBookmarkVo> pagingList2 = resumeMapper.getBookmarkListPaging(offset2, pageSize2);
+						response2 = new PagingResponse<>(pagingList2, pagination2);
+
+				ModelAndView mv = new ModelAndView();
+				mv.addObject("pvo",pvo);
+				mv.addObject("bookmarkList",bookmarkList);
+				mv.addObject("response2", response2);
+				mv.addObject("pagingVo2", pagingVo2);
+				mv.addObject("bookmarkNowpage", bookmarkNowpage);
+				mv.setViewName("/person/myPage_bookmarkList");
+
+				return mv;
+	}
+	
+	
+//	@GetMapping("/MyPage")
+//	public ModelAndView personMypage(
+//	    UserVo userVo, 
+//	    PersonVo personVo, 
+//	    ResumeVo resumeVo, 
+//	    PersonApplyVo personApplyVo, 
+//	    PersonBookmarkVo personbookmarkVo,
+//	    @RequestParam(value = "nowpage") int nowpage) {
+//	    
+//	    PersonVo pvo = personMapper.getPersonInfo(personVo, userVo);
+//
+//	    // 이력서 리스트 페이징
+//	    List<ResumeVo> resumeList = personMapper.getResumeList(resumeVo);
+//	    int resumeCount = resumeMapper.countResumeList(resumeList);
+//	    PagingResponse<ResumeVo> resumeResponse = createPagingResponse(resumeList, resumeCount, nowpage);
+//
+//	    // 지원 리스트 페이징
+//	    List<PersonApplyVo> applyList = personMapper.getApplyList(personApplyVo);
+//	    int applyCount = personMapper.countApplyList(applyList); // countApplyList 메소드 필요
+//	    PagingResponse<PersonApplyVo> applyResponse = createPagingResponse(applyList, applyCount, nowpage);
+//
+//	    // 북마크 리스트 페이징
+//	    List<PersonBookmarkVo> bookmarkList = personMapper.getBookmarkList(personbookmarkVo);
+//	    int bookmarkCount = personMapper.countBookmarkList(bookmarkList); // countBookmarkList 메소드 필요
+//	    PagingResponse<PersonBookmarkVo> bookmarkResponse = createPagingResponse(bookmarkList, bookmarkCount, nowpage);
+//
+//	    ModelAndView mv = new ModelAndView();
+//	    mv.addObject("pvo", pvo);
+//	    mv.addObject("resumeResponse", resumeResponse);
+//	    mv.addObject("applyResponse", applyResponse);
+//	    mv.addObject("bookmarkResponse", bookmarkResponse);
+//	    mv.addObject("nowpage", nowpage);
+//
+//	    mv.setViewName("/person/myPage");
+//
+//	    return mv;
+//	}
+//
+//	private <T> PagingResponse<T> createPagingResponse(List<T> list, int count, int nowpage) {
+//	    PagingResponse<T> response;
+//	    if (count < 1) {
+//	        response = new PagingResponse<>(Collections.emptyList(), null);
+//	    } else {
+//	        // 페이징을 위한 초기 설정값
+//	        PagingVo pagingVo = new PagingVo();
+//	        pagingVo.setPage(nowpage);
+//	        pagingVo.setPageSize(3); // 각 리스트마다 페이지 크기를 다르게 설정할 수 있음
+//	        pagingVo.setRecordSize(3);
+//
+//	        // Pagination 객체를 생성해서 페이지 정보 계산 후 PagingVo 타입의 객체에 계산된 페이지 정보 저장
+//	        Pagination pagination = new Pagination(count, pagingVo);
+//	        pagingVo.setPagination(pagination);
+//
+//	        int offset = pagingVo.getOffset();
+//	        int pageSize = pagingVo.getPageSize();
+//
+//	        // 페이징된 리스트를 가져오는 로직
+//	        List<T> pagingList = getPagedList(list, offset, pageSize);
+//	        response = new PagingResponse<>(pagingList, pagination);
+//	    }
+//	    return response;
+//	}
+//
+//	private <T> List<T> getPagedList(List<T> list, int offset, int pageSize) {
+//	    int toIndex = Math.min(offset + pageSize, list.size());
+//	    if (offset > list.size()) {
+//	        return Collections.emptyList();
+//	    }
+//	    return list.subList(offset, toIndex);
+//	}
 
 	@GetMapping("/MyPage/UpdateForm")
 	public ModelAndView myPageUpdateForm(UserVo userVo, PersonVo personVo) {
@@ -349,15 +630,43 @@ public class PersonController {
 
 	}
 	@GetMapping("/Resume/GetrecommendList")
-	public ModelAndView resumeRecommendList(RecommendPostVo recommendPostVo, ResumeVo resumeVo) {
-		
-		ResumeVo vo = resumeMapper.getResumeDetailView(resumeVo);
-		List<RecommendPostVo> postList = resumeMapper.getPostList(recommendPostVo);
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("vo",vo);
-		mv.addObject("postList",postList);
-		mv.setViewName("/person/recommendPost");
-		return mv;
+	public ModelAndView resumeRecommendList(RecommendPostVo recommendPostVo, ResumeVo resumeVo, @RequestParam(value = "nowpage") int nowpage) {
+	    ResumeVo vo = resumeMapper.getResumeDetailView(resumeVo);
+	    List<RecommendPostVo> postList = resumeMapper.getPostList(recommendPostVo);
+
+	    // 이력서 리스트 페이징
+	    int count = resumeMapper.countRecommensPostList(resumeVo.getResume_idx());
+
+	    PagingResponse<RecommendPostVo> response;
+	    if (count < 1) {
+	        response = new PagingResponse<>(Collections.emptyList(), null);
+	    } 
+	        // 페이징을 위한 초기 설정값
+	        PagingVo pagingVo = new PagingVo();
+	        pagingVo.setPage(nowpage);
+	        pagingVo.setPageSize(1);
+	        pagingVo.setRecordSize(1);
+
+	        // Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
+	        Pagination pagination = new Pagination(count, pagingVo);
+	        pagingVo.setPagination(pagination);
+
+	        int offset = pagingVo.getOffset();
+	        System.out.println(offset);
+	        int pageSize = pagingVo.getPageSize();
+	        System.out.println(pageSize);
+
+	        List<RecommendPostVo> pagingList = resumeMapper.getPostListPaging(resumeVo.getResume_idx(),offset, pageSize);
+	        response = new PagingResponse<>(pagingList, pagination);
+
+	    ModelAndView mv = new ModelAndView();
+	    mv.addObject("response", response);
+	    mv.addObject("pagingVo", pagingVo);
+	    mv.addObject("nowpage", nowpage);
+	    mv.addObject("vo", vo);
+	    mv.addObject("postList", postList);
+	    mv.setViewName("/person/recommendPost");
+	    return mv;
 	}
 	
 	// 특정 구직자의 특정 공고에 지원하기( 중복 안되게 할것( 이미 지원한 공고라면 지원하기 버튼 없애는 방법 또는 지원하기 눌렀을때 이미
@@ -391,36 +700,107 @@ public class PersonController {
 		return mv;
 	}
 	
-    @RequestMapping("/Person/AddBookmark")
-    public ResponseEntity<?> addBookmark(@RequestBody BookmarkVo bookmarkVo) {
-        // user_idx를 임시로 1로 설정합니다. 나중에 세션으로 변경
-        bookmarkVo.setUser_idx(1);
-        
-        // POST_IDX 값이 제대로 설정되었는지 로그로 확인
-        System.out.println("POST_IDX: " + bookmarkVo.getPost_idx());
+	// 개인회원 로그인
+		@PostMapping("/Person/Login")
+		public String personLogin(HttpServletRequest request, UserVo userVo,
+		                           HttpServletResponse response) throws IOException, ServletException {
+			
+		      
+		String id = request.getParameter("id");
+		String pwd = request.getParameter("pwd");
+		
+	    userVo = userMapper.login2(id,pwd);
+	    
+	    
+		 if(userVo != null) {//아이디와 암호 일치시 수행
+			 System.out.println(id);
+			 HttpSession session = request.getSession();
+			 session.setMaxInactiveInterval(60*60); //60분동안 로그인 유지
+			 session.setAttribute("login", userVo); //사용자 정보 세션에 저장
+			 session.setAttribute("isLoggedIn", true);
+			 return "redirect:/";           
+		 }
+		 else {//로그인 실패시
+			  PrintWriter out = response.getWriter();
+			  response.setCharacterEncoding("UTF-8");
+			  response.setContentType("text/html; charset=UTF-8;");
+		      out.println("<script> alert('Please Check Your ID and Password');");
+		      out.println("history.go(-1); </script>"); 
+		      out.close();             
+		      return "redirect:/LoginForm";
+		      }
+		   }
+		
+		// 개인회원 회원가입 폼
+		@RequestMapping("/Person/JoinForm")
+		public String joinForm() {
+			return "join";
+		}
+		
+		// 개인회원 회원가입
+		@RequestMapping("/Person/Join")
+		public ModelAndView perJoin(PersonVo perVo,HttpServletRequest request) {
+			
+			StringBuilder sb1 = new StringBuilder();
+			StringBuilder sb2 = new StringBuilder();
+			StringBuffer sb3 = new StringBuffer();
+			
+			String add1 = request.getParameter("address1");
+			String add2 = request.getParameter("address2");
+			
+			String address = sb1 .append(add1).append(",").append(" ").append(add2).toString();
+			perVo.setAddress(address);
+			System.out.println(address);
+			
+			String so1 = request.getParameter("social_num1");
+			String so2 = request.getParameter("social_num2");
+			
+			String social_num = sb2.append(so1).append("-").append(so2).toString();
+			perVo.setSocial_num(social_num);
+			System.out.println(social_num);
+			
+			String ph1 = request.getParameter("phone1");
+			String ph2 = request.getParameter("phone2");
+			String ph3 = request.getParameter("phone3");
+			
+			String phone = sb3.append(ph1).append("-").append(ph2).append("-").append(ph3).toString();
+			perVo.setPhone(phone);
+			System.out.println(phone);
+			
+			System.out.println("perVo" + perVo);
+			
+			ModelAndView mv = new ModelAndView();
+			personMapper.insert(perVo);
+			
+			mv.setViewName("login");
+			return mv;
+		}
+		
+	    @RequestMapping("/Person/AddBookmark")
+	    public ResponseEntity<?> addBookmark(@SessionAttribute("login") UserVo userVo, @RequestBody BookmarkVo bookmarkVo) {
 
-        boolean success = personMapper.addBookmark(bookmarkVo);
-        if (success) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
-        }
-    }
-    
-    @RequestMapping("/Person/RemoveBookmark")
-    public ResponseEntity<?> removeBookmark(@RequestBody BookmarkVo bookmarkVo) {
-    	// user_idx를 임시로 1로 설정합니다. 나중에 세션으로 변경
-    	bookmarkVo.setUser_idx(1);
-    	
-    	// POST_IDX 값이 제대로 설정되었는지 로그로 확인
-    	System.out.println("POST_IDX: " + bookmarkVo.getPost_idx());
-    	
-    	boolean success = personMapper.removeBookmark(bookmarkVo);
-    	if (success) {
-    		return ResponseEntity.ok().build();
-    	} else {
-    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
-    	}
-    }
+	    	int user_idx = userMapper.getUser_idx(userVo.getId());
+
+	    	boolean success = personMapper.addBookmark(user_idx, bookmarkVo.getPost_idx());
+	    	if (success) {
+	    		return ResponseEntity.ok().build();
+	    	} else {
+	    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
+	    	}
+	    }
+
+	    // Remove Bookmark
+	    @RequestMapping("/Person/RemoveBookmark")
+	    public ResponseEntity<?> removeBookmark(@SessionAttribute("login") UserVo userVo, @RequestBody BookmarkVo bookmarkVo) {
+	    	
+	    	int user_idx = userMapper.getUser_idx(userVo.getId());
+
+	        boolean success = personMapper.removeBookmark(user_idx, bookmarkVo.getPost_idx());
+	        if (success) {
+	            return ResponseEntity.ok().build();
+	        } else {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
+	        }
+	    }
 
 }

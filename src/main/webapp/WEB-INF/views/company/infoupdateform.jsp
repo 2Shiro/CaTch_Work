@@ -7,6 +7,7 @@
 <title>정보 수정</title>
 <link rel="stylesheet" href="/css/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 <style>
 	#total {
 		display: flex;
@@ -16,7 +17,7 @@
 	}
 	#profile {
 		width: 500px;
-		margin-right: 20px;
+		margin-left: 100px;
 	}
 	#info {
 		margin-left: 20px;
@@ -31,6 +32,9 @@
 	#warningimg {
 		width: 25px;
 		height: 25px;
+	}
+	#info {
+		margin-left: 70px;
 	}
 </style>
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
