@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.catwork.mapper.PersonMapper">  
 <select id="getPersonInfo">
 	SELECT
@@ -17,7 +18,7 @@
 	FROM PERSON_TB P
     JOIN USER_TB U
     ON P.USER_IDX = U.USER_IDX
-    WHERE U.ID = 'id001'
+    WHERE U.ID = #{arg1}
 
 </select>
 
@@ -27,7 +28,7 @@
 		EMAIL
 		
 	FROM USER_TB
-	WHERE  USER_IDX = 2 	
+	WHERE  USER_IDX = #{arg0} 	
 
 </select>
 <update id="updateMyInfo">
@@ -36,7 +37,7 @@
 			PWD = #{pwd},
 			EMAIL = #{email}	
 			
-	WHERE  ID='id001'	
+	WHERE  ID=#{id}	
 
 </update>
 <update id="updateMyInfo2">
@@ -46,16 +47,13 @@
 			ZIP_CODE=#{zip_code},
 			ADDRESS=#{address}
 
-	WHERE  USER_IDX=(
-    SELECT USER_IDX
-    FROM   USER_TB U
-    WHERE U.ID='id001')
+	WHERE  USER_IDX=#{user_idx}
 
 </update>
 
 <delete id="personDelete">
 	DELETE FROM USER_TB
-	WHERE  ID='151515'
+	WHERE  USER_IDX=#{user_idx}
 
 </delete>
 
@@ -76,7 +74,7 @@
 	WHERE USER_IDX=(
 	    SELECT USER_IDX
 	    FROM   USER_TB U
-	    WHERE U.ID='user')
+	    WHERE U.ID=#{arg1})
 
 
 </select>
@@ -105,7 +103,7 @@ FROM (
     JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
     JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
     JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
-    WHERE U.USER_IDX = 2
+    WHERE U.USER_IDX = #{arg1}
 )
 
 </select>
@@ -128,7 +126,7 @@ FROM (
     FROM BOOKMARK_TB B 
     JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
     JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
-    WHERE U.USER_IDX = 2
+    WHERE U.USER_IDX = #{arg1}
 
 
 
@@ -181,17 +179,19 @@ FROM (
         AND POST_IDX = #{post_idx}
     </select>
     
-    <insert id="insert">		
-		INSERT ALL
-		INTO user_tb (user_idx,id, pwd ,email,type)
-		VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},2)		
-		INTO person_tb (per_idx,user_idx,name,phone,zip_code,address,social_num,created)
-		VALUES
-		((SELECT MAX(NVL(per_idx,0)+1) FROM PERSON_TB),(SELECT MAX(NVL(user_idx,0)) FROM user_tb),
-			#{name},#{phone},#{zip_code},#{address},#{social_num},sysdate)
-		SELECT *
-		FROM DUAL
-	</insert>
+   <insert id="insert">      
+      INSERT ALL
+      INTO user_tb (user_idx,id, pwd ,email,type)
+      VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},2)      
+      INTO person_tb (per_idx,user_idx,name,phone,zip_code,address,social_num,created)
+      VALUES
+      ((SELECT MAX(NVL(per_idx,0)+1) FROM PERSON_TB),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
+         #{name},#{phone},#{zip_code},#{address},#{social_num},sysdate)
+      SELECT *
+      FROM DUAL
+   </insert>
+   
+
 	
 	<select id="getUser_idx">
 		SELECT USER_IDX FROM USER_TB WHERE ID = #{id}

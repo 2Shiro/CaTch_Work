@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
 <mapper namespace="com.catwork.mapper.UserMapper">  
 
 <select id="getUserInfo">
@@ -67,5 +69,15 @@
 		SELECT USER_IDX
 		FROM USER_TB
 		WHERE ID = #{id} 
+	</select>
+	
+	<!-- 모든 유저 가져오기 -->
+	<select id="getAllUser">
+		SELECT USER_IDX,
+					 ID,
+					 PWD,
+					 TYPE,
+					 EMAIL
+		FROM USER_TB
 	</select>
 </mapper>

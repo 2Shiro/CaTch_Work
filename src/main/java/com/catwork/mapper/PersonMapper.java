@@ -1,5 +1,9 @@
 package com.catwork.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
+
+import com.catwork.domain.PersonVo;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -60,7 +64,21 @@ public interface PersonMapper {
 	boolean removeBookmark(int user_idx, int post_idx);
 	// 북마크 여부
 	List<Integer> getBookmarked(int user_idx);
-
+	// viewpost 에서의 북마크 여부
 	boolean isBookmarked(@Param("user_idx") int user_idx, @Param("post_idx") int post_idx);
+
+	PersonVo getPersonInfo(PersonVo personVo, String id);
+
+	List<ResumeVo> getResumeList(ResumeVo resumeVo, String id);
+
+	List<PersonApplyVo> getApplyList(PersonApplyVo personApplyVo, int user_idx);
+
+	List<PersonBookmarkVo> getBookmarkList(PersonBookmarkVo personbookmarkVo, int user_idx);
+
+	PersonVo getPwd(int user_idx);
+
+	void updateMyInfo(PersonVo personVo, String id);
+
+	void updateMyInfo2(PersonVo personVo, int user_idx);
 
 }

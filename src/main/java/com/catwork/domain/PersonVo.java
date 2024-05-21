@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PersonVo {
 	
+
 	private int per_idx;
 	private int user_idx;
+	
 	private String name;
 	private String phone;
 	private String zip_code;

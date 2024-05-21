@@ -103,6 +103,26 @@ public interface ResumeMapper {
 
 	List<PersonBookmarkVo> getBookmarkListPaging(int offset2, int pageSize2);
 
+	List<PersonBookmarkVo> getBookmarkListPaging(int offset, int pageSize, PersonBookmarkVo personbookmarkVo);
+
+
+	int countResumeList(List<ResumeVo> resumeList, int user_idx);
+
+
+	List<ResumeVo> getResumeListPaging(int offset, int pageSize, String id);
+
+	int countApplyList(List<PersonApplyVo> applyList, int user_idx);
+
+	List<PersonApplyVo> getApplyListPaging(int offset1, int pageSize1, int user_idx);
+
+	int countBookmarkList(List<PersonBookmarkVo> bookmarkList, int user_idx);
+
+	List<PersonBookmarkVo> getBookmarkListPaging(int offset2, int pageSize2, int user_idx);
+
+	void insertResume(ResumeVo resumeVo, int user_idx);
+
+	List<PersonApplyResumeVo> getResumeList(int post_idx, int user_idx);
+
 
 
 

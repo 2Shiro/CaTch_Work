@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
 <title>로그인</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -97,6 +98,7 @@ hr {
   		 		<img id="loginlogo" src="/img/personlogin.png" alt="이미지 오류">
 	  		 		<hr>
     		 <table>
+    		  <input type="hidden" name="type" value=2>
        		<tr>
          		<td colspan="2"><div class="form-floating mb-3">
 				 				<input type="text" id="pid" name="id" class="form-control" >

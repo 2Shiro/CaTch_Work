@@ -10,7 +10,7 @@
         	<div id="personapply">
             <div>&nbsp;</div>
             <h2>내가 지원한 공고</h2>
-            <div>&nbsp;</div>
+            <div>&nbsp;</div> 
             <div>&nbsp;</div>
             <div>&nbsp;</div>
             <div class="myapply">

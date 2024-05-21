@@ -244,6 +244,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+
+
+
+
+
 function toggleBookmark(event, post_idx) {
     event.preventDefault(); // 링크 기본 동작 방지
     event.stopPropagation(); // 이벤트 버블링 방지
