@@ -6,13 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>개인정보 수정</title>
-<link rel="icon" type="image/png" href="/img/favicon.png" />
-<link href="/css/start.css" rel="stylesheet" />
-<link href="/css/test.css" rel="stylesheet" />
-
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link rel="stylesheet" href="/css/common.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <style>
@@ -33,8 +30,8 @@
 	<%@include file="/WEB-INF/include/nav.jsp" %>
 
 <body>
-	<div class="person">
 	<div class="container">
+	<div class="person">
 		<section>
 
 	<form action="/MyPageUpdate" method="POST">
@@ -182,8 +179,15 @@ goDeleteEl.addEventListener('click', () => {
     // user_idx 선언 후 삽입해야함
     const user_idx = document.getElementById('user_idx').value;
     
-    alert('탈퇴처리 되었습니다');
-    location.href = '/PersonDelete?user_idx=' + user_idx;
+    // 확인 창을 띄워 삭제 여부를 물어봄
+    const isConfirmed = confirm('정말 탈퇴하시겠습니까?');
+
+    if (isConfirmed) {
+        alert('탈퇴처리 되었습니다');
+        location.href = '/PersonDelete?user_idx=' + user_idx;
+    } else {
+        
+    }
 });
 
 </script>

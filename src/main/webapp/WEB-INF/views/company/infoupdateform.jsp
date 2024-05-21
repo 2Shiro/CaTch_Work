@@ -252,29 +252,56 @@
 </script>
 
 <script>
-	//탈퇴
-	const stateBtnEl = document.getElementById("info-delete"")
+// 	const stateBtnEl = document.getElementById("info-delete")
 	
-		stateBtnEl.addEventListener('click', (e) => {
-		    let url = '/Company/InfoDelete'
-		    const user = {
-		        user_idx: document.querySelector("#user_idx").value
-		    }
+// 		stateBtnEl.addEventListener('click', (e) => {
+// 		    let url = '/Company/InfoDelete'
+// 		    const user = {
+// 		        user_idx: document.querySelector("#user_idx").value
+// 		    }
 		    
-		    const param = {
-            method  : 'POST',
-            headers : {"Content-Type": "application/json" },
-            body    : JSON.stringify(user)
+// 		    const param = {
+//             method  : 'POST',
+//             headers : {"Content-Type": "application/json" },
+//             body    : JSON.stringify(user)
+//         }
+	
+		    
+// 		    fetch(url, param)
+// 		    .then(response => {
+// 		        const msg = (response.ok) ? "탈퇴 되었습니다." : "탈퇴에 실패하였습니다."
+// 		        alert(msg)
+// 		        window.location.href("http://localhost:9086/")
+// 		    })
+// 		})
+const stateBtnEl = document.getElementById('info-delete');
+const user_idxEl = document.querySelector("#user_idx").value
+
+stateBtnEl.addEventListener('click', (e) => {
+    let url = '/Company/InfoDelete?user_idx=' + user_idxEl;
+    const user_idx = user_idxEl
+    //alert(user_idx)
+    
+    const param = {
+        method: 'POST',
+        headers: {"Content-Type": "application/json" },
+        body: JSON.stringify(user_idx)
+    };
+    
+    fetch(url, param)
+    .then(response => {
+        const msg = (response.ok) ? "탈퇴 되었습니다." : "탈퇴에 실패하였습니다.";
+        alert(msg);
+        if (response.ok) {
+            window.location.href = "http://localhost:9086/";
         }
-	
-		    
-		    fetch(url, param)
-		    .then(response => {
-		        const msg = (response.ok) ? "탈퇴 되었습니다." : "탈퇴에 실패하였습니다."
-		        alert(msg)
-		        window.location.href("http://localhost:9086/")
-		    })
-		})
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('탈퇴에 실패하였습니다.');
+    });
+});
+
 </script>
 	
 </body>
