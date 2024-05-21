@@ -17,6 +17,11 @@
           <a class="nav-link" href="/Company/ResumeList?nowpage=1">구직자 이력서</a>
         </li>
         </c:if>
+        <c:if test="${usertype.type == 0}">
+        <li class="nav-item">
+          <a class="nav-link" href="/UserList">사용자 목록</a>
+        </li>
+        </c:if>
         <c:if test="${usertype.type == 1}">
         <li class="nav-item">
           <a class="nav-link" href="/Company/MyPage?nowpage=1">마이페이지</a>
