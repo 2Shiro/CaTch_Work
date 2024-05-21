@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>CaTch Work</title>
 <link rel="stylesheet" href="/css/common.css" />
+<link rel="stylesheet" href="/css/rating.css" />
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -19,50 +20,74 @@
 
 	<%@include file="/WEB-INF/include/nav.jsp"%>
 	<section>
-
-		<div class="" id="postdetail">
-			<div class="">
+		<div id="container">
+			<div class="" id="postdetail">
 				<div class="">
-					<form class="needs-validation container"
-						action="/Company/MyPostWrite" novalidate id="postForm"
-						method="post">
+					<form class="needs-validation container" method="post">
 						<div class="">
-							<div class="my-1 mx-auto row position-relative">
-								<div class="d-flex justify-content-start align-items-center">
-									<!-- Title -->
-									<h2 class="form-control mb-0" id="title" name="title"
-										style="flex-grow: 1;">${postvo.title}</h2>
-									<!-- Bookmark Icon -->
-									<c:if test="${usertype.type == 2}">
-										<div class="bookmark-icon ms-3"
-											onclick="toggleBookmark(event, ${postvo.post_idx})">
-											<c:choose>
-												<c:when test="${isBookmarked}">
-													<img src="/img/moew_on.png"
-														id="bookmark_${postvo.post_idx}" alt="북마크"
-														style="width: 50px; height: 50px;">
-												</c:when>
-												<c:otherwise>
-													<img src="/img/moew_off.png"
-														id="bookmark_${postvo.post_idx}" alt="북마크"
-														style="width: 50px; height: 50px;">
-												</c:otherwise>
-											</c:choose>
-										</div>
-									</c:if>
+							<div class="">
+								<div class="my-1 mx-auto row position-relative">
+									<div class="d-flex justify-content-start align-items-center">
+										<!-- Title -->
+										<h2 id="title" name="title" style="flex-grow: 1;">${postvo.title}</h2>
+										<!-- Bookmark Icon -->
+										<c:if test="${usertype.type == 2}">
+											<div class="bookmark-icon ms-3"
+												onclick="toggleBookmark(event, ${postvo.post_idx})">
+												<c:choose>
+													<c:when test="${isBookmarked}">
+														<img src="/img/moew_on.png"
+															id="bookmark_${postvo.post_idx}" alt="북마크"
+															style="width: 50px; height: 50px;">
+													</c:when>
+													<c:otherwise>
+														<img src="/img/moew_off.png"
+															id="bookmark_${postvo.post_idx}" alt="북마크"
+															style="width: 50px; height: 50px;">
+													</c:otherwise>
+												</c:choose>
+											</div>
+										</c:if>
+									</div>
 								</div>
+								<hr>
 							</div>
-							<hr>
 							<div class="my-1 mx-auto row">
-								<div class="row">
+								<img src="${companyvo.logo}" class="card-img-top" alt="회사로고"
+									style="width: 50%; margin: 0 auto;">
+								<div class="row mt-4">
+									<div class="col-6 row d-flex align-items-center">
+										<div class="col-md-4">
+											<!-- col-md-auto를 col-md-4로 변경 -->
+											<h5>회사명</h5>
+										</div>
+										<div class="col-md-8">
+											<input type="text" class="form-control" style="width: 400px;"
+												id="jobtype" name="jobtype" readonly="readonly"
+												value="${companyvo.name}">
+										</div>
+									</div>
+									<div class="col-6 row d-flex align-items-center">
+										<div class="col-md-4">
+											<h5>부서</h5>
+										</div>
+										<div class="col-md-8">
+											<input class="form-control" style="width: 400px;" type="text"
+												name="go" id="gohome" readonly="readonly"
+												value="${postvo.department}">
+										</div>
+									</div>
+								</div>
+								<div class="row mt-4">
 									<div class="col-6 row d-flex align-items-center">
 										<div class="col-md-4">
 											<!-- col-md-auto를 col-md-4로 변경 -->
 											<h5>지원 자격</h5>
 										</div>
 										<div class="col-md-8">
-											<input type="text" class="form-control" id="career"
-												name="career" readonly="readonly" value="${postvo.career}">
+											<input type="text" class="form-control" style="width: 400px;"
+												id="career" name="career" readonly="readonly"
+												value="${postvo.career}">
 										</div>
 									</div>
 									<div class="col-6 row d-flex align-items-center">
@@ -70,8 +95,9 @@
 											<h5>연봉</h5>
 										</div>
 										<div class="col-md-8">
-											<input type="text" class="form-control" id="salary"
-												name="salary" readonly="readonly" value="${postvo.salary}">
+											<input type="text" class="form-control" style="width: 400px;"
+												id="salary" name="salary" readonly="readonly"
+												value="${postvo.salary}">
 										</div>
 									</div>
 								</div>
@@ -82,43 +108,46 @@
 											<h5>근무 조건</h5>
 										</div>
 										<div class="col-md-8">
-											<input type="text" class="form-control" id="jobtype"
-												name="jobtype" readonly="readonly" value="${postvo.jobtype}">
+											<input type="text" class="form-control" style="width: 400px;"
+												id="jobtype" name="jobtype" readonly="readonly"
+												value="${postvo.jobtype}">
 										</div>
 									</div>
 									<div class="col-6 row d-flex align-items-center">
 										<div class="col-md-4">
 											<h5>근무 시간</h5>
 										</div>
-										<div class="col-md-8 d-flex">
-											<input class="form-control ms-3" type="text" name="go"
-												id="gohome" readonly="readonly" value="${postvo.go}">
+										<div class="col-md-8">
+											<input class="form-control" style="width: 400px;" type="text"
+												name="go" id="gohome" readonly="readonly"
+												value="${postvo.go}">
+										</div>
+									</div>
+								</div>
+								<div class="row mt-4">
+									<div class="col-6 row d-flex align-items-center">
+										<div class="col-md-4">
+											<!-- col-md-auto를 col-md-4로 변경 -->
+											<h5>담당자</h5>
+										</div>
+										<div class="col-md-8">
+											<input type="text" class="form-control" style="width: 400px;"
+												id="manager" name="manager" readonly="readonly"
+												value="${postvo.manager}">
+										</div>
+									</div>
+									<div class="col-6 row d-flex align-items-center">
+										<div class="col-md-4">
+											<h5>담당자 번호</h5>
+										</div>
+										<div class="col-md-8">
+											<input type="text" class="form-control" style="width: 400px;"
+												id="mphone" name="mphone" readonly="readonly"
+												value="${postvo.mphone}">
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="row mt-4">
-								<div class="col-6 row d-flex align-items-center">
-									<div class="col-md-4">
-										<!-- col-md-auto를 col-md-4로 변경 -->
-										<h5>담당자</h5>
-									</div>
-									<div class="col-md-8">
-										<input type="text" class="form-control" id="manager"
-											name="manager" readonly="readonly" value="${postvo.manager}">
-									</div>
-								</div>
-								<div class="col-6 row d-flex align-items-center">
-									<div class="col-md-4">
-										<h5>담당자 번호</h5>
-									</div>
-									<div class="col-md-8">
-										<input type="text" class="form-control" id="mphone"
-											name="mphone" readonly="readonly" value="${postvo.mphone}">
-									</div>
-								</div>
-							</div>
-
 							<div class="my-1 mx-auto row">
 								<label for="deadline" class="form-label">마감 일자</label> <input
 									type="text" class="form-control" id="deadline" name="deadline"
@@ -145,9 +174,120 @@
 									value="0">
 							</div>
 						</div>
-						<br> <input type="hidden" id="comaddress"
-							value="${companyvo.address}">
-						<div id="map" style="width: 100%; height: 400px;"></div>
+						<br>
+						<div class="">
+							<hr>
+							<div class="my-1 mx-auto row position-relative">
+								<div class="d-flex justify-content-start align-items-center">
+									<!-- Title -->
+									<h2 id="name" name="name" style="flex-grow: 1;">${companyvo.name} 기업소개</h2>
+								</div>
+							</div>
+						</div>
+						<div class="my-1 mx-auto row">
+							<div class="row mt-4">
+								<div class="col-6 row d-flex align-items-center">
+									<div class="col-md-4">
+										<!-- col-md-auto를 col-md-4로 변경 -->
+										<h5>대표자</h5>
+									</div>
+									<div class="col-md-8">
+										<input type="text" class="form-control" style="width: 400px;"
+											id="representative" name="representative" readonly="readonly"
+											value="${companyvo.representative}">
+									</div>
+								</div>
+								<div class="col-6 row d-flex align-items-center">
+									<div class="col-md-4">
+										<h5>주소</h5>
+									</div>
+									<div class="col-md-8">
+										<input class="form-control" style="width: 400px;" type="text"
+											name="address" id="address" readonly="readonly"
+											value="${companyvo.address}">
+									</div>
+								</div>
+							</div>
+							<div class="row mt-4">
+								<div class="col-6 row d-flex align-items-center">
+									<div class="col-md-4">
+										<!-- col-md-auto를 col-md-4로 변경 -->
+										<h5>회사분류</h5>
+									</div>
+									<div class="col-md-8">
+										<input type="text" class="form-control" style="width: 400px;"
+											id="ctype" name="ctype" readonly="readonly"
+											value="${companyvo.ctype}">
+									</div>
+								</div>
+								<div class="col-6 row d-flex align-items-center">
+									<div class="col-md-4">
+										<h5>설립일자</h5>
+									</div>
+									<div class="col-md-8">
+										<input type="text" class="form-control" style="width: 400px;"
+											id="bdate" name="bdate" readonly="readonly"
+											value="${companyvo.bdate}">
+									</div>
+								</div>
+							</div>
+							<input type="hidden" id="star" name="star" value="${rate}">
+							<div class="row mt-4">
+								<div class="col-6 row d-flex align-items-center">
+									<div class="col-md-4">
+										<!-- col-md-auto를 col-md-4로 변경 -->
+										<h5>기업 평점</h5>
+									</div>
+									<div class="col-md-8">
+										<div class="rating" style="margin-left: 50px;">
+										    <label class="rating__label rating__label--half" for="starhalf">
+										        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										    <label class="rating__label rating__label--full" for="star1">
+										        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										    <label class="rating__label rating__label--half" for="starhalf">
+										        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										    <label class="rating__label rating__label--full" for="star1">
+										        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										    <label class="rating__label rating__label--half" for="starhalf">
+										        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										    <label class="rating__label rating__label--full" for="star1">
+										        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										    <label class="rating__label rating__label--half" for="starhalf">
+										        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										    <label class="rating__label rating__label--full" for="star1">
+										        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										    <label class="rating__label rating__label--half" for="starhalf">
+										        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										    <label class="rating__label rating__label--full" for="star1">
+										        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+										        <span class="star-icon"></span>
+										    </label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<br>
+						<input type="hidden" id="comaddress" value="${companyvo.address}">
+						<div id="map" style="width: 100%; height: 400px; margin: 0 auto;"></div>
 					</form>
 				</div>
 			</div>
@@ -184,20 +324,17 @@
 			<!-- 기업회원일때 -->
 			<c:if test="${usertype.type == 1}">
 				<div class="my-3 d-flex justify-content-center">
-					<a href="/Company/MyPost?user_id=${sessionVo.user_id}&nowpage=1"
-						class="btn btn-primary mx-3">등록 공고 관리</a> <a href="/" id="btn-list"
+					<a href="/Company/MyPage?nowpage=1" class="btn btn-primary mx-3">등록
+						공고 관리</a> <a href="/" id="btn-list"
 						class="btn btn-outline-secondary mx-3">메인으로</a>
 				</div>
 			</c:if>
 			<c:if test="${usertype.type == 0}">
-				<a href="/" id="btn-list"
-						class="btn btn-outline-secondary mx-3">삭제</a>
-				<a href="/" id="btn-list"
-						class="btn btn-outline-secondary mx-3">메인으로</a>
+				<a href="/" id="btn-list" class="btn btn-outline-danger mx-3">삭제</a>
+				<a href="/" id="btn-list" class="btn btn-outline-secondary mx-3">메인으로</a>
 			</c:if>
 			<c:if test="${usertype.type eq null}">
-				<a href="/" id="btn-list"
-						class="btn btn-outline-secondary mx-3">메인으로</a>
+				<a href="/" id="btn-list" class="btn btn-outline-secondary mx-3">메인으로</a>
 			</c:if>
 			<!-- history back 사용? -->
 			<!-- 세션별로 다르게 -->
@@ -273,5 +410,14 @@ function toggleBookmark(event, post_idx) {
     });
 }
 
+//평점
+const icons = document.querySelectorAll('.star-icon')
+const check = document.querySelector('#star').value
+
+window.addEventListener('load', () => {
+	for (let i = 0; i < check; i++) {
+    	icons[i].classList.add('filled')
+    }
+})
 </script>
 </html>

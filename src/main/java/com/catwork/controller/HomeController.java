@@ -124,13 +124,20 @@ public class HomeController {
     
     
 	@RequestMapping("/Company/Viewpost")
-	public ModelAndView viewpost(@RequestParam("post_idx") int post_idx, @RequestParam("com_idx") int com_idx, PostVo postidx, @SessionAttribute("login") UserVo userVo) {
+	public ModelAndView viewpost(@RequestParam("post_idx") int post_idx, PostVo postidx, @SessionAttribute("login") UserVo userVo) {
 		int user_idx = userMapper.getUser_idx(userVo.getId());
 		
 		UserVo usertype = userMapper.getUserInfoById(user_idx);
 		
 	    PostVo postvo = companyMapper.getViewPost(post_idx);
-	    CompanyVo companyvo = companyMapper.getCompanyByComId(com_idx);
+	    CompanyVo comidvo = companyMapper.getComId(post_idx);
+	    
+	    CompanyVo companyvo = companyMapper.getCompanyByComId(comidvo.getCom_idx());
+	    
+		//평점 가져오기
+		int rate = companyMapper.getMyRate(companyvo.getCom_idx());
+		
+		System.out.println("평점111111111111111111111111111111111111111111111:"+rate);
 	    
 		List<PostSkillVo> postSkills = companyMapper.getPostSkills(postidx.getPost_idx());
 		List<SkillVo> skill = new ArrayList<SkillVo>();
@@ -155,6 +162,7 @@ public class HomeController {
 	    mv.addObject("isBookmarked", isBookmarked);
 	    mv.addObject("alreadyApplied", alreadyApplied);
 	    mv.addObject("skill", skill);
+	    mv.addObject("rate", rate);
 	    mv.addObject("resumevo", resumevo);
 	    mv.addObject("postvo", postvo);
 	    mv.addObject("companyvo", companyvo);

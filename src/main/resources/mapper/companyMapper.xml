@@ -72,6 +72,7 @@
 	            CAREER,
 	            GOWORK || ' ~ ' || GOHOME	GO,
 	            JOBTYPE,
+	            DEPARTMENT,
 	            SALARY,
 	            TO_CHAR(DEADLINE, 'YY/MM/DD') AS DEADLINE,
 	            INTRO,
@@ -351,4 +352,14 @@
 		FROM RATE_TB 
 		WHERE COM_IDX = #{arg0}
 	</select>
+	
+	<!-- com_idx 가져오기 -->
+	<select id="getComId">
+		SELECT	COM_IDX
+		FROM	POST_TB P
+				JOIN USER_TB U ON P.USER_IDX = U.USER_IDX
+				JOIN COMPANY_TB C ON U.USER_IDX= C.USER_IDX 
+		WHERE	P.POST_IDX = #{arg0}
+	</select>
+	
 </mapper>

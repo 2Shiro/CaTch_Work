@@ -8,19 +8,16 @@ import com.catwork.interceptor.LoginCheckInterceptor;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
-
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new LoginCheckInterceptor())
-		        .addPathPatterns("/**","/**/*")
-		        .excludePathPatterns("/LoginForm","/logout",
-		        					 "/Person/Login","/Person/JoinForm","/Person/Join",
-		        					 "/Company/Login","/Company/JoinForm","/Company/Join",
-		        		             "/Board",
-		        		             "/CheckId","/FAQ",
-		        		             "/log*","/css/**", "/img/**", "/js/**"
-		        		             );
-			
-	}	
+	    registry.addInterceptor(new LoginCheckInterceptor())
+	            .addPathPatterns("/**")
+	            .excludePathPatterns("/", "/LoginForm", "/logout",
+	                    "/Person/Login", "/Person/JoinForm", "/Person/Join",
+	                    "/Company/Login", "/Company/JoinForm", "/Company/Join",
+	                    "/Board", "/CheckId", "/FAQ",
+	                    "/log*", "/css/**", "/img/**", "/js/**"
+	            );
+	}
 	
 }
