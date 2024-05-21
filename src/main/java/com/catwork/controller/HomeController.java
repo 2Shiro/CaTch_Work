@@ -53,7 +53,7 @@ public class HomeController {
 		int user_idx = userMapper.getUser_idx(userVo.getId());
 
 		UserVo usertype = userMapper.getUserInfoById(user_idx);
-		
+		System.out.println("usertype:"+usertype);
 	    List<MainPageVo> mainPageList = new ArrayList<>();
 	    List<PostVo> postList = companyMapper.getmainpostList();
 

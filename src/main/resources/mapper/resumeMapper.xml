@@ -57,7 +57,7 @@
    <select id="countResumeList">
    	SELECT COUNT(*) AS CNT FROM RESUME_TB R
     JOIN USER_TB U ON R.USER_IDX=U.USER_IDX 
-    WHERE U.USER_IDX = 2
+    WHERE U.USER_IDX = #{arg1}
    
    </select>
    <select id="countRecommensPostList">
@@ -82,7 +82,7 @@ FROM (
 	JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
 	JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
 	JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
-	WHERE U.USER_IDX = 2
+	WHERE U.USER_IDX = #{arg1}
    </select>
    
    
@@ -104,7 +104,7 @@ FROM (
     WHERE USER_IDX = (
         SELECT USER_IDX
         FROM USER_TB U
-        WHERE U.ID = 'user'
+        WHERE U.ID = #{arg2}
     )
     OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
 	</select>
@@ -114,7 +114,7 @@ FROM (
     FROM BOOKMARK_TB B 
     JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
     JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
-    WHERE U.USER_IDX = 2
+    WHERE U.USER_IDX = #{arg1}
    
    </select>
    
@@ -136,7 +136,7 @@ FROM (
 FROM BOOKMARK_TB B 
 JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
 JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
-WHERE U.USER_IDX = 2
+WHERE U.USER_IDX = #{arg2}
 ORDER BY P.CREATED DESC
 OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
    
@@ -216,7 +216,7 @@ FROM (
     JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
     JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
     JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
-    WHERE U.USER_IDX = 2
+    WHERE U.USER_IDX = #{arg2}
 )
 OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
    
@@ -299,7 +299,7 @@ GROUP BY
     FROM BOOKMARK_TB B 
     JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
     JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
-    WHERE U.USER_IDX = 2
+    WHERE U.USER_IDX = #{arg1}
    </select>
    
    <select id="getResumeDetailView"  >
@@ -427,8 +427,8 @@ FROM (
     JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
     JOIN PERSON_TB PE ON U.USER_IDX = PE.USER_IDX
     JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
-    WHERE P.POST_IDX = #{post_idx}
-    AND   U.USER_IDX = 2
+    WHERE P.POST_IDX = #{arg0}
+    AND   U.USER_IDX = #{arg1}
 )
    
    </select>

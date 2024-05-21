@@ -38,7 +38,7 @@
 		<section>
 
 	<form action="/MyPageUpdate" method="POST">
-	
+	<input type="hidden" value="${ pvo.user_idx }" name="user_idx" id="user_idx">
 	<h2 class="title">개인정보 수정</h2>
 					<section>
 				<div class="mt-5 ms-3">
@@ -51,7 +51,7 @@
 								</div>
 								<div class="input-group mb-3">
 									<span class="input-group-text" id="pid">아이디</span>
-									 <input	type="text" class="form-control" id="id"  value="${pvo.id}" readonly>
+									 <input	type="text" class="form-control" id="id" name="id" value="${pvo.id}" readonly>
 								</div>
 								<div class="input-group mb-3">
 									<span class="input-group-text" id="ppwd">비밀번호</span>
@@ -177,13 +177,14 @@
 	goUpdateEl.addEventListener('click', ()=>{
 		alert('수정되었습니다');
 	})
-	const goDeleteEl = document.querySelector('#goDelete')
-	goDeleteEl.addEventListener('click', ()=>{
-		// user_idx 선언 후 삽입해야함
-		location.href='/PersonDelete';
-		alert('탈퇴처리 되었습니다');
-		
-	})
+const goDeleteEl = document.querySelector('#goDelete');
+goDeleteEl.addEventListener('click', () => {
+    // user_idx 선언 후 삽입해야함
+    const user_idx = document.getElementById('user_idx').value;
+    
+    alert('탈퇴처리 되었습니다');
+    location.href = '/PersonDelete?user_idx=' + user_idx;
+});
 
 </script>
 </body>

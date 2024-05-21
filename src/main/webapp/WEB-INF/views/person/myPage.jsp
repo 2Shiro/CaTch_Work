@@ -788,10 +788,12 @@ h1 {
 	
 	    // 클릭 이벤트를 상위 요소에 등록하여 중첩 방지
 	    document.querySelector('.mybookmark .table-group-divider').addEventListener('click', (event) => {
+	    	//alert('ddd')
 	        const clickedElement = event.target;
-	        if (clickedElement.classList.contains('bookmark-icon')) {
+	    	console.log(clickedElement)
+	        if (clickedElement.classList.contains('bookmark-icons')) {
 	            const bookmarkValue = clickedElement.closest('.td8').querySelector('[type=hidden]').value;
-	            
+	            console.log(bookmarkValue)
 	            const url = '/Bookmark/Delete?book_idx=' + bookmarkValue;
 	
 	            fetch(url, {
@@ -810,10 +812,10 @@ h1 {
 	                deletedRows.push(deletedRowNum);
 	
 	                // 화면에서 삭제된 데이터를 제외하고 나머지 데이터를 다시 그림
-	                fetch('/Bookmark/List')
+	                fetch('/Bookmark/List2')
 	                .then(response => response.json())
 	                .then(bookmarkList => {
-	                    const tableDivider = document.querySelector('.bookmark .table-group-divider');
+	                    const tableDivider = document.querySelector('.mybookmark .table-group-divider');
 	                    tableDivider.innerHTML = '';
 	
 	                    bookmarkList.forEach(bo => {
@@ -827,7 +829,7 @@ h1 {
 	                            html += '<td>'+bo.mphone+'</td>';
 	                            html += '<td class="td8">';
 	                            html += '<input type="hidden" value="'+bo.book_idx+'">';
-	                            html += '<img class="bookmark-icon" src="/img/fillmoew.png" alt="북마크 아이콘">';
+	                            html += '<img src="/img/fillmoew.png" class="bookmark-icons" alt="북마크"  style="width: 24px; height: 24px;">';
 	                            html += '</td>';
 	                            html += '</tr>';
 	

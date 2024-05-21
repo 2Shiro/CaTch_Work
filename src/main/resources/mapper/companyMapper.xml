@@ -162,18 +162,7 @@
 		SELECT
 		NVL(MAX(POST_IDX),0) + 1 FROM POST_TB
 	</select>
-		<!-- 기업회원 가입 -->
-	<insert id="insert">		
-		INSERT ALL
-		INTO user_tb (user_idx,id, pwd ,email,type)
-		VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},1)		
-		INTO company_tb (com_idx,user_idx,type,name,logo,cnum,representative,zip_code,address,ctype,bdate,created)
-		VALUES
-		((SELECT MAX(NVL(com_idx,0)+1) FROM company_tb),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
-			1,#{name}, '/', #{cnum}, #{representative},#{zip_code},#{address},#{ctype},#{bdate},sysdate)
-		SELECT *
-		FROM DUAL
-	</insert>
+
 	
 	
 	<!-- post insert -->
@@ -343,6 +332,18 @@
 		SELECT ADDRESS FROM COMPANY_TB WHERE USER_IDX = #{user_idx}
 	</select>
 	
+   <!-- 기업회원 가입 -->
+   <insert id="insert">      
+      INSERT ALL
+      INTO user_tb (user_idx,id, pwd ,email,type)
+      VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},1)      
+      INTO company_tb (com_idx,user_idx,type,name,logo,cnum,representative,zip_code,address,ctype,bdate,created)
+      VALUES
+      ((SELECT MAX(NVL(com_idx,0)+1) FROM company_tb),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
+         1,#{name}, '/', #{cnum}, #{representative},#{zip_code},#{address},#{ctype},#{bdate},sysdate)
+      SELECT *
+      FROM DUAL
+   </insert>
 
 	
 	<!-- 평점 가져오기 -->

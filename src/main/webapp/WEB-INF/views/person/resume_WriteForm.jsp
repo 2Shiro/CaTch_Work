@@ -59,7 +59,7 @@ textarea {
 		<section>
 
 	<form action="/MyPage/Resume/Write" method="POST">
-	user<input type="text"  name="user_idx">
+	<input type="hidden"  name="user_idx" value="${usertype.user_idx }">
 	<section>
 <div class="container">				
 				<section>
