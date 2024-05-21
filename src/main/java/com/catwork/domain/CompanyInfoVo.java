@@ -33,7 +33,7 @@ public class CompanyInfoVo {
 		this.pwd = user.getPwd();
 		this.type = user.getType();
 		this.email = user.getEmail();
-		this.com_idx = company.getCnum();
+		this.com_idx = company.getCom_idx();
 		this.name = company.getName();
 		this.logo = company.getLogo();
 		this.cnum = company.getCnum();

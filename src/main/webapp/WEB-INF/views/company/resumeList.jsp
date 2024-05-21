@@ -34,7 +34,7 @@
         		<input class="form-control" type="search" placeholder="기술 스택 검색" aria-label="Search" name="searchword">
       		</c:when>
       		<c:otherwise>
-        		<input class="form-control" type="search" placeholder="Search" aria-label="Search" id="searchword" name="searchword" value="${searchword}">      		
+        		<input class="form-control" type="search" placeholder="기술 스택 검색" aria-label="Search" id="searchword" name="searchword" value="${searchword}">      		
       		</c:otherwise>
       	</c:choose>
         <button class="btn btn-outline-success" type="submit">Search</button>

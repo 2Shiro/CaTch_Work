@@ -4,6 +4,13 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.catwork.domain.UserVo;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.catwork.domain.UserListVo;
+import com.catwork.domain.UserVo;
+
 @Mapper
 public interface UserMapper {
 
@@ -24,4 +31,6 @@ public interface UserMapper {
 	int checkId(String id);
 
 	int getUser_idx(String id);
+
+	List<UserVo> getAllUser();
 }

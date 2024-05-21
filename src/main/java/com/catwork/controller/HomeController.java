@@ -14,12 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.catwork.domain.CompanyVo;
 import com.catwork.domain.MainPageVo;
+import com.catwork.domain.PersonVo;
 import com.catwork.domain.PostSkillVo;
 import com.catwork.domain.PostVo;
 import com.catwork.domain.ResumeVo;
 import com.catwork.domain.SkillVo;
+import com.catwork.domain.UserListVo;
 import com.catwork.domain.UserVo;
-//github.com/2Shiro/CaTch_Work.git
 import com.catwork.mapper.CompanyMapper;
 import com.catwork.mapper.PersonMapper;
 import com.catwork.mapper.ResumeMapper;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class HomeController {
 	
+
 	@Autowired
 	private CompanyMapper companyMapper;
 	
@@ -165,4 +167,91 @@ public class HomeController {
 		int result = userMapper.checkId(id);
 		return result;
 	}
+	
+	//관리자의 user 목로 보기
+	@RequestMapping("/UserList")
+	public ModelAndView userList(@SessionAttribute("login") UserVo userVo,
+			@RequestParam(value = "searchword", defaultValue = "none") String searchword) {
+		ModelAndView mv = new ModelAndView();
+		
+		//회원 정보 세션 가져오기
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		
+		String originword = searchword;
+		
+		List<UserVo> allUserList = userMapper.getAllUser();
+		
+		List<UserListVo> userList = new ArrayList<>();
+		
+		searchword = searchword.replaceAll(" ", "");
+		
+		for(int i = 0; i < allUserList.size(); i++) {
+			if(originword.equals("none")) {
+				if(allUserList.get(i).getType() == 1) { //기업 회원
+					UserVo user = userMapper.getUserInfoById(allUserList.get(i).getUser_idx()); 
+					CompanyVo comuser = companyMapper.getCompanyById(allUserList.get(i).getUser_idx());
+					userList.add(new UserListVo(user.getUser_idx(), user.getId(), user.getPwd(), 
+												user.getType(), user.getEmail(),
+												comuser.getName(), comuser.getCreated(),
+												comuser.getZip_code(), comuser.getAddress(),
+												comuser.getCom_idx(), comuser.getLogo(),
+												comuser.getCnum(), comuser.getRepresentative(),
+												comuser.getCtype(), comuser.getBdate()));
+				} else if (allUserList.get(i).getType() == 2) {
+					UserVo user = userMapper.getUserInfoById(allUserList.get(i).getUser_idx()); 
+					PersonVo peruser = personMapper.getPersonDetail(allUserList.get(i).getUser_idx());
+					userList.add(new UserListVo(user.getUser_idx(), user.getId(), user.getPwd(), 
+												user.getType(), user.getEmail(),
+												peruser.getName(), peruser.getCreated(),
+												peruser.getZip_code(), peruser.getAddress(),
+												peruser.getPer_idx(), peruser.getPhone(),
+												peruser.getSocial_num()));
+				}
+			} else { 
+				if(allUserList.get(i).getType() == 1 && allUserList.get(i).getId().replaceAll(" ", "").contains(searchword)) { //기업 회원
+					UserVo user = userMapper.getUserInfoById(allUserList.get(i).getUser_idx()); 
+					CompanyVo comuser = companyMapper.getCompanyById(allUserList.get(i).getUser_idx());
+					userList.add(new UserListVo(user.getUser_idx(), user.getId(), user.getPwd(), 
+												user.getType(), user.getEmail(),
+												comuser.getName(), comuser.getCreated(),
+												comuser.getZip_code(), comuser.getAddress(),
+												comuser.getCom_idx(), comuser.getLogo(),
+												comuser.getCnum(), comuser.getRepresentative(),
+												comuser.getCtype(), comuser.getBdate()));
+				} else if (allUserList.get(i).getType() == 2 && allUserList.get(i).getId().replaceAll(" ", "").contains(searchword)) {
+					UserVo user = userMapper.getUserInfoById(allUserList.get(i).getUser_idx()); 
+					PersonVo peruser = personMapper.getPersonDetail(allUserList.get(i).getUser_idx());
+					userList.add(new UserListVo(user.getUser_idx(), user.getId(), user.getPwd(), 
+												user.getType(), user.getEmail(),
+												peruser.getName(), peruser.getCreated(),
+												peruser.getZip_code(), peruser.getAddress(),
+												peruser.getPer_idx(), peruser.getPhone(),
+												peruser.getSocial_num()));
+				}
+			}
+		}
+		
+		searchword = originword;
+		
+		mv.addObject("searchword", searchword);
+		mv.addObject("userList", userList);
+		mv.addObject("usertype", usertype);
+		mv.setViewName("/admin/userList");
+		
+		return mv;
+	}
+	
+	@RequestMapping("/Delete")
+	public ModelAndView deleteUserList(UserVo user) {
+		userMapper.deleteUser(user);
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("redirect:/UserList");
+		
+		return mv;
+	}
 }
+
