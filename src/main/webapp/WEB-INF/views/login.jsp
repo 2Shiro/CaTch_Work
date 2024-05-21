@@ -4,7 +4,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+
+<title>로그인</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -14,6 +15,8 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 	crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <style>
 .sticky-footer {
 	position: fixed;
@@ -49,13 +52,25 @@
 table tr{
 					td { text-align:center;} }
           }     
-ul >li{ margin:0; }     
+ul >li{ margin:0; }    
+#loginlogo {
+	height: 90px;
+} 
+hr {
+	margin: 0 auto;
+	margin-top: 10px;
+	width: 300px;
+}
+#loginimg, #logoutimg, #joinimg {
+  	height: 30px;
+  }
 </style>
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
 		<div class="main">        
             <a href="/">
-                 <img alt="Logo" src="/img/logo.png" style="width:250px;">
+                 <img alt="Logo" src="/img/CaTchWork_logo.png" style="width:250px;">
              </a><br><br><br>
        </div>
 
@@ -76,10 +91,12 @@ ul >li{ margin:0; }
 	<!-- 내용 -->
 	<div class="tab-content" id="myTabContent">
 		<!-- 개인회원 -->
-		<div class="tab-pane fade show active" id="userinfo" role="tabpanel"
+		<div class="tab-pane fade show active mt-5" id="userinfo" role="tabpanel"
 			aria-labelledby="userinfo-tab">
 		<form  action="/Person/Login" method="post" id="login">
   		 <div class="log">
+  		 		<img id="loginlogo" src="/img/personlogin.png" alt="이미지 오류">
+	  		 		<hr>
     		 <table>
        		<tr>
          		<td colspan="2"><div class="form-floating mb-3">
@@ -95,20 +112,34 @@ ul >li{ margin:0; }
 				 		</div></td>
        		</tr>
        		<tr id="btn">
-        		 <td><br><button type="submit" class="btn btn-primary" style="background-color:#6694f8; color : white; border:white; width : 120px;">로그인</button></td>
+        		 <td><br><button type="submit" class="btn btn-primary" style="background-color:#6694f8; color : white; border:white; width : 120px;"><img id="loginimg" src="/img/login.png" alt="그림 오류"></button></td>
         		 <td><br><button type="button" class="btn btn-primary"  onClick="location.href='/Person/JoinForm'" style="background-color:#6694f8; color : white; border:white; width: 120px;">
-             		 회원가입</button></td>
+             		 <img id="loginimg" src="/img/join.png" alt="그림 오류"></button></td>
        		 </tr>     
     		 </table> 
     		 </div>  
    		</form>
+   		<!-- 네이버 로그인 버튼 노출 영역 -->
+  <div id="naver_id_login"></div>
+  <!-- //네이버 로그인 버튼 노출 영역 -->
+  <script type="text/javascript">
+  	var naver_id_login = new naver_id_login("XQu51X2C208MnglyYyEj", "http://localhost:9086/");
+  	var state = naver_id_login.getUniqState();
+  	naver_id_login.setButton("white", 2,40);
+  	naver_id_login.setDomain("http://localhost:9086/");
+  	naver_id_login.setState(state);
+  	naver_id_login.setPopup();
+  	naver_id_login.init_naver_id_login();
+  </script>
 		</div>
 		
 		<!-- 기업회원 -->
-		<div class="tab-pane fade" id="myreview" role="tabpanel"
+		<div class="tab-pane fade mt-5" id="myreview" role="tabpanel"
 			aria-labelledby="myreview-tab">
 		<form  action="/Company/Login" method="post" id="clogin">
   		 <div class="log">
+  		 	<img id="loginlogo" src="/img/companylogin.png" alt="이미지 오류">
+  		 	<hr>
     		 <table>
     		 <input type="hidden" name="type" value=1>
        		<tr>
@@ -125,15 +156,39 @@ ul >li{ margin:0; }
 				 		</div></td>
        		</tr>
        		<tr id="btn">
-        		 <td><br><button type="submit" class="btn btn-primary" style="background-color:#6694f8; color : white; border:white; width : 120px;">로그인</button></td>
+        		 <td><br><button type="submit" class="btn btn-primary" style="background-color:#6694f8; color : white; border:white; width : 120px;"><img id="loginimg" src="/img/login.png" alt="그림 오류"></button></td>
         		 <td><br><button type="button" class="btn btn-primary"  onClick="location.href='/Company/JoinForm'" style="background-color:#6694f8; color : white; border:white; width: 120px;">
-             		 회원가입</button></td>
+             		 <img id="loginimg" src="/img/join.png" alt="그림 오류"></button></td>
        		 </tr>     
     		 </table> 
     		 </div>  
    		</form>
 		</div>
 	</div>
-
+	<script>
+	let key = "${param.key}";
+	console.log(key);
+	if(key === "userinfo"){
+		
+		$("#myreview-tab").removeClass("active");
+		$("#wishlist-tab").removeClass("active");
+		$("#userinfo-tab").addClass("active");
+		
+		$("#myreview").removeClass("show active");
+		$("#wishlist").removeClass("show active");
+		$("#userinfo").addClass("show active");
+		
+	}else if(key === "myreview"){
+		
+		$("#wishlist-tab").removeClass("active");
+		$("#userinfo-tab").removeClass("active");
+		$("#myreview-tab").addClass("active");
+		
+		$("#userinfo").removeClass("show active");
+		$("#wishlist").removeClass("show active");
+		$("#myreview").addClass("show active");
+		
+	}
+	</script>
 </body>
 </html>

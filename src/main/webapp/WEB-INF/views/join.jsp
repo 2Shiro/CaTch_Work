@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>회원가입</title>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -32,7 +32,7 @@
 <body>
          <div class="main" >        
             <a href="/">
-                 <img alt="Logo" src="/img/logo.png" style="width:250px;">
+                 <img alt="Logo" src="/img/CaTchWork_logo.png" style="width:250px;">
              </a><br><br><br>
        </div>
         <div class="container">

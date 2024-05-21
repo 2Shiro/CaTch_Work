@@ -1,0 +1,272 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CaTch Work</title>
+<link rel="stylesheet" href="/css/common.css" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
+</head>
+<body>
+	<%@include file="/WEB-INF/include/header.jsp"%>
+
+	<%@include file="/WEB-INF/include/nav.jsp"%>
+	<section>
+
+		<div class="" id="postdetail">
+			<div class="">
+				<div class="">
+					<form class="needs-validation container"
+						action="/Company/MyPostWrite" novalidate id="postForm"
+						method="post">
+						<div class="">
+							<div class="my-1 mx-auto row position-relative">
+								<div class="d-flex justify-content-start align-items-center">
+									<!-- Title -->
+									<h2 class="form-control mb-0" id="title" name="title"
+										style="flex-grow: 1;">${postvo.title}</h2>
+									<!-- Bookmark Icon -->
+									<div class="bookmark-icon ms-3"
+										onclick="toggleBookmark(event, ${postvo.post_idx})">
+										<c:choose>
+											<c:when test="${isBookmarked}">
+												<img src="/img/moew_on.png"
+													id="bookmark_${postvo.post_idx}" alt="북마크"
+													style="width: 50px; height: 50px;">
+											</c:when>
+											<c:otherwise>
+												<img src="/img/moew_off.png"
+													id="bookmark_${postvo.post_idx}" alt="북마크"
+													style="width: 50px; height: 50px;">
+											</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+							</div>
+							<hr>
+							<div class="my-1 mx-auto row">
+								<div class="row">
+									<div class="col-6 row d-flex align-items-center">
+										<div class="col-md-4">
+											<!-- col-md-auto를 col-md-4로 변경 -->
+											<h5>지원 자격</h5>
+										</div>
+										<div class="col-md-8">
+											<input type="text" class="form-control" id="career"
+												name="career" readonly="readonly" value="${postvo.career}">
+										</div>
+									</div>
+									<div class="col-6 row d-flex align-items-center">
+										<div class="col-md-4">
+											<h5>연봉</h5>
+										</div>
+										<div class="col-md-8">
+											<input type="text" class="form-control" id="salary"
+												name="salary" readonly="readonly" value="${postvo.salary}">
+										</div>
+									</div>
+								</div>
+								<div class="row mt-4">
+									<div class="col-6 row d-flex align-items-center">
+										<div class="col-md-4">
+											<!-- col-md-auto를 col-md-4로 변경 -->
+											<h5>근무 조건</h5>
+										</div>
+										<div class="col-md-8">
+											<input type="text" class="form-control" id="jobtype"
+												name="jobtype" readonly="readonly" value="${postvo.jobtype}">
+										</div>
+									</div>
+									<div class="col-6 row d-flex align-items-center">
+										<div class="col-md-4">
+											<h5>근무 시간</h5>
+										</div>
+										<div class="col-md-8 d-flex">
+											<input class="form-control ms-3" type="text" name="go"
+												id="gohome" readonly="readonly" value="${postvo.go}">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row mt-4">
+								<div class="col-6 row d-flex align-items-center">
+									<div class="col-md-4">
+										<!-- col-md-auto를 col-md-4로 변경 -->
+										<h5>담당자</h5>
+									</div>
+									<div class="col-md-8">
+										<input type="text" class="form-control" id="manager"
+											name="manager" readonly="readonly" value="${postvo.manager}">
+									</div>
+								</div>
+								<div class="col-6 row d-flex align-items-center">
+									<div class="col-md-4">
+										<h5>담당자 번호</h5>
+									</div>
+									<div class="col-md-8">
+										<input type="text" class="form-control" id="mphone"
+											name="mphone" readonly="readonly" value="${postvo.mphone}">
+									</div>
+								</div>
+							</div>
+
+							<div class="my-1 mx-auto row">
+								<label for="deadline" class="form-label">마감 일자</label> <input
+									type="text" class="form-control" id="deadline" name="deadline"
+									readonly="readonly" value="${postvo.deadline}">
+							</div>
+							<div class="my-1 mx-auto row">
+								<label for="c_intro" class="form-label">기업 소개</label>
+								<textarea rows="10" class="form-control" id="intro" name="intro"
+									readonly="readonly">${postvo.intro}</textarea>
+
+							</div>
+							<div class="my-1 mx-auto row">
+								<label for="job_intro" class="form-label">업무 소개</label>
+								<textarea rows="10" class="form-control" id="explain"
+									name="explain" readonly="readonly">${postvo.explain}</textarea>
+							</div>
+							<div class="mt-3 mx-auto row">
+								<c:forEach var="skill" items="${skill}">
+									<div class="col-auto">
+										<button type="button" class="btn btn-primary">${skill.name}</button>
+									</div>
+								</c:forEach>
+								<input type="hidden" id="defaultSkillIdx" name="skillIdx"
+									value="0">
+							</div>
+						</div>
+						<br> <input type="hidden" id="comaddress"
+							value="${companyvo.address}">
+						<div id="map" style="width: 100%; height: 400px;"></div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="my-3 d-flex justify-content-center">
+			<!-- 개인회원일때 -->
+			<%-- <c:if test="${sessionVo.type == 2}"> --%>
+			<c:if test="${!alreadyApplied}">
+				<form action="/Person/JoinPost" method="POST">
+					<input type="hidden" name="user_idx" value="${user_idx}" /> <input
+						type="hidden" name="post_idx" value="${postvo.post_idx}" /> <input
+						type="hidden" name="com_idx" value="${companyvo.com_idx}" />
+					<div class="input-group mb-3 resume">
+						<label class="input-group-text" for="inputGroupSelect01">이력서</label>
+						<select name="resume_idx" class="form-select" id="presumeSelect">
+							<option selected>==선택==</option>
+							<c:forEach var="resumevo" items="${resumevo}">
+								<option value="${resumevo.resume_idx}">${resumevo.title}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="my-3 d-flex justify-content-center">
+						<button type="submit" class="btn btn-primary mx-3">지원하기</button>
+						<div>
+							<a href="/" id="btn-list" class="btn btn-outline-secondary mx-3">메인으로</a>
+						</div>
+					</div>
+				</form>
+			</c:if>
+			<c:if test="${alreadyApplied}">
+				<p>이미 이 공고에 지원하셨습니다.</p>
+			</c:if>
+			<%-- </c:if> --%>
+			<!-- 기업회원일때 -->
+			<%-- <c:if test="${sessionVo.type == 1}"> --%>
+			<div class="my-3 d-flex justify-content-center">
+				<a href="/Company/MyPost?user_id=${sessionVo.user_id}&nowpage=1"
+					class="btn btn-primary mx-3">등록 공고 관리</a> <a href="/" id="btn-list"
+					class="btn btn-outline-secondary mx-3">메인으로</a>
+			</div>
+			<%-- </c:if> --%>
+			<!-- history back 사용? -->
+			<!-- 세션별로 다르게 -->
+		</div>
+	</section>
+	<%@include file="/WEB-INF/include/footer.jsp"%>
+</body>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92d4589340537a5f8d4dbc6cb7e73577&libraries=services"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다
+var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new kakao.maps.services.Geocoder();
+
+//JSP에서 전달된 회사 주소를 사용합니다
+var companyAddress = document.getElementById("comaddress").value;
+
+// 주소로 좌표를 검색합니다
+geocoder.addressSearch(companyAddress, function(result, status) {
+
+    // 정상적으로 검색이 완료됐으면 
+     if (status === kakao.maps.services.Status.OK) {
+
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new kakao.maps.InfoWindow({
+            content: '<div style="width:150px;text-align:center;padding:6px 0;">회사 위치</div>'
+        });
+        infowindow.open(map, marker);
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+    } 
+});
+
+function toggleBookmark(event, post_idx) {
+    event.preventDefault(); // 링크 기본 동작 방지
+    event.stopPropagation(); // 이벤트 버블링 방지
+
+    var bookmarkIcon = document.getElementById('bookmark_' + post_idx);
+    
+    // bookmarkIcon이 null인지 확인
+    if (!bookmarkIcon) {
+        console.error('Bookmark icon element not found for post index: ' + post_idx);
+        return;
+    }
+
+    var isBookmarked = bookmarkIcon.src.includes('moew_on.png'); // 북마크 상태 확인
+
+    // AJAX 요청을 통해 서버에 북마크 상태 업데이트
+    $.ajax({
+        url: isBookmarked ? '/Person/RemoveBookmark' : '/Person/AddBookmark', // 조건에 따라 URL 결정
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ post_idx: post_idx }),
+        success: function(response) {
+            // 성공적으로 처리된 경우, 북마크 아이콘 업데이트
+            bookmarkIcon.src = isBookmarked ? '/img/moew_off.png' : '/img/moew_on.png';
+            // 사용자에게 북마크 상태 변경 알림 (옵션)
+            alert(isBookmarked ? '북마크가 해제되었습니다.' : '북마크가 추가되었습니다.');
+        },
+        error: function(xhr, status, error) {
+            alert('북마크 업데이트 실패: ' + error);
+        }
+    });
+}
+
+</script>
+</html>

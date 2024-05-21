@@ -15,7 +15,9 @@ public class PagingVo {
     
     private Pagination pagination;    // 페이지네이션 정보
 
-    public int getOffset() {
+
+
+	public int getOffset() {
         return (page - 1) * recordSize;
     }
 

@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.catwork.mapper.ResumeMapper">  
+
+<insert id="insertResume">
+	INSERT INTO RESUME_TB(
+		RESUME_IDX,
+		USER_IDX,
+		TITLE,
+		IMAGE,
+		LINK,
+		INTRO,
+		TYPE
+	)
+	VALUES(
+		(SELECT MAX(NVL(RESUME_IDX,0)+1)
+		FROM   RESUME_TB),
+		#{user_idx},
+		#{title},
+		#{image},
+		#{link},
+		#{intro},
+		#{type}
+	)
+</insert>
+
+	<insert id="insertResumeSkill">
+      <foreach collection="list" item="resumeSkill"
+           index      = "i"  
+           open       = "INSERT ALL"    
+           close      = "SELECT * FROM DUAL"
+           separator  = " " >
+           INTO  RESUME_SKILL_TB VALUES (
+                GET_FILENUM(),
+                (SELECT MAX(NVL(RESUME_IDX,0))FROM   RESUME_TB),
+                #{ resumeSkill.skill_idx  }
+           )
+      </foreach>
+   
+   </insert>
+	<insert id="insertResumeSkill2">
+      <foreach collection="list" item="resumeSkill"
+           index      = "i"  
+           open       = "INSERT ALL"    
+           close      = "SELECT * FROM DUAL"
+           separator  = " " >
+           INTO  RESUME_SKILL_TB VALUES (
+                GET_FILENUM(),
+                #{resumeSkill.resume_idx},
+                #{ resumeSkill.skill_idx  }
+           )
+      </foreach>
+   
+   </insert>
+   
+   
+   <select id="countResumeList">
+   	SELECT COUNT(*) AS CNT FROM RESUME_TB R
+    JOIN USER_TB U ON R.USER_IDX=U.USER_IDX 
+    WHERE U.USER_IDX = 2
+   
+   </select>
+   <select id="countRecommensPostList">
+SELECT COUNT(*)
+FROM (
+    SELECT 
+        LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.NAME) AS SKILL_NAMES
+    FROM POST_TB P 
+    JOIN POST_SKILL_TB PS ON P.POST_IDX = PS.POST_IDX 
+    JOIN SKILL_TB S ON PS.SKILL_IDX = S.SKILL_IDX
+    JOIN RESUME_SKILL_TB RS ON S.SKILL_IDX = RS.SKILL_IDX
+    JOIN RESUME_TB R ON RS.RESUME_IDX = R.RESUME_IDX
+    JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+    WHERE R.RESUME_IDX = #{resume_idx}
+    GROUP BY P.POST_IDX
+) TEMP
+   </select>
+   
+   <select id="countApplyList">
+	SELECT COUNT(*)
+	FROM APPLY_TB A 
+	JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
+	JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+	JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
+	WHERE U.USER_IDX = 2
+   </select>
+   
+   
+   
+   
+   
+   	<select id="getResumeListPaging">
+   SELECT 
+        ROW_NUMBER() OVER (ORDER BY RESUME_IDX) AS NUM,
+        RESUME_IDX,
+        USER_IDX,
+        TITLE,
+        IMAGE,
+        LINK,
+        INTRO,
+        CREATED,
+        TYPE
+    FROM RESUME_TB
+    WHERE USER_IDX = (
+        SELECT USER_IDX
+        FROM USER_TB U
+        WHERE U.ID = 'user'
+    )
+    OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+	</select>
+   
+   <select id="countBookmarkList">
+   SELECT COUNT(*)
+    FROM BOOKMARK_TB B 
+    JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
+    JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
+    WHERE U.USER_IDX = 2
+   
+   </select>
+   
+   
+   <select id="getBookmarkListPaging">
+   SELECT 
+    B.BOOK_IDX,
+    B.USER_IDX,
+    B.POST_IDX,
+    B.BOOKMARK,
+    P.TITLE,
+    P.CAREER,
+    P.SALARY,
+    P.DEADLINE,
+    P.MANAGER,
+    P.MPHONE,
+    P.CREATED,
+    ROW_NUMBER() OVER (ORDER BY P.CREATED DESC) AS row_num
+FROM BOOKMARK_TB B 
+JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
+JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
+WHERE U.USER_IDX = 2
+ORDER BY P.CREATED DESC
+OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+   
+   
+   
+   </select>
+   
+   
+   
+   <select id="getPostListPaging">
+	   SELECT 
+	    R.RESUME_IDX,
+	    P.TITLE,
+	    P.CAREER,
+	    P.GOHOME,
+	    P.SALARY,
+	    P.POST_IDX,
+	    P.USER_IDX,
+	    P.DEADLINE,
+	    P.INTRO,
+	    P.EXPLAIN,
+	    P.MANAGER,
+	    P.MPHONE,
+	    P.CREATED,
+	    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.NAME) AS SKILL_NAMES,
+	    ROW_NUMBER() OVER (ORDER BY P.CREATED DESC) AS ROW_NUM
+	FROM POST_TB P 
+	JOIN POST_SKILL_TB PS ON P.POST_IDX = PS.POST_IDX 
+	JOIN SKILL_TB S ON PS.SKILL_IDX = S.SKILL_IDX
+	JOIN RESUME_SKILL_TB RS ON S.SKILL_IDX = RS.SKILL_IDX
+	JOIN RESUME_TB R ON RS.RESUME_IDX = R.RESUME_IDX
+	JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+	WHERE R.RESUME_IDX = #{arg0}  
+	GROUP BY
+		R.RESUME_IDX,
+	    P.TITLE,
+	    P.CAREER,
+	    P.GOHOME,
+	    P.SALARY,
+	    P.POST_IDX,
+	    P.USER_IDX,
+	    P.DEADLINE,
+	    P.INTRO,
+	    P.EXPLAIN,
+	    P.MANAGER,
+	    P.MPHONE,
+	    P.CREATED
+	OFFSET #{arg1} ROWS FETCH NEXT #{arg2} ROWS ONLY
+   
+   
+   
+   
+   
+   </select>
+   
+   
+   <select id="getApplyListPaging">
+   SELECT *
+FROM (
+    SELECT 
+        A.APPLY_IDX,
+        A.RESUME_IDX,
+        A.POST_IDX,
+        A.STATE,
+        A.CREATED,
+        U.USER_IDX,
+        P.TITLE,
+        P.CAREER,
+        P.GOWORK,
+        P.GOHOME,
+        P.SALARY,
+        P.DEADLINE,
+        P.MANAGER,
+        P.MPHONE,
+        ROW_NUMBER() OVER (ORDER BY A.APPLY_IDX) AS ROW_NUM
+    FROM APPLY_TB A 
+    JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
+    JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+    JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
+    WHERE U.USER_IDX = 2
+)
+OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+   
+   </select>
+   
+   
+   <select id="getSkillList">
+   		SELECT 
+   			SKILL_IDX,
+   			NAME
+   		FROM SKILL_TB	
+   
+   </select>
+   
+   <select id="getView">
+		SELECT 
+    PE.NAME,
+    PE.PHONE,
+    TO_CHAR(TO_DATE(SUBSTR(PE.SOCIAL_NUM, 1, 6), 'YYMMDD'), 'YY"년 "MM"월 "DD"일"') AS SOCIAL_NUM,
+    PE.ADDRESS,
+    R.RESUME_IDX,
+    R.USER_IDX,
+    R.IMAGE,
+    R.TITLE,
+    R.IMAGE,
+    R.LINK,
+    R.INTRO,
+    R.CREATED,
+    R.TYPE,
+    LISTAGG(L.NAME, ', ') WITHIN GROUP (ORDER BY L.NAME) AS SKILL_NAMES
+FROM 
+    RESUME_SKILL_TB S
+RIGHT JOIN 
+    RESUME_TB R ON R.RESUME_IDX = S.RESUME_IDX 
+LEFT JOIN 
+    SKILL_TB L ON S.SKILL_IDX = L.SKILL_IDX
+JOIN 
+    PERSON_TB PE ON R.USER_IDX = PE.USER_IDX    
+WHERE 
+    R.RESUME_IDX = #{resume_idx}
+GROUP BY
+    R.RESUME_IDX,
+    R.USER_IDX,
+    R.TITLE,
+    R.IMAGE,
+    R.LINK,
+    R.INTRO,
+    R.CREATED,
+    R.TYPE,
+    PE.NAME,
+    PE.PHONE,
+    PE.SOCIAL_NUM,
+    PE.ADDRESS
+   </select>
+   
+   <select id="getReskillList">
+   		SELECT 
+   			RESKILL_IDX,
+   			SKILL_IDX,
+   			RESUME_IDX
+   		FROM RESUME_SKILL_TB
+   		WHERE RESUME_IDX = #{resume_idx}	
+   
+   </select>
+   
+   <select id="getBookmarkList">
+      SELECT 
+        B.BOOK_IDX,
+        B.USER_IDX,
+        B.POST_IDX,
+        B.BOOKMARK,
+        P.TITLE,
+        P.CAREER,
+        P.SALARY,
+        P.DEADLINE,
+        P.MANAGER,
+        P.MPHONE,
+        P.CREATED,
+        ROW_NUMBER() OVER (ORDER BY P.CREATED DESC) AS row_num
+    FROM BOOKMARK_TB B 
+    JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
+    JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
+    WHERE U.USER_IDX = 2
+   </select>
+   
+   <select id="getResumeDetailView"  >
+		SELECT 
+			R.RESUME_IDX,
+		    R.TITLE,
+		    R.IMAGE,
+		    R.LINK,
+		    R.INTRO,
+		    R.TYPE,
+		    P.NAME,
+		    P.PHONE
+		FROM RESUME_TB R JOIN PERSON_TB P
+		ON   R.USER_IDX = P.USER_IDX
+		WHERE R.RESUME_IDX = #{resume_idx}
+   
+   </select>
+   
+   <update id="updateResume">
+   		UPDATE RESUME_TB
+   			SET TITLE=#{title},
+   				IMAGE=#{image},
+   				LINK=#{link},
+   				INTRO=#{intro},
+   				TYPE=#{type}
+   		WHERE resume_idx= #{resume_idx}
+   
+   </update>
+   <update id="updateResumeSkill">
+   		UPDATE RESUME_SKILL_TB
+   			SET 
+   				RESUME_IDX=#{resume_idx},
+   				SKILL_IDX=#{skill_idx}
+   		WHERE  RESKILL_IDX = #{reskill_idx}
+   
+   </update>
+   
+   
+   <delete id="deleteSkill">
+   		DELETE FROM RESUME_SKILL_TB
+   		WHERE  RESUME_IDX = #{resume_idx}
+   
+   </delete>
+   
+    <delete id="deleteSkillByResumeIdx">
+   		DELETE FROM RESUME_SKILL_TB
+   		WHERE  RESUME_IDX = #{resume_idx}
+   
+   </delete>
+   
+	<delete id="resumeDelete">
+		DELETE FROM RESUME_TB
+		WHERE  RESUME_IDX=#{resume_idx}
+	
+	</delete>
+   
+   
+   
+   <select id="getPostList">
+		SELECT 
+		    P.TITLE,
+		    P.CAREER,
+		    P.GOHOME,
+		    P.SALARY,
+		    P.POST_IDX,
+		    P.USER_IDX,
+		    P.DEADLINE,
+		    P.INTRO,
+		    P.EXPLAIN,
+		    P.MANAGER,
+		    P.MPHONE,
+		    P.CREATED,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.NAME) AS SKILL_NAMES,
+		    ROW_NUMBER() OVER (ORDER BY P.CREATED DESC) AS ROW_NUM
+		FROM POST_TB P 
+		JOIN POST_SKILL_TB PS ON P.POST_IDX = PS.POST_IDX 
+		JOIN SKILL_TB S ON PS.SKILL_IDX= S.SKILL_IDX
+		JOIN RESUME_SKILL_TB RS ON S.SKILL_IDX = RS.SKILL_IDX
+		JOIN RESUME_TB R ON RS.RESUME_IDX = R.RESUME_IDX
+		JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+		WHERE R.RESUME_IDX = #{resume_idx}  
+		GROUP BY
+		    P.TITLE,
+		    P.CAREER,
+		    P.GOWORK,
+		    P.GOHOME,
+		    P.SALARY,
+		    P.POST_IDX,
+		    P.USER_IDX,
+		    P.DEADLINE,
+		    P.INTRO,
+		    P.EXPLAIN,
+		    P.MANAGER,
+		    P.MPHONE,
+		    P.CREATED
+   
+   </select>
+   
+   <select id="getResumeList">
+   
+   SELECT *
+FROM (
+    SELECT 
+        A.APPLY_IDX,
+        A.RESUME_IDX,
+        A.POST_IDX,
+        A.STATE,
+        A.CREATED,
+        U.USER_IDX,
+        P.TITLE,
+        R.TITLE RTITLE,
+        P.CAREER,
+        P.GOWORK,
+        P.GOHOME,
+        P.SALARY,
+        P.DEADLINE,
+        P.MANAGER,
+        P.MPHONE,
+        PE.PER_IDX,
+        PE.NAME,
+        PE.PHONE,
+        ROW_NUMBER() OVER (ORDER BY A.APPLY_IDX) AS ROW_NUM
+    FROM APPLY_TB A 
+    JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
+    JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+    JOIN PERSON_TB PE ON U.USER_IDX = PE.USER_IDX
+    JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
+    WHERE P.POST_IDX = #{post_idx}
+    AND   U.USER_IDX = 2
+)
+   
+   </select>
+
+	<select id="getPersonState">
+	
+	
+	SELECT
+	    APPLY_IDX,
+	    STATE_IDX,
+	    RESUME_IDX,
+	    SCORE,
+	    COMMENTS,
+	    USER_IDX
+	FROM STATE_TB
+	WHERE APPLY_IDX = #{apply_idx}
+    
+	</select>
+	
+	<!-- 로그인 되어있는 유저의 이력서 목록 불러오기 -->
+	<select id="getResumesByUserId">
+	
+		SELECT	RESUME_IDX,
+				USER_IDX,
+				TITLE
+		FROM	RESUME_TB
+		WHERE	USER_IDX = #{user_idx}
+	
+	</select>
+	
+	<delete id="deleteBookmark">
+	
+	DELETE FROM BOOKMARK_TB
+	WHERE BOOK_IDX = #{book_idx}
+	
+	</delete>
+	
+	
+	<select id="getRateForm">
+		SELECT 
+		    PE.PER_IDX,
+		    C.COM_IDX
+		FROM APPLY_TB A
+		JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
+		JOIN USER_TB U ON P.USER_IDX = U.USER_IDX
+		JOIN COMPANY_TB C ON U.USER_IDX = C.USER_IDX
+		JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX
+		LEFT JOIN PERSON_TB PE ON R.USER_IDX = PE.USER_IDX 
+		WHERE A.APPLY_IDX = #{apply_idx}
+	
+	</select>
+	
+	<insert id="insertRate">
+INSERT INTO RATE_TB(
+    RATE_IDX,
+    PER_IDX,
+    COM_IDX,
+    RATING
+)
+VALUES (
+    COALESCE((SELECT MAX(RATE_IDX) FROM RATE_TB), 0) + 1,
+    #{per_idx},
+    #{com_idx},
+    #{rating}
+)
+	
+	</insert>
+
+</mapper>
