@@ -9,17 +9,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CompanyVo {
 	
-	private int com_idx;
-	private int user_idx;
+	private String id;
+	private String pwd;
+	private int    type;
+	private String email;
 	private String name;
 	private String logo;
-	private int cnum;
+	private int   cnum;
 	private String representative;
 	private String zip_code;
 	private String address;
 	private String ctype;
 	private String bdate;
 	private String created;
+	private int com_idx;
+	private int user_idx;
+	
+
 	
 	
 }

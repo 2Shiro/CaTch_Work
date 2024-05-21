@@ -1,5 +1,8 @@
 package com.catwork.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
+
+import com.catwork.domain.CompanyVo;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;

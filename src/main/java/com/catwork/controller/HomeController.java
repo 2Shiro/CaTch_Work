@@ -21,7 +21,6 @@ import com.catwork.domain.ResumeVo;
 import com.catwork.domain.SkillVo;
 import com.catwork.domain.UserListVo;
 import com.catwork.domain.UserVo;
-//github.com/2Shiro/CaTch_Work.git
 import com.catwork.mapper.CompanyMapper;
 import com.catwork.mapper.PersonMapper;
 import com.catwork.mapper.ResumeMapper;
@@ -34,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class HomeController {
 	
+
 	@Autowired
 	private CompanyMapper companyMapper;
 	
@@ -254,3 +254,4 @@ public class HomeController {
 		return mv;
 	}
 }
+

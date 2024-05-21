@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.catwork.mapper.CommentMapper">
+	
+	<!-- 자유게시판 댓글 추가 -->
+	<insert id="add">
+		INSERT
+		INTO bcomment_tb (bcomment_idx,board_idx,user_idx,content)
+		VALUES ( (SELECT NVL(MAX(bcomment_idx),0)+1 FROM bcomment_tb),
+							#{board_idx}, #{user_idx}, #{content} )
+	</insert>
+	
+	<!-- 자유게시판 댓글 리스트 -->
+	<select id="getcommentList">
+		SELECT b.bcomment_idx,b.board_idx,b.user_idx,b.content,
+					 TO_CHAR(b.created,'YYYY-MM-DD') created,u.id
+		FROM   bcomment_tb b LEFT JOIN user_tb u ON b.user_idx = u.user_idx
+		WHERE  b.board_idx = #{board_idx}	
+	</select>
+	
+	<!-- 자유게시판 댓글 업데이트 -->
+	<update id="update">
+		UPDATE bcomment_tb 
+		SET 	 content = #{content}
+		WHERE  bcomment_idx=#{bcomment_idx}
+	</update>
+	
+	<!-- 자유게시판 댓글 삭제 -->
+	<delete id="delete">
+		DELETE FROM bcomment_tb
+		WHERE  bcomment_idx=#{bcomment_idx}
+	</delete>
+	
+	<!-- 기업게시판 댓글 리스트 -->
+	<select id="getccommentList">
+		SELECT c.ccomment_idx,c.cboard_idx,c.user_idx,c.content,TO_CHAR(c.created,'YYYY-MM-DD') created,u.id
+		FROM   ccomment_tb c LEFT JOIN user_tb u ON c.user_idx = u.user_idx
+		WHERE  c.cboard_idx = #{cboard_idx}
+	</select>
+	
+	<!-- 기업게시판 댓글 추가 -->
+	<insert id="addccomment">
+		INSERT INTO ccomment_tb (ccomment_idx,cboard_idx,user_idx,content,created,id)
+	</insert>
+	
+	<!-- 홈페이지게시판 댓글 리스트 -->
+	<select id="gethcommentList">
+		SELECT h.bcomment_idx,h.board_idx,h.user_idx,h.content,
+					 TO_CHAR(hb.created,'YYYY-MM-DD') created,u.id
+		FROM   hcomment_tb h LEFT JOIN user_tb u ON h.user_idx = u.user_idx
+		WHERE  h.board_idx = #{hboard_idx}	
+	</select>
+	
+</mapper>
