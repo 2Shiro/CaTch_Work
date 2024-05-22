@@ -51,9 +51,14 @@ public class BoardController {
 	public ModelAndView list(BoardVo boardVo,CBoardVo cBoardVo,HBoardVo hBoardVo,
 							@RequestParam(value = "nowpage") int nowpage,
 							@RequestParam(value = "nowpage2") int nowpage2,
-							@RequestParam(value = "nowpage3") int nowpage3) {		
+							@RequestParam(value = "nowpage3") int nowpage3,
+							@SessionAttribute("login") UserVo userVo
+			) {		
 		
 		ModelAndView mv = new ModelAndView();
+		
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
 		
 		// 자유게시판 게시글
 		List<BoardVo> boardList = boardMapper.getBoardList();
@@ -97,17 +102,17 @@ public class BoardController {
 	      // 페이징을 위한 초기 설정값
 	      PagingVo pagingVo = new PagingVo();
 	      pagingVo.setPage(nowpage);
-	      pagingVo.setPageSize(3);
+	      pagingVo.setPageSize(5);
 	      pagingVo.setRecordSize(3);
 	      
 	      PagingVo pagingVo2 = new PagingVo();
 	      pagingVo2.setPage(nowpage2);
-	      pagingVo2.setPageSize(3);
+	      pagingVo2.setPageSize(5);
 	      pagingVo2.setRecordSize(3);
 	      
 	      PagingVo pagingVo3 = new PagingVo();
 	      pagingVo3.setPage(nowpage3);
-	      pagingVo3.setPageSize(3);
+	      pagingVo3.setPageSize(5);
 	      pagingVo3.setRecordSize(3);
 
 	      // Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
@@ -162,7 +167,8 @@ public class BoardController {
 												@RequestParam(value = "nowpage") int nowpage){
 		
 		ModelAndView mv = new ModelAndView();
-		int user_idx = personMapper.getUser_idx(userVo.getId());
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
 		
 		String origin = keyword;
 		
@@ -198,7 +204,7 @@ public class BoardController {
 		// 페이징을 위한 초기 설정값
 		PagingVo pagingVo = new PagingVo();
 		pagingVo.setPage(nowpage);
-		pagingVo.setPageSize(3);
+		pagingVo.setPageSize(5);
 		pagingVo.setRecordSize(3);//
 
 		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
@@ -228,6 +234,7 @@ public class BoardController {
 	    mv.addObject("pagingVo", pagingVo);
 	    mv.addObject("nowpage", nowpage);
 	    mv.addObject("keyword", keyword);
+	    mv.addObject("usertype", usertype);
 		
 		mv.setViewName("board/personboard");
 		return mv;
@@ -243,6 +250,7 @@ public class BoardController {
 		ModelAndView mv = new ModelAndView();
 		
 		int user_idx = personMapper.getUser_idx(userVo.getId());
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
 		
 		//검색어 공백 제거
 		keyword = keyword.replaceAll(" ", "");
@@ -267,7 +275,7 @@ public class BoardController {
 	      // 페이징을 위한 초기 설정값
 	      PagingVo pagingVo = new PagingVo();
 	      pagingVo.setPage(nowpage);
-	      pagingVo.setPageSize(3);
+	      pagingVo.setPageSize(5);
 	      pagingVo.setRecordSize(3);
 
 	      // Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
@@ -290,6 +298,7 @@ public class BoardController {
 	      mv.addObject("response", response); 
 	      mv.addObject("pagingVo", pagingVo);
 	      mv.addObject("nowpage", nowpage);
+	      mv.addObject("usertype", usertype);
 	
 		mv.setViewName("board/homeboard");
 				
@@ -331,7 +340,7 @@ public class BoardController {
 	      // 페이징을 위한 초기 설정값
 	      PagingVo pagingVo = new PagingVo();
 	      pagingVo.setPage(nowpage);
-	      pagingVo.setPageSize(3);
+	      pagingVo.setPageSize(5);
 	      pagingVo.setRecordSize(3);
 
 	      // Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
@@ -350,7 +359,8 @@ public class BoardController {
 	      }
 	      
 	      response = new PagingResponse<>(pagingList, pagination);
-	      
+	      UserVo usertype = userMapper.getUserInfoById(user_idx);
+		  mv.addObject("usertype", usertype);
 	      mv.addObject("response", response); 
 	      mv.addObject("pagingVo", pagingVo);
 	      mv.addObject("nowpage", nowpage);
@@ -362,7 +372,7 @@ public class BoardController {
 	
 	// 자주 묻는 질문
 	@RequestMapping("/Faq")
-	public ModelAndView faqBoard() {
+	public ModelAndView faqBoard(@SessionAttribute("login") UserVo userVo) {
 		ModelAndView mv = new ModelAndView();
 		
 		// FAQ
@@ -372,6 +382,13 @@ public class BoardController {
 		List<FaqVo> faqList2 = boardMapper.getList2();
 		mv.addObject("faqList2",faqList2);
 		
+		int user_idx = personMapper.getUser_idx(userVo.getId());
+		mv.addObject("user_idx", user_idx);
+		
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		mv.addObject("usertype", usertype);
+
+		
 		mv.setViewName("board/faqboard");
 		
 		return mv;
@@ -379,13 +396,23 @@ public class BoardController {
 	
 	// 자유게시판 글 작성폼
 	@RequestMapping("/WriteForm")
-	public String WriteForm() {
-		return "board/write";
+	public ModelAndView WriteForm(@SessionAttribute("login") UserVo userVo) {
+		ModelAndView mv = new ModelAndView();
+		
+		int user_idx = personMapper.getUser_idx(userVo.getId());
+		mv.addObject("user_idx", user_idx);
+		
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		mv.addObject("usertype", usertype);
+		mv.setViewName("board/write");
+		return mv;
 	}
 	
 	// 자유게시판 글 작성
 	@RequestMapping("/Write")
-	public ModelAndView Write(BoardVo boardVo) {
+	public ModelAndView Write(BoardVo boardVo,
+			@SessionAttribute("login") UserVo userVo
+			) {
 		
 		ModelAndView mv = new ModelAndView();
 		boardMapper.insert(boardVo);
@@ -404,7 +431,9 @@ public class BoardController {
 		ModelAndView mv = new ModelAndView();
 		
 		int user_idx = userMapper.getUser_idx(userVo.getId());
+		mv.addObject("user_idx", user_idx);
 		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		mv.addObject("usertype", usertype);
 		
 		BoardVo vo = boardMapper.getboard(boardVo);
 		mv.addObject("vo", vo);
@@ -573,8 +602,13 @@ public class BoardController {
 	
 	// 기업 Q&A 게시글 작성폼
 	@RequestMapping("/CWriteForm")
-	public ModelAndView cwriteForm() {
+	public ModelAndView cwriteForm(@SessionAttribute("login") UserVo userVo) {
 		ModelAndView mv = new ModelAndView();
+		int user_idx = personMapper.getUser_idx(userVo.getId());
+		mv.addObject("user_idx", user_idx);
+		
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("board/cwrite");
 		return mv;
 	}
@@ -633,6 +667,7 @@ public class BoardController {
 		
 		int user_idx = userMapper.getUser_idx(userVo.getId());
 		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		mv.addObject("usertype", usertype);
 		
 		CBoardVo vo = boardMapper.getcboard(boardVo);
 		mv.addObject("vo", vo);
@@ -734,8 +769,14 @@ public class BoardController {
 	
 	// 홈페이지 Q&A 게시글 작성폼
 	@RequestMapping("/HWriteForm")
-	public ModelAndView hwriteForm() {
+	public ModelAndView hwriteForm(@SessionAttribute("login") UserVo userVo) {
 		ModelAndView mv = new ModelAndView();
+		int user_idx = personMapper.getUser_idx(userVo.getId());
+		mv.addObject("user_idx", user_idx);
+		
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		mv.addObject("usertype", usertype);
+		
 		mv.setViewName("board/hwrite");
 		return mv;
 	}
@@ -795,6 +836,7 @@ public class BoardController {
 		
 		int user_idx = userMapper.getUser_idx(userVo.getId());
 		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		mv.addObject("usertype", usertype);
 		
 		HBoardVo vo = boardMapper.gethboard(hBoardVo);
 		mv.addObject("vo", vo);
@@ -891,8 +933,14 @@ public class BoardController {
 
 	// FAQ 
 	@RequestMapping("/FAQ")
-	public ModelAndView faq() {
+	public ModelAndView faq(@SessionAttribute("login") UserVo userVo) {
 		ModelAndView mv = new ModelAndView();
+		
+		int user_idx = personMapper.getUser_idx(userVo.getId());
+		mv.addObject("user_idx", user_idx);
+		
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		mv.addObject("usertype", usertype);
 
 		mv.setViewName("board/faq");
 		
