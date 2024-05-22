@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>FAQ</title>
+<link rel="stylesheet" href="/css/common.css" />
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -70,6 +71,10 @@
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
+	<%@include file="/WEB-INF/include/header.jsp"%>
+
+	<%@include file="/WEB-INF/include/nav.jsp"%>
+
 	<%@include file="/WEB-INF/include/boardnav.jsp" %>
 	
 	<div class="container faq">
@@ -106,11 +111,12 @@
 			</div>
 		</div>
 		</div>
+		<%@include file="/WEB-INF/include/footer.jsp"%>
 		
 				<script>
         function collapse(element) {
-            var before = document.getElementsByClassName("active")[0]               // 기존에 활성화된 버튼
-            if (before && document.getElementsByClassName("active")[0] != element) {  // 자신 이외에 이미 활성화된 버튼이 있으면
+            var before = document.getElementsByClassName("active")[1]               // 기존에 활성화된 버튼
+            if (before && document.getElementsByClassName("active")[1] != element) {  // 자신 이외에 이미 활성화된 버튼이 있으면
                 before.nextElementSibling.style.maxHeight = null;   // 기존에 펼쳐진 내용 접고
                 before.classList.remove("active");                  // 버튼 비활성화
             }

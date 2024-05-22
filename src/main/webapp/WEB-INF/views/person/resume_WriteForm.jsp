@@ -7,15 +7,15 @@
 <meta charset="UTF-8">
 <title>이력서 작성하기</title>
 <style>
-	#img-thumbnail {
-		width: 200px;
-		margin-right: 20px;
-		text-align: center;
-		align-content: center;
-		align-items: center;
-		margin: 0 auto;
-		align-self: center;
-	}
+#img-thumbnail {
+	width: 200px;
+	margin-right: 20px;
+	text-align: center;
+	align-content: center;
+	align-items: center;
+	margin: 0 auto;
+	align-self: center;
+}
 #goWrite{
 	float : right;
 }
@@ -68,7 +68,7 @@ textarea {
 	<form action="/MyPage/Resume/Write" method="POST" enctype="multipart/form-data">
 	<input type="hidden"  name="user_idx" value="${usertype.user_idx }">
 	<section>
-<div class="container">				
+		<div class="container">		
 				<section>
 				<div class="mt-5 ms-3">
 					<div class="row">
@@ -78,6 +78,7 @@ textarea {
 									<input type="text" class="border-0 w-100" id="title">
 								</h2>
 							</div>
+				<h2>이력서 작성하기</h2>		
 				
 						</div>
 
@@ -170,6 +171,8 @@ textarea {
 
 
 	
+	<div>&nbsp;</div> 
+	<div>&nbsp;</div> 
 	
 	<%@include file="/WEB-INF/include/footer.jsp" %>
 <script>

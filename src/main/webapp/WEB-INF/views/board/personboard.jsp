@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>자유게시판</title>
+<link rel="stylesheet" href="/css/common.css" />
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -29,6 +30,10 @@
 		crossorigin="anonymous"></script>
 </head>
 <body>
+	<%@include file="/WEB-INF/include/header.jsp"%>
+
+	<%@include file="/WEB-INF/include/nav.jsp"%>
+
 	<%@include file="/WEB-INF/include/boardnav.jsp" %>
 	
 	<div class="container">
@@ -81,5 +86,6 @@
 					<%@include file="/WEB-INF/pagination/boardPaging.jsp"%>
 				</div>
 			</div>
+			<%@include file="/WEB-INF/include/footer.jsp"%>
 </body>
 </html>

@@ -191,8 +191,6 @@ FROM (
       SELECT *
       FROM DUAL
    </insert>
-   
-
 	
 	<select id="getUser_idx">
 		SELECT USER_IDX FROM USER_TB WHERE ID = #{id}
