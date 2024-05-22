@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>이력서 작성하기</title>
+<title>이력서 수정하기</title>
 <style>
 	#total {
 		display: flex;
@@ -54,16 +54,19 @@
         .input-group-text input {
             width: 100%; /* 입력 필드 넓이를 100%로 설정하여 부모 요소에 맞게 조정 */
         }
+        
+        #headerlogo {
+    height: 100px;
+    width: 192.98px;
+}
       
 
 
 </style>
-<link rel="icon" type="image/png" href="/img/favicon.png" />
-<link href="/css/start.css" rel="stylesheet" />
-<link href="/css/test.css" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link rel="stylesheet" href="/css/common.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 
 </head>
 	<%@include file="/WEB-INF/include/header.jsp" %>
@@ -78,7 +81,7 @@
 
     
         <section class="container">
-            <h2>회원 정보</h2>
+            <h2>이력서 수정하기</h2>
             <div id="total">
                 <div id="profile">
                     <img src="${vo.image}" id="img-thumbnail" name="image" class="img-thumbnail" alt="프로필없음">
@@ -108,7 +111,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-default">자기소개</span></br>
-                        <textarea rows="10" class="form-control" id="job-intro"name="intro"></textarea>
+                        <textarea rows="10" class="form-control" id="job-intro"name="intro">${vo.intro }</textarea>
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-default">공개여부</span>
@@ -133,8 +136,8 @@
                 </div>
             </div>
             <div class="">
-                <button type="submit" id="info-update" name="info-update" class="btn btn-primary">확인</button>
-                <button type="button" id="info-delete" class="btn btn-danger">삭제</button>
+                <button type="submit" id="goUpdate" name="info-update" class="btn btn-primary">확인</button>
+                <button type="button" id="goDelete" class="btn btn-danger">삭제</button>
                 <a type="button" class="btn btn-secondary" href="javascript:window.history.back();">뒤로</a>
             </div>
         </section>
@@ -148,18 +151,26 @@
 	
 	<%@include file="/WEB-INF/include/footer.jsp" %>
 <script> 
-// 	const goUpdateEl = document.querySelector('#goUpdate')
-// 	goUpdateEl.addEventListener('click',()=>{
-// 		alert('수정되었습니다');
-// 		location.href='/Resume/Update?resume_idx=${vo.resume_idx}';
-	
-// 	})
-	const goDeleteEl = document.querySelector('#goDelete')
-	goDeleteEl.addEventListener('click',()=>{
-		alert('삭제되었습니다');
-		location.href='/Resume/Delete?resume_idx=${vo.resume_idx}';
+	const goUpdateEl = document.querySelector('#goUpdate')
+	goUpdateEl.addEventListener('click',()=>{
+		alert('수정되었습니다');
+		//location.href='/Resume/Update?resume_idx=${vo.resume_idx}';
 	
 	})
+const goDeleteEl = document.querySelector('#goDelete');
+goDeleteEl.addEventListener('click', () => {
+    // 사용자에게 삭제 여부를 물어봄
+    const isConfirmed = confirm('정말 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+        // 사용자가 확인하면 삭제 처리 진행
+        alert('삭제되었습니다');
+        location.href = '/Resume/Delete?resume_idx=${vo.resume_idx}';
+    } else {
+        // 사용자가 취소하면 아무 동작도 하지 않음
+        //alert('삭제가 취소되었습니다');
+    }
+});
 	
 	
 </script>	

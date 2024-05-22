@@ -1,5 +1,5 @@
 package com.catwork.controller;
-
+//import com.catwork.mapper.CompanyMapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -981,4 +981,5 @@ public class CompanyController {
 			mv.setViewName("login");
 			return mv;
 		}
+
 }

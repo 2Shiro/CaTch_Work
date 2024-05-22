@@ -49,56 +49,55 @@
 					<!-- 평점 -->
 					<input type="hidden" id="star" name="star" value="${rate}">
 					<div class="d-flex">
-					<div class="">
-						<button class="btn btn-outline-secondary"
-										style="--bs-btn-hover-color: #6c757d; --bs-btn-hover-bg: #fff;">
-										기업 평점
-						</button>
+						<div class="">
+							<button class="btn btn-outline-secondary"
+											style="--bs-btn-hover-color: #6c757d; --bs-btn-hover-bg: #fff;">
+											기업 평점
+							</button>
+						</div>
+						<div class="rating" style="margin-left: 50px;">
+						    <label class="rating__label rating__label--half" for="starhalf">
+						        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						    <label class="rating__label rating__label--full" for="star1">
+						        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						    <label class="rating__label rating__label--half" for="starhalf">
+						        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						    <label class="rating__label rating__label--full" for="star1">
+						        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						    <label class="rating__label rating__label--half" for="starhalf">
+						        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						    <label class="rating__label rating__label--full" for="star1">
+						        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						    <label class="rating__label rating__label--half" for="starhalf">
+						        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						    <label class="rating__label rating__label--full" for="star1">
+						        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						    <label class="rating__label rating__label--half" for="starhalf">
+						        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						    <label class="rating__label rating__label--full" for="star1">
+						        <input type="radio" id="star1" class="rating__input" name="rating" value="">
+						        <span class="star-icon"></span>
+						    </label>
+						</div>
 					</div>
-					<div class="rating" style="margin-left: 50px;">
-				    <label class="rating__label rating__label--half" for="starhalf">
-				        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				    <label class="rating__label rating__label--full" for="star1">
-				        <input type="radio" id="star1" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				    <label class="rating__label rating__label--half" for="starhalf">
-				        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				    <label class="rating__label rating__label--full" for="star1">
-				        <input type="radio" id="star1" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				    <label class="rating__label rating__label--half" for="starhalf">
-				        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				    <label class="rating__label rating__label--full" for="star1">
-				        <input type="radio" id="star1" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				    <label class="rating__label rating__label--half" for="starhalf">
-				        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				    <label class="rating__label rating__label--full" for="star1">
-				        <input type="radio" id="star1" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				    <label class="rating__label rating__label--half" for="starhalf">
-				        <input type="radio" id="starhalf" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				    <label class="rating__label rating__label--full" for="star1">
-				        <input type="radio" id="star1" class="rating__input" name="rating" value="">
-				        <span class="star-icon"></span>
-				    </label>
-				</div>
-				</div>
-					
 				</div>
 			</div>
 			<div class="mt-3">

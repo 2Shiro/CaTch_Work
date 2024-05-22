@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.catwork.mapper.BoardMapper">
+	
+	<!-- 자유게시판 게시글 목록  -->
+	<select id="getBoardList">
+		SELECT b.board_idx,u.id,b.title,to_char(b.created,'yyyy-mm-dd') created, b.hit
+		FROM	 board_tb b, user_tb u
+		WHERE  b.user_idx = u.user_idx
+		ORDER BY created desc	
+	</select>
+	
+	<!-- 자유게시글 카운트 -->
+	<select id="countBoardList">
+		SELECT COUNT(*) FROM board_tb
+	</select>
+	
+	<!-- 자유게시판 페이징 -->
+	<select id="getBoardListPaging">
+		SELECT b.board_idx,u.id,b.title,to_char(b.created,'yyyy-mm-dd') created, b.hit
+		FROM	 board_tb b, user_tb u
+		WHERE  b.user_idx = u.user_idx
+		ORDER BY created desc	
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+    ROWS ONLY
+	</select>
+	
+	<!-- 자유게시판 조회수 증가 -->
+	<update id="ahit">
+		UPDATE board_tb 
+		SET 	 hit = hit + 1
+		WHERE  board_idx = #{board_idx}
+	</update>
+	
+	<!-- 자유게시판 view -->
+	<select id="getboard">
+		SELECT b.board_idx,b.user_idx,u.id,b.title,b.content,to_char(b.created,'yyyy-mm-dd') created,b.hit
+		FROM   board_tb b 
+		LEFT JOIN user_tb u ON b.user_idx = u.user_idx
+		WHERE  b.board_idx = #{board_idx}
+	</select>	
+	
+	<select id="getCommentView">
+		SELECT 
+			BCOMMENT_IDX,
+			BOARD_IDX,
+			USER_IDX,
+			CONTENT,
+			CREATED
+		FROM BCOMMENT_TB
+		WHERE BCOMMENT_IDX=#{bcomment_idx}	
+	</select>
+	
+	<!-- 자유게시판 글 작성 -->
+	<insert id="insert">
+		INSERT INTO board_tb(board_idx,user_idx,title,content,created,hit)
+		VALUES ((SELECT NVL(MAX(board_idx),0)+1 FROM board_tb)
+						,(SELECT user_idx FROM user_tb WHERE id=#{id})
+						,#{title} ,#{content}, sysdate, 0)   
+	</insert>
+	
+	<!-- 자유게시판 글 수정 -->
+	<update id="updateboard">
+		UPDATE board_tb
+		SET    content = #{content}, title=#{title}
+		WHERE  board_idx = #{board_idx}
+	</update>
+	
+	<!-- 자유게시판 글 삭제 -->
+	<delete id="deleteboard">
+		DELETE FROM board_tb
+		WHERE board_idx = #{board_idx}
+	</delete>
+
+	<!-- 기업게시판 게시글 목록 -->
+	<select id="getcBoardList">
+		SELECT c.cboard_idx, c.user_idx, c.title, c.content, TO_CHAR(c.created,'YYYY-MM-DD') created, c.hit, u.id
+		FROM   cboard_tb c,user_tb u
+		WHERE  c.user_idx = u.user_idx
+		ORDER BY created desc
+	</select>
+		
+	<!-- 기업게시판 글 카운트 -->
+	<select id="countCboardList">
+		SELECT COUNT(*) FROM cboard_tb
+	</select>
+	
+	<!-- 기업게시판 페이징 -->
+	<select id="getCBoardListPaging">
+		SELECT c.cboard_idx, c.user_idx, c.title, c.content, TO_CHAR(c.created,'YYYY-MM-DD') created, c.hit, u.id
+		FROM   cboard_tb c,user_tb u
+		WHERE  c.user_idx = u.user_idx
+		ORDER BY created desc
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+    ROWS ONLY
+	</select>
+	
+	<!-- 기업게시판 게시글 추가 -->
+	<insert id="cwrite">
+		INSERT INTO cboard_tb (cboard_idx,user_idx,title,content,created,hit)
+		VALUES ((SELECT NVL(MAX(cboard_idx),0)+1 FROM cboard_tb),
+						(SELECT user_idx FROM user_tb WHERE id=#{id}),
+						#{title},#{content},sysdate,0)
+	</insert>
+		
+	<!-- 기업Q&A 게시글 조회수 -->
+	<update id="chit">
+		UPDATE cboard_tb 
+		SET 	 hit = hit + 1
+		WHERE  cboard_idx = #{cboard_idx}
+	</update>
+	
+	<!-- 기업Q&A 글 상세보기 -->
+	<select id="getcboard">
+		SELECT u.id,c.cboard_idx,c.user_idx,c.title,c.content,
+						to_char(c.created,'yyyy-mm-dd') created,c.hit
+		FROM   cboard_tb c 
+		LEFT JOIN user_tb u ON c.user_idx = u.user_idx
+		WHERE  c.cboard_idx = #{cboard_idx}
+	</select>
+	
+	<!-- 기업게시판 글 수정 -->
+	<update id="updatecboard">
+		UPDATE cboard_tb
+		SET		 content =#{content}, title=#{title}
+		WHERE  cboard_idx = #{cboard_idx}
+	</update>
+	<!-- 홈게시판 글 수정 -->
+	<update id="updatehboard">
+		UPDATE hboard_tb
+		SET		 content =#{content}, title=#{title}
+		WHERE  hboard_idx = #{hboard_idx}
+	</update>
+	
+	<!-- 기업게시판 글 삭제 -->
+	<delete id="deletecboard">
+		DELETE FROM cboard_tb
+		WHERE cboard_idx = #{cboard_idx}
+	</delete>
+
+	<!-- 홈페이지 Q&A 게시글 목록 -->
+	<select id="gethBoardList">
+		SELECT h.hboard_idx, h.user_idx, h.title, h.content, TO_CHAR(h.created,'YYYY-MM-DD') created, h.hit, u.id
+		FROM   hboard_tb h,user_tb u
+		WHERE  h.user_idx = u.user_idx
+		ORDER BY created desc
+	</select>
+	
+	<!-- 홈게시판 글 카운트 -->
+	<select id="countHboardList">
+		SELECT COUNT(*) FROM hboard_tb
+	</select>
+	
+	<!-- 홈게시판 페이징 -->
+	<select id="getHBoardListPaging">
+		SELECT h.hboard_idx, h.user_idx, h.title, h.content, TO_CHAR(h.created,'YYYY-MM-DD') created, h.hit, u.id
+		FROM   hboard_tb h,user_tb u
+		WHERE  h.user_idx = u.user_idx
+		ORDER BY created desc		
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+    ROWS ONLY
+	</select>
+	
+	<!-- 홈Q&A 페이지 게시물 조회수 증가 -->
+	<update id="hhit">
+		UPDATE hboard_tb 
+		SET 	 hit = hit + 1
+		WHERE  hboard_idx = #{hboard_idx}
+	</update>
+	
+	<!-- 홈 Q&A 페이지 특정게시물 불러오기 -->
+	<select id="gethboard">
+		SELECT h.hboard_idx, h.user_idx, h.title, h.content, h.created, h.hit, u.id
+		FROM   hboard_tb h
+		LEFT JOIN user_tb u ON h.user_idx = u.user_idx
+		WHERE  hboard_idx=#{hboard_idx}
+	</select>
+	
+	<!-- 홈페이지 Q&A 게시글 추가 -->
+	<insert id="hwrite">
+		INSERT INTO hboard_tb (hboard_idx,user_idx,title,content,created,hit)
+		VALUES ((SELECT NVL(MAX(hboard_idx),0)+1 FROM hboard_tb),
+						(SELECT user_idx FROM user_tb WHERE id=#{id}),
+						#{title},#{content},sysdate,0)
+	</insert>
+	
+	<!-- 홈 게시판 글 삭제 -->
+	<delete id="deletehboard">
+		DELETE FROM hboard_tb
+		WHERE hboard_idx = #{hboard_idx}
+	</delete>
+	
+
+	<!-- FAQ 개인회원 -->
+	<select id="getList2">
+		SELECT question,answer
+		FROM   user_faq_tb
+		WHERE  type=2
+	</select>
+	
+	<!-- FAQ 기업회원 -->
+	<select id="getList">
+		SELECT question,answer
+		FROM	 user_faq_tb
+		WHERE  type=1
+	</select>
+	
+	<!-- search boardresult for paging -->
+	<select id="countresult">
+		SELECT COUNT(*) AS COUNT FROM board_tb
+	</select>
+	
+	<!-- search cboardresult for paging -->
+<!-- 	<select id=""> -->
+<!-- 		SELECT COUNT(*) AS COUNT FROM cboard_tb -->
+<!-- 	</select> -->
+	
+	<!-- search hboardresult for paging -->
+<!-- 	<select id=""> -->
+<!-- 		SELECT COUNT(*) AS COUNT FROM hboard_tb -->
+<!-- 	</select> -->
+	
+	<!-- SEARCH BOARAD RESULT-->
+	<select id="getresultList">
+		SELECT u.id, b.board_idx, b.user_idx, b.title, b.content, b.created, b.hit
+		FROM   board_tb b
+		LEFT JOIN user_tb u  ON b.user_idx=u.user_idx
+		WHERE   (b.title LIKE '%' || #{arg0} || '%')
+						OR (b.content LIKE '%' || #{arg0} || '%')
+		ORDER BY b.created desc
+	</select>
+	
+	<!-- SEARCH BOARD RESULT FOR PAGING -->
+	<select id="getResultListPaging">
+		SELECT u.id, b.board_idx, b.user_idx, b.title, b.content, to_char(b.created,'yyyy-mm-dd') created, b.hit
+		FROM   board_tb b
+		LEFT JOIN user_tb u  ON b.user_idx=u.user_idx
+		ORDER BY b.created desc
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+    ROWS ONLY		
+	</select>	
+	
+	<!-- SEARCH BOARD RESULT FOR PAGING -->
+	<select id="getResultListPagingSearch">
+		SELECT u.id, b.board_idx, b.user_idx, b.title, b.content, to_char(b.created,'yyyy-mm-dd') created, b.hit
+		FROM   board_tb b
+		LEFT JOIN user_tb u  ON b.user_idx=u.user_idx
+		WHERE   (b.title LIKE '%' || #{arg2} || '%')
+						OR (b.content LIKE '%' || #{arg2} || '%') 
+		ORDER BY b.created desc
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+    ROWS ONLY		
+	</select>	
+	
+	<!-- SEARCH HBOARD RESULT FOR PAGING -->
+	<select id="getSearchHBoardList">
+		SELECT h.hboard_idx, h.user_idx, h.title, h.content, TO_CHAR(h.created,'YYYY-MM-DD') created, h.hit, u.id
+		FROM   hboard_tb h
+		LEFT JOIN user_tb u   ON  h.user_idx = u.user_idx
+		WHERE   (h.title LIKE '%' || #{arg0} || '%')
+						OR (h.content LIKE '%' || #{arg0} || '%') 
+		ORDER BY created desc
+	</select>
+	
+	<!-- SEARCH HBOARD RESULT FOR PAGE -->
+	<select id="getResultHListPaging">
+		SELECT u.id, b.hboard_idx, b.user_idx, b.title, b.content, to_char(b.created,'yyyy-mm-dd') created, b.hit
+		FROM   hboard_tb b
+		LEFT JOIN user_tb u  ON b.user_idx=u.user_idx
+		ORDER BY created desc
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+    ROWS ONLY		
+	</select>
+	
+	<!-- SEARCH HBOARD RESULT FOR PAGE -->
+	<select id="getHResultListPagingSearch">
+		SELECT u.id, b.hboard_idx, b.user_idx, b.title, b.content, to_char(b.created,'yyyy-mm-dd') created, b.hit
+		FROM   hboard_tb b
+		LEFT JOIN user_tb u  ON b.user_idx = u.user_idx
+		WHERE   (b.title LIKE '%' || #{arg2} || '%')
+						OR (b.content LIKE '%' || #{arg2} || '%') 
+		ORDER BY created desc
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+    ROWS ONLY		
+	</select>
+	
+	<!-- SEARCH CBOARD RESULT -->
+	<select id="getcresultList">
+		SELECT u.id, b.cboard_idx, b.user_idx, b.title, b.content, b.created, b.hit
+		FROM   cboard_tb b
+		LEFT JOIN user_tb u  ON b.user_idx=u.user_idx
+		WHERE   (b.title LIKE '%' || #{arg0} || '%')
+						OR (b.content LIKE '%' || #{arg0} || '%')
+		ORDER BY created desc
+	</select>
+	
+	<!-- SEARCH CBOARD RESULT WITH PAGING -->
+	<select id="getCResultListPagingSearch">
+		SELECT u.id, b.cboard_idx, b.user_idx, b.title, b.content, to_char(b.created,'yyyy-mm-dd') created, b.hit
+		FROM   cboard_tb b
+		LEFT JOIN user_tb u  ON b.user_idx = u.user_idx
+		WHERE   (b.title LIKE '%' || #{arg2} || '%')
+						OR (b.content LIKE '%' || #{arg2} || '%') 
+		ORDER BY created desc
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+    ROWS ONLY		
+	</select>
+	
+	
+</mapper>

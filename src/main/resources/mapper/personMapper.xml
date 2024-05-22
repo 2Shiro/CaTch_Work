@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.catwork.mapper.PersonMapper">  
 <select id="getPersonInfo">
 	SELECT
 		U.ID,
 		U.PWD,
+		U.EMAIL,
 		U.TYPE, 
 		P.PER_IDX,
 		P.USER_IDX,
@@ -17,7 +19,7 @@
 	FROM PERSON_TB P
     JOIN USER_TB U
     ON P.USER_IDX = U.USER_IDX
-    WHERE U.ID = 'id001'
+    WHERE U.ID = #{arg1}
 
 </select>
 
@@ -27,7 +29,7 @@
 		EMAIL
 		
 	FROM USER_TB
-	WHERE  USER_IDX = 2 	
+	WHERE  USER_IDX = #{arg0} 	
 
 </select>
 <update id="updateMyInfo">
@@ -36,7 +38,7 @@
 			PWD = #{pwd},
 			EMAIL = #{email}	
 			
-	WHERE  ID='id001'	
+	WHERE  ID=#{id}	
 
 </update>
 <update id="updateMyInfo2">
@@ -46,16 +48,13 @@
 			ZIP_CODE=#{zip_code},
 			ADDRESS=#{address}
 
-	WHERE  USER_IDX=(
-    SELECT USER_IDX
-    FROM   USER_TB U
-    WHERE U.ID='id001')
+	WHERE  USER_IDX=#{user_idx}
 
 </update>
 
 <delete id="personDelete">
 	DELETE FROM USER_TB
-	WHERE  ID='151515'
+	WHERE  USER_IDX=#{user_idx}
 
 </delete>
 
@@ -76,7 +75,7 @@
 	WHERE USER_IDX=(
 	    SELECT USER_IDX
 	    FROM   USER_TB U
-	    WHERE U.ID='user')
+	    WHERE U.ID=#{arg1})
 
 
 </select>
@@ -105,7 +104,7 @@ FROM (
     JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
     JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
     JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
-    WHERE U.USER_IDX = 2
+    WHERE U.USER_IDX = #{arg1}
 )
 
 </select>
@@ -128,7 +127,7 @@ FROM (
     FROM BOOKMARK_TB B 
     JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
     JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
-    WHERE U.USER_IDX = 2
+    WHERE U.USER_IDX = #{arg1}
 
 
 
@@ -181,17 +180,17 @@ FROM (
         AND POST_IDX = #{post_idx}
     </select>
     
-    <insert id="insert">		
-		INSERT ALL
-		INTO user_tb (user_idx,id, pwd ,email,type)
-		VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},2)		
-		INTO person_tb (per_idx,user_idx,name,phone,zip_code,address,social_num,created)
-		VALUES
-		((SELECT MAX(NVL(per_idx,0)+1) FROM PERSON_TB),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
-			#{name},#{phone},#{zip_code},#{address},#{social_num},sysdate)
-		SELECT *
-		FROM DUAL
-	</insert>
+   <insert id="insert">      
+      INSERT ALL
+      INTO user_tb (user_idx,id, pwd ,email,type)
+      VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},2)      
+      INTO person_tb (per_idx,user_idx,name,phone,zip_code,address,social_num,created)
+      VALUES
+      ((SELECT MAX(NVL(per_idx,0)+1) FROM PERSON_TB),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
+         #{name},#{phone},#{zip_code},#{address},#{social_num},sysdate)
+      SELECT *
+      FROM DUAL
+   </insert>
 	
 	<select id="getUser_idx">
 		SELECT USER_IDX FROM USER_TB WHERE ID = #{id}
@@ -202,28 +201,28 @@ FROM (
 	    <!-- 동일한 USER_IDX와 POST_IDX를 가진 데이터가 없는 경우에만 북마크 추가 -->
 	    INSERT INTO BOOKMARK_TB ( BOOK_IDX, USER_IDX, POST_IDX, BOOKMARK )
 	    SELECT ( SELECT NVL( MAX( BOOK_IDX ), 0 ) + 1 FROM BOOKMARK_TB ),
-	           #{user_idx},
-	           #{post_idx},
+	           #{arg0},
+	           #{arg1},
 	           1
 	    FROM DUAL
 	    WHERE NOT EXISTS (
 	        SELECT 1 FROM BOOKMARK_TB
-	        WHERE USER_IDX = #{user_idx} AND POST_IDX = #{post_idx}
+	        WHERE USER_IDX = #{arg0} AND POST_IDX = #{arg1}
 	    )
 	</insert>
 	
 	<!-- 북마크 삭제 -->
 	<delete id="removeBookmark">
 	    DELETE FROM BOOKMARK_TB
-	    WHERE USER_IDX = #{user_idx}
-	    AND POST_IDX = #{post_idx}
+	    WHERE USER_IDX = #{arg0}
+	    AND POST_IDX = #{arg1}
 	</delete>
     
 	<!-- 사용자의 북마크한 게시글 ID 목록을 반환 -->
 	<select id="getBookmarked" resultType="int">
 	    SELECT POST_IDX
 	    FROM BOOKMARK_TB
-	    WHERE USER_IDX = #{user_idx}
+	    WHERE USER_IDX = #{arg0}
 	</select>
     
 	<!-- 사용자가 특정 게시글을 북마크했는지 확인 -->

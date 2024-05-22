@@ -23,8 +23,8 @@
 }
 
 .img-thumbnail {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
 }
 
 #goUpdate {
@@ -107,11 +107,12 @@ h1 {
     <div class="tab-pane fade show active" id="personinfo" role="tabpanel" aria-labelledby="personinfo-tab">
         <div class="container">
             <div>&nbsp;</div>
+            <div>&nbsp;</div>
             <h2>회원 정보</h2>
             <div>&nbsp;</div>
             <div id="total">
                 <div id="profile">
-                    <img src="/img/defaultProfile.png" class="img-thumbnail" alt="프로필없음">
+                    <img src="/img/cblank_profile.jpg" class="img-thumbnail" alt="프로필없음">
                 </div>
                 <div>&nbsp;</div>
                 <div id="info">
@@ -156,8 +157,7 @@ h1 {
 		
         <div class="container mt-5">
             <div id="personresume">
-                <div>&nbsp;</div>
-                <h2>구직자 이력서</h2>
+                <h2>구직자 이력서11</h2>
                 <div id="myresume" name="resume" class="linkDiv">
                 <div>&nbsp;</div>
                 <div>&nbsp;</div>
@@ -167,7 +167,7 @@ h1 {
                             <tr>
                                 <th scope="col">번호</th>
                                 <th scope="col">이력서 제목</th>
-                                <th scope="col">이름</th>
+                                <th scope="col">작성일</th>
                                 <th scope="col">추천공고 보러가기</th>
                             </tr>
                         </thead>
@@ -200,6 +200,7 @@ h1 {
         <div class="container">
         	<div id="personapply">
             <div>&nbsp;</div>
+            <div>&nbsp;</div>
             <h2>내가 지원한 공고</h2>
             <div>&nbsp;</div>
             <div>&nbsp;</div>
@@ -220,7 +221,7 @@ h1 {
                         <c:forEach var="po" items="${response1.list}" varStatus="status">
                             <tr>
                                 <th scope="row">${status.count}</th>
-                                <td class="td2"><a href="/Post?post_idx=${po.post_idx}">${po.title}</a></td>
+                                <td class="td2"><a href="/Company/Viewpost?post_idx=${po.post_idx}">${po.title}</a></td>
                                 <td>${po.salary}</td>
                                 <td>${po.career}</td>
                                 <td>${po.mphone}</td>
@@ -248,6 +249,7 @@ h1 {
 	<div class="container">
 	<div id="personbookmark">
 	<div>&nbsp;</div>
+	<div>&nbsp;</div>
 		<h2>내가 북마크한 공고</h2>
 		<div>&nbsp;</div>
 		<div>&nbsp;</div>
@@ -268,7 +270,7 @@ h1 {
 					<c:forEach var="bo" items="${response2.list}" varStatus="status">
 					   <tr data-row-num="${status.count}" data-deleted="false">
 					        <th scope="row">${bo.row_num}</th>
-					        <td class="td2"><a href="/Post?post_idx=${po.post_idx}">${bo.title}</a></td>
+					        <td class="td2"><a href="/Company/Viewpost?post_idx=${bo.post_idx}">${bo.title}</a></td>
 					        <td>${bo.salary}</td>
 					        <td>${bo.career}</td>
 					        <td>${bo.mphone}</td>
@@ -300,7 +302,7 @@ h1 {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title">지원 결과</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="modalData">
@@ -322,16 +324,13 @@ h1 {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title">기업 평가</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="modalState">
 
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+
     </div>
   </div>
 </div>
@@ -373,7 +372,7 @@ h1 {
         // href 속성 값에서 ${ro.resume_idx} 값을 추출합니다.
         const resume_idx = href.split('=')[1];
         
-	        let url = '/Resume/GetrecommendList?resume_idx='+resume_idx+'&nowpage=1';
+	        let url = '/Resume/GetrecommendList?resume_idx='+resume_idx+'&rNowpage=1';
 	        location.href=url;	
 	    });
 	}
@@ -479,13 +478,15 @@ h1 {
 // 	                        html += '</td>';
 // 	                        html += '</tr>';
 	                        html += '<tr>';
-	                        html += '<td>'+resume.row_num+'</td>';
-	                        html += '<td>'+resume.name+'</td>';
-	                        html += '<td>'+resume.rtitle+'</td>';
-	                        html += '<td>'+resume.phone+'</td>';
-	                        html += '<td>'+resume.created+'</td>';
-	                        html += '<td><button class="btn btn-primary result-btn">결과보기</button></td>'; // 클래스 추가
-	                        html += '<td><button class="btn btn-danger rate-btn">기업평가</button></td>'; // 클래스 추가
+	                       // html += '<td>'+resume.row_num+'</td>';
+	                       	html += ''
+	                       	html += '<td colspan="6">'+resume.name+'  님은 ' +resume.rtitle+'  이력서로  '+resume.created+'  에 지원하셨습니다'+'</td>'
+	                        
+	                       	if(resume.state != 0) {
+	                       		html += '<td><button class="btn btn-primary result-btn">결과보기</button></td>'; // 클래스 추가
+							}	                        
+	                       	
+	                       	html += '<td><button class="btn btn-danger rate-btn">기업평가</button></td>'; // 클래스 추가
 	                        html += '<input type="hidden" value="'+resume.apply_idx+'" name="apply_idx">'; // 클래스 추가
 	                        html += '<input type="hidden" value="'+resume.per_idx+'" name="per_idx">'; // 클래스 추가
 	                        html += '</tr>'; // 클래스 추가
@@ -503,7 +504,7 @@ h1 {
 	                            
 	                            // tr 안에서 input[type=hidden] 요소를 찾아서 apply_idx 값을 가져오기
 	                            const apply_idx = tr.querySelector('input[type=hidden]').value;
-	                            alert(apply_idx)
+	                            //alert(apply_idx)
 	                            
 	                            const modalData = document.getElementById('modalData');
 
@@ -516,9 +517,32 @@ h1 {
 	                                .then(response => response.json())
 	                                .then(vo => {
 	                                    modalData.innerHTML = ''; // 초기화
-	                            
-	                                    let modalHtml = '<p>점수:'+vo.score+'</p>';
+	                            		
+	                                    let state = vo.state
+	                                    //alert('state' + state)
+	                                    let stateresult = ''
+	                                    if(state == 1) {
+	                                    	stateresult += '합격'
+	                                    } else if(state == 2) {
+	                                    	stateresult += '불합격'
+	                                    } else if (state == 0) {
+	                                    	stateresult += '대기'
+	                                    }
+	                                   	//alert(stateresult)
+	                                    
+	                                    let comments = ''
+	                                
+	                                    if(vo.comments === null) {
+	                                    	comments += '대기중입니다. '
+	                                    } else{
+	                                    	comments += vo.comments
+	                                    }
+	                                   	//alert(comments)
+	                                    
+	                              
+	                                    let modalHtml = '<p>'+stateresult+'</p>'
 	                                    modalHtml += '<p>코멘트:'+vo.comments+'</p>';
+	                                    
 	                                    modalData.innerHTML += modalHtml;
 	                                    
 	                                })
@@ -552,10 +576,8 @@ h1 {
                                         peridx = vo.per_idx;
 	                                    modalData.innerHTML = ''; // 초기화
 	                            
-	                                    let modalHtml = '<p>per_idx:'+vo.per_idx+'</p>';
+	                                    let modalHtml = '<form>';
 	                                    
-	                                    modalHtml += vo.com_idx;
-	                                    modalHtml += '<form>';
 	                                    //modalHtml += '<form action="/Company/Rate?com_idx='+vo.com_idx+'&per_idx='+vo.per_idx+'" method="POST">';
 	                                    modalHtml += '<input type="hidden" id="rate_per_idx" name="per_idx" value="'+vo.per_idx+'">';
 	                                    modalHtml += '<input type="hidden" id="rate_com_idx" name="com_idx" value="'+vo.com_idx+'">';
@@ -610,6 +632,10 @@ h1 {
 	                                    modalHtml += '<span class="star-icon">';
 	                                    modalHtml += '</span>';
 	                                    modalHtml += '</label>';
+	                                    modalHtml += '</div>';
+	                                    modalHtml += '<div>&nbsp;';
+	                                    modalHtml += '</div>';
+	                                    modalHtml += '<div>';
 	                                    modalHtml += '</div>';
 	                                    modalHtml += '<button type="submit" id="rateSubmitBtn" class="btn btn-primary">평가하기</button>';
 	                                    
@@ -788,10 +814,13 @@ h1 {
 	
 	    // 클릭 이벤트를 상위 요소에 등록하여 중첩 방지
 	    document.querySelector('.mybookmark .table-group-divider').addEventListener('click', (event) => {
+	    	
 	        const clickedElement = event.target;
-	        if (clickedElement.classList.contains('bookmark-icon')) {
+	    	console.log(clickedElement)
+	        if (clickedElement.classList.contains('bookmark-icons')) {
+	        	alert('북마크가 해제되었습니다')
 	            const bookmarkValue = clickedElement.closest('.td8').querySelector('[type=hidden]').value;
-	            
+	            console.log(bookmarkValue)
 	            const url = '/Bookmark/Delete?book_idx=' + bookmarkValue;
 	
 	            fetch(url, {
@@ -810,10 +839,10 @@ h1 {
 	                deletedRows.push(deletedRowNum);
 	
 	                // 화면에서 삭제된 데이터를 제외하고 나머지 데이터를 다시 그림
-	                fetch('/Bookmark/List')
+	                fetch('/Bookmark/List2')
 	                .then(response => response.json())
 	                .then(bookmarkList => {
-	                    const tableDivider = document.querySelector('.bookmark .table-group-divider');
+	                    const tableDivider = document.querySelector('.mybookmark .table-group-divider');
 	                    tableDivider.innerHTML = '';
 	
 	                    bookmarkList.forEach(bo => {
@@ -827,7 +856,7 @@ h1 {
 	                            html += '<td>'+bo.mphone+'</td>';
 	                            html += '<td class="td8">';
 	                            html += '<input type="hidden" value="'+bo.book_idx+'">';
-	                            html += '<img class="bookmark-icon" src="/img/fillmoew.png" alt="북마크 아이콘">';
+	                            html += '<img src="/img/fillmoew.png" class="bookmark-icons" alt="북마크"  style="width: 24px; height: 24px;">';
 	                            html += '</td>';
 	                            html += '</tr>';
 	

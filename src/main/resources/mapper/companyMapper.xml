@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.catwork.mapper.CompanyMapper"> 
 
 	<!-- 전체 공고 가져오기 -->
@@ -71,6 +72,7 @@
 	            CAREER,
 	            GOWORK || ' ~ ' || GOHOME	GO,
 	            JOBTYPE,
+	            DEPARTMENT,
 	            SALARY,
 	            TO_CHAR(DEADLINE, 'YY/MM/DD') AS DEADLINE,
 	            INTRO,
@@ -166,6 +168,8 @@
 		SELECT
 		NVL(MAX(POST_IDX),0) + 1 FROM POST_TB
 	</select>
+
+	
 	
 	<!-- post insert -->
 	<insert id="insertpost"
@@ -318,7 +322,7 @@
 	<!-- state 부분 추가 -->
 	<insert id="insertState">
 		INSERT INTO STATE_TB (STATE_IDX, RESUME_IDX, APPLY_IDX, SCORE, COMMENTS, USER_IDX)
-		VALUES((SELECT (MAX(STATE_IDX) + 1) STATE_IDX FROM STATE_TB), #{resume_idx}, #{apply_idx},
+		VALUES((SELECT (NVL(MAX(STATE_IDX),0) + 1) STATE_IDX FROM STATE_TB), #{resume_idx}, #{apply_idx},
 						#{score}, #{comments}, #{user_idx})
 	</insert>
 	
@@ -388,17 +392,18 @@
 		SELECT ADDRESS FROM COMPANY_TB WHERE USER_IDX = #{user_idx}
 	</select>
 	
-	<insert id="insert">		
-		INSERT ALL
-		INTO user_tb (user_idx,id, pwd ,email,type)
-		VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},1)		
-		INTO company_tb (com_idx,user_idx,type,name,logo,cnum,representative,zip_code,address,ctype,bdate,created)
-		VALUES
-		((SELECT MAX(NVL(com_idx,0)+1) FROM company_tb),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
-			1,#{name}, '/', #{cnum}, #{representative},#{zip_code},#{address},#{ctype},#{bdate},sysdate)
-		SELECT *
-		FROM DUAL
-	</insert>
+      <!-- 기업회원 가입 -->
+   <insert id="insert">      
+      INSERT ALL
+      INTO user_tb (user_idx,id, pwd ,email,type)
+      VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},1)      
+      INTO company_tb (com_idx,user_idx,type,name,logo,cnum,representative,zip_code,address,ctype,bdate,created)
+      VALUES
+      ((SELECT MAX(NVL(com_idx,0)+1) FROM company_tb),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
+         1,#{name}, '/', #{cnum}, #{representative},#{zip_code},#{address},#{ctype},#{bdate},sysdate)
+      SELECT *
+      FROM DUAL
+   </insert>
 	
 	<!-- 평점 가져오기 -->
 	<select id="getMyRate">
@@ -406,4 +411,14 @@
 		FROM RATE_TB 
 		WHERE COM_IDX = #{arg0}
 	</select>
+	
+	   <!-- com_idx 가져오기 -->
+   <select id="getComId">
+      SELECT   COM_IDX
+      FROM   POST_TB P
+            JOIN USER_TB U ON P.USER_IDX = U.USER_IDX
+            JOIN COMPANY_TB C ON U.USER_IDX= C.USER_IDX 
+      WHERE   P.POST_IDX = #{arg0}
+   </select>
+
 </mapper>

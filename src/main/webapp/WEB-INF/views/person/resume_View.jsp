@@ -12,11 +12,10 @@
 	}
 </style>
 <link rel="icon" type="image/png" href="/img/favicon.png" />
-<link href="/css/start.css" rel="stylesheet" />
-<link href="/css/test.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/common.css" />
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<link rel="stylesheet" href="/css/common.css" />
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 
 </head>
 	<%@include file="/WEB-INF/include/header.jsp" %>
@@ -91,11 +90,11 @@
 						</div>
 						<div class="my-1 mx-auto row">
 							<label for="skills" class="form-label">기술스택</label>
-							<div class="mt-3 mx-auto row" id="skills">
-										<input type="text" class="form-control" id="address" name="address"
-										readonly="readonly" value="${ vo.skill_names }">
-
-							</div>
+								<c:forEach var="skill" items="${skillList}">
+									<div class="col-auto">
+										<button type="button" class="btn btn-primary">${skill.name}</button>
+									</div>
+								</c:forEach>
 						</div>
 						<div class="my-1 mx-auto row">
 							<label for="self-intro" class="form-label">업무 소개</label>

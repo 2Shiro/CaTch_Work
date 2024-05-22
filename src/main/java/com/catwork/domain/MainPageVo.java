@@ -17,6 +17,6 @@ public class MainPageVo {
     private String name;
     private String title;
     private String deadline;
-    private boolean isBookmarked; // 북마크 여부를 나타내는 필드 추가
+    private boolean isBookmarked; // 북마크 여부를 나타내는 필드
     
 }

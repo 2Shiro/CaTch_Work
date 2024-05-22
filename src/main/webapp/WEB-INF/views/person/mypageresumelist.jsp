@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>이력서 페이징 갈아끼우기</title>
+<title>이력서 페이지</title>
 <link rel="stylesheet" href="/css/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
 	<div class="container mt-5">
             <div id="personresume">
                 <div>&nbsp;</div>
-                <h2>구직자 이력서</h2>
+                <h2>구직자 이력서입니다</h2>
                 <div id="myresume" name="resume" class="linkDiv">
                 <div>&nbsp;</div>
                 <div>&nbsp;</div>
@@ -29,7 +29,7 @@
                             <tr>
                                 <th scope="col">번호</th>
                                 <th scope="col">이력서 제목</th>
-                                <th scope="col">이름</th>
+                                <th scope="col">작성일</th>
                                 <th scope="col">추천공고 보러가기</th>
                             </tr>
                         </thead>
@@ -61,6 +61,13 @@
 
  
  <script>
+ 
+ $(document).ready(function() {
+	    $('#goWrite').on('click', function() {
+			alert('dd')
+	        location.href = '/MyPage/Resume/WriteForm';
+	    });
+	});
 //해당 이력서의 추천공고 보러가기
 // 	const recommendListEls = document.getElementsByName('recommendList');
 	
@@ -118,13 +125,13 @@ $(document).ready(function() {
                 return;
             }
 
-            const url = '/Resume/GetrecommendList?resume_idx=' + resume_idx + '&nowpage=1';
+            const url = '/Resume/GetrecommendList?resume_idx=' + resume_idx + '&rNowpage=1';
             location.href = url;  
         });
     }
 });
 	
- 
+
  </script>
 </body>
 </html>

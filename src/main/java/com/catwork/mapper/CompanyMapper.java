@@ -1,5 +1,8 @@
 package com.catwork.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
+
+import com.catwork.domain.CompanyVo;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -96,4 +99,6 @@ public interface CompanyMapper {
 	List<ResumeVo> getResumeListPagingOpen(int offset, int pageSize);
 	
 	List<ResumeVo> getResumeListPagingSearchOpen(int offset, int pageSize, String searchword);
+
+	CompanyVo getComId(int post_idx);
 }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.catwork.mapper.CommentMapper">
+	
+	<!-- 자유게시판 댓글 추가 -->
+	<insert id="add">
+		INSERT
+		INTO bcomment_tb (bcomment_idx,board_idx,user_idx,content)
+		VALUES ( (SELECT NVL(MAX(bcomment_idx),0)+1 FROM bcomment_tb),
+							#{board_idx}, #{user_idx}, #{content} )
+	</insert>
+	
+	<!-- 자유게시판 댓글 리스트 -->
+	<select id="getcommentList">
+		SELECT b.bcomment_idx,b.board_idx,b.user_idx,b.content,
+					 TO_CHAR(b.created,'YYYY-MM-DD') created,u.id
+		FROM   bcomment_tb b LEFT JOIN user_tb u ON b.user_idx = u.user_idx
+		WHERE  b.board_idx = #{board_idx}	
+		ORDER BY b.bcomment_idx DESC
+	</select>
+	
+	<!-- 자유게시판 댓글 수정 -->
+	<update id="update">
+		UPDATE bcomment_tb 
+		SET 	 content = #{content}
+		WHERE  bcomment_idx=#{bcomment_idx}
+	</update>
+	
+	<!-- 자유게시판 댓글 삭제 -->
+	<delete id="delete">
+		DELETE FROM bcomment_tb
+		WHERE  bcomment_idx=#{bcomment_idx}
+	</delete>
+	
+	<!-- 기업게시판 댓글 리스트 -->
+	<select id="getccommentList">
+		SELECT c.ccomment_idx,c.cboard_idx,c.user_idx,c.content,TO_CHAR(c.created,'YYYY-MM-DD') created,u.id
+		FROM   ccomment_tb c LEFT JOIN user_tb u ON c.user_idx = u.user_idx
+		WHERE  c.cboard_idx = #{cboard_idx}
+		ORDER BY c.ccomment_idx DESC
+	</select>
+	
+	<!-- 기업게시판 댓글 추가 -->
+	<insert id="addccomment">
+		INSERT INTO ccomment_tb (ccomment_idx,cboard_idx,user_idx,content,created)
+		VALUES( (SELECT MAX(ccomment_idx)+1 FROM ccomment_tb),#{cboard_idx},
+							#{user_idx},#{content},sysdate)
+	</insert>
+	
+	<!-- 기업게시판 댓글 수정 -->
+	<update id="updateCComment">
+		UPDATE  ccomment_tb
+		SET			content = #{content}
+		WHERE		ccomment_idx = #{ccomment_idx}
+	</update>
+	
+	<!-- 기업게시판 댓글 삭제 -->
+	<delete id="deleteCComment">
+		DELETE FROM ccomment_tb
+		WHERE  ccomment_idx = #{ccomment_idx}		
+	</delete>
+	
+	<!-- 홈페이지게시판 댓글 리스트 -->
+	<select id="gethcommentList">
+		SELECT h.hcomment_idx,h.hboard_idx,h.user_idx,h.content,
+					 TO_CHAR(h.created,'YYYY-MM-DD') created,u.id
+		FROM   hcomment_tb h LEFT JOIN user_tb u ON h.user_idx = u.user_idx
+		WHERE  h.hboard_idx = #{hboard_idx}	
+		ORDER BY h.hcomment_idx DESC
+	</select>
+	
+	<!-- 홈페이지 게시판 댓글 추가 -->
+	<insert id="addhcomment">
+		INSERT INTO hcomment_tb (hcomment_idx,hboard_idx,user_idx,content)
+		VALUES(	(SELECT MAX(hcomment_idx)+1 FROM hcomment_tb),
+							#{hboard_idx},#{user_idx},#{content})
+	</insert>
+	
+	<!-- 홈페이지 게시판 댓글 수정 -->
+	<update id="updateHcomment">
+		UPDATE hcomment_tb 
+		SET 	 content = #{content}
+		WHERE  hcomment_idx=#{hcomment_idx}
+	</update>
+	
+	<!-- 홈페이지 게시판 댓글 삭제 -->
+	<delete id="deleteHComment">
+		DELETE FROM hcomment_tb
+		WHERE  hcomment_idx = #{hcomment_idx}
+	</delete>
+	
+</mapper>
