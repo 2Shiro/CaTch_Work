@@ -181,7 +181,7 @@ public class BoardController {
 			resultList = boardMapper.getBoardList();	
 
 		} else {
-			resultList= boardMapper.getresultList(keyword);
+			resultList= boardMapper.getresultList(keyword); 
 		}
 		
 		
