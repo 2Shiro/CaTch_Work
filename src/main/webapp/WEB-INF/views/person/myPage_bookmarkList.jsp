@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>이력서 페이징 갈아끼우기</title>
+<title>북마크 페이지</title>
 <link rel="stylesheet" href="/css/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
 					<c:forEach var="bo" items="${response2.list}" varStatus="status">
 					   <tr data-row-num="${bo.row_num}" data-deleted="false">
 					        <th scope="row">${status.count}</th>
-					        <td class="td2"><a href="/Post?post_idx=${po.post_idx}">${bo.title}</a></td>
+					        <td class="td2"><a href="/Company/Viewpost?post_idx=${bo.post_idx}">${bo.title}</a></td>
 					        <td>${bo.salary}</td>
 					        <td>${bo.career}</td>
 					        <td>${bo.mphone}</td>

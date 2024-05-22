@@ -11,6 +11,7 @@ public class ResumeVo {
 	private int    num; 
 	private int resume_idx;
 	private int user_idx;
+	private int post_idx;
 	private String title;
 	private String image;
 	private String link;

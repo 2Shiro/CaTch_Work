@@ -124,45 +124,47 @@ public class HomeController {
     
     
 	@RequestMapping("/Company/Viewpost")
-	public ModelAndView viewpost(@RequestParam("post_idx") int post_idx, @RequestParam("com_idx") int com_idx, PostVo postidx, @SessionAttribute("login") UserVo userVo) {
-		int user_idx = userMapper.getUser_idx(userVo.getId());
-		
-		UserVo usertype = userMapper.getUserInfoById(user_idx);
-		
-	    PostVo postvo = companyMapper.getViewPost(post_idx);
-	    CompanyVo companyvo = companyMapper.getCompanyByComId(com_idx);
-	    
-		List<PostSkillVo> postSkills = companyMapper.getPostSkills(postidx.getPost_idx());
-		List<SkillVo> skill = new ArrayList<SkillVo>();
-		for(int i = 0; i < postSkills.size(); i++) {
-			SkillVo skillname = companyMapper.getSkillName(postSkills.get(i).getSkill_idx());
-			skill.add(skillname);
-		}
-		
-	    ModelAndView mv = new ModelAndView();
-	    
-	    //Integer user_idx = (Integer) session.getAttribute("user_idx");
-	    boolean isBookmarked = false;
-	    boolean alreadyApplied = personMapper.checkIfAlreadyApplied(user_idx, post_idx);
-	    List<ResumeVo> resumevo = new ArrayList<>();
+	   public ModelAndView viewpost(@RequestParam("post_idx") int post_idx, PostVo postidx, @SessionAttribute("login") UserVo userVo) {
+	      int user_idx = userMapper.getUser_idx(userVo.getId());
+	      
+	      UserVo usertype = userMapper.getUserInfoById(user_idx);
+	      
+	       PostVo postvo = companyMapper.getViewPost(post_idx);
+	       CompanyVo comidvo = companyMapper.getComId(post_idx);
+	       
+	       CompanyVo companyvo = companyMapper.getCompanyByComId(comidvo.getCom_idx());
+	       
+	      List<PostSkillVo> postSkills = companyMapper.getPostSkills(postidx.getPost_idx());
+	      List<SkillVo> skill = new ArrayList<SkillVo>();
+	      for(int i = 0; i < postSkills.size(); i++) {
+	         SkillVo skillname = companyMapper.getSkillName(postSkills.get(i).getSkill_idx());
+	         skill.add(skillname);
+	      }
+	      
+	       ModelAndView mv = new ModelAndView();
+	       
+	       //Integer user_idx = (Integer) session.getAttribute("user_idx");
+	       boolean isBookmarked = false;
+	       boolean alreadyApplied = personMapper.checkIfAlreadyApplied(user_idx, post_idx);
+	       List<ResumeVo> resumevo = new ArrayList<>();
 
-	    if (usertype.getId() != null && usertype.getType() == 2) {
-	        isBookmarked = personMapper.isBookmarked(user_idx, post_idx);
-	        resumevo = resumeMapper.getResumesByUserId(user_idx);
-	    }
+	       if (usertype.getId() != null && usertype.getType() == 2) {
+	           isBookmarked = personMapper.isBookmarked(user_idx, post_idx);
+	           resumevo = resumeMapper.getResumesByUserId(user_idx);
+	       }
 
-	    mv.addObject("user_idx", user_idx);
-	    mv.addObject("isBookmarked", isBookmarked);
-	    mv.addObject("alreadyApplied", alreadyApplied);
-	    mv.addObject("skill", skill);
-	    mv.addObject("resumevo", resumevo);
-	    mv.addObject("postvo", postvo);
-	    mv.addObject("companyvo", companyvo);
-	    mv.addObject("usertype", usertype);
-	    
-	    mv.setViewName("/company/viewpost");
-	    return mv;
-	}
+	       mv.addObject("user_idx", user_idx);
+	       mv.addObject("isBookmarked", isBookmarked);
+	       mv.addObject("alreadyApplied", alreadyApplied);
+	       mv.addObject("skill", skill);
+	       mv.addObject("resumevo", resumevo);
+	       mv.addObject("postvo", postvo);
+	       mv.addObject("companyvo", companyvo);
+	       mv.addObject("usertype", usertype);
+	       
+	       mv.setViewName("/company/viewpost");
+	       return mv;
+	   }
 
 	@RequestMapping("/LoginForm")
 	public String plogin() {
