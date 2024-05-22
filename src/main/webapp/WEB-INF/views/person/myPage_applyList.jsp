@@ -30,7 +30,7 @@
                         <c:forEach var="po" items="${response1.list}" varStatus="status">
                             <tr>
                                 <th scope="row">${status.count}</th>
-                                <td class="td2"><a href="/Post?post_idx=${po.post_idx}">${po.title}</a></td>
+                                <td class="td2"><a href="/Company/Viewpost?post_idx=${po.post_idx}">${po.title}</a></td>
                                 <td>${po.salary}</td>
                                 <td>${po.career}</td>
                                 <td>${po.mphone}</td>
@@ -114,7 +114,7 @@
 	                                //alert("dd")
 	                                const tr = $(this).closest('tr');
 	                                const apply_idx = tr.find('input[type=hidden]').val();
-	                                alert(apply_idx)
+	                                //alert(apply_idx)
 	                                const modalData = $('#modalData');
 	                                modalResult.css('display', 'block');
 
@@ -123,8 +123,30 @@
 	                                    .then(response => response.json())
 	                                    .then(vo => {
 	                                        modalData.html('');
-	                                        let modalHtml = '<p>점수:'+vo.score+'</p>';
-	                                        modalHtml += '<p>코멘트:'+vo.comments+'</p>';
+		                                    let state = vo.state
+		                                    //alert('state' + state)
+		                                    let stateresult = ''
+		                                    if(state == 1) {
+		                                    	stateresult += '합격'
+		                                    } else if(state == 2) {
+		                                    	stateresult += '불합격'
+		                                    } else if (state == 0) {
+		                                    	stateresult += '대기'
+		                                    }
+		                                   	//alert(stateresult)
+		                                    
+		                                    let comments = ''
+		                                
+		                                    if(vo.comments === null) {
+		                                    	comments += '대기중입니다. '
+		                                    } else{
+		                                    	comments += vo.comments
+		                                    }
+		                                   	//alert(comments)
+		                                    
+		                              
+		                                    let modalHtml = '<p>'+stateresult+'</p>'
+		                                    modalHtml += '<p>코멘트:'+vo.comments+'</p>';
 	                                        modalData.append(modalHtml);
 	                                    })
 	                                    .catch(error => console.error('Error:', error));

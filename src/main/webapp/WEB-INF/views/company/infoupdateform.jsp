@@ -50,7 +50,7 @@
 	<div class="container mt-5" >
 	<form action="/Company/InfoUpdate" method="POST" enctype="multipart/form-data">
 		<section class="container">
-			<h2>회원 정보</h2>
+			<h2>회원 정보 수정</h2>
 			<div id="total">
 				<div id="profile">
 					<img src="${company.logo}" id="img-thumbnail" name="logo" class="img-thumbnail" alt="프로필없음">

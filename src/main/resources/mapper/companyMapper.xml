@@ -89,6 +89,11 @@
 		SELECT RESUME_IDX, USER_IDX, TITLE, IMAGE, LINK, INTRO, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, TYPE FROM RESUME_TB
 		ORDER BY RESUME_IDX DESC
 	</select>
+	<select id="getResumeListOpen">
+		SELECT RESUME_IDX, USER_IDX, TITLE, IMAGE, LINK, INTRO, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, TYPE FROM RESUME_TB
+		WHERE TYPE = 1
+		ORDER BY RESUME_IDX DESC
+	</select>
 
 	<!-- 기술 이름 가져오기 -->
 	<select id="getSkillName">
@@ -260,6 +265,60 @@
 		ROWS ONLY
 	</select>
 	
+	<select id="getResumeListPagingOpen">
+		SELECT 
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    R.TYPE,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX) AS SKILLS
+		FROM 
+		    resume_tb r
+		JOIN 
+		    person_tb p ON r.user_idx = p.user_idx
+		LEFT JOIN 
+		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
+		LEFT JOIN 
+		    skill_tb s ON rs.skill_idx = s.skill_idx
+		WHERE R.TYPE = 1
+		GROUP BY
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    R.TYPE
+		ORDER BY
+		    r.RESUME_IDX
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+		ROWS ONLY
+	</select>
+	<select id="getResumeListPagingSearchOpen">
+		SELECT 
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    R.TYPE,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX) AS SKILLS
+		FROM 
+		    resume_tb r
+		JOIN 
+		    person_tb p ON r.user_idx = p.user_idx
+		LEFT JOIN 
+		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
+		LEFT JOIN 
+		    skill_tb s ON rs.skill_idx = s.skill_idx
+		WHERE R.TYPE = 1
+		GROUP BY
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    R.TYPE
+		HAVING REPLACE(UPPER(LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX)), ' ', '') LIKE '%' || REPLACE(UPPER(#{arg2}), ' ', '') || '%'
+		ORDER BY
+		    r.RESUME_IDX
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+		ROWS ONLY
+	</select>
+	
 	<!-- state 부분 추가 -->
 	<insert id="insertState">
 		INSERT INTO STATE_TB (STATE_IDX, RESUME_IDX, APPLY_IDX, SCORE, COMMENTS, USER_IDX)
@@ -332,6 +391,7 @@
 	<select id="getAddress">
 		SELECT ADDRESS FROM COMPANY_TB WHERE USER_IDX = #{user_idx}
 	</select>
+	
       <!-- 기업회원 가입 -->
    <insert id="insert">      
       INSERT ALL
@@ -352,13 +412,13 @@
 		WHERE COM_IDX = #{arg0}
 	</select>
 	
-	<!-- com_idx 가져오기 -->
-	<select id="getComId">
-		SELECT	COM_IDX
-		FROM	POST_TB P
-				JOIN USER_TB U ON P.USER_IDX = U.USER_IDX
-				JOIN COMPANY_TB C ON U.USER_IDX= C.USER_IDX 
-		WHERE	P.POST_IDX = #{arg0}
-	</select>
-	
+	   <!-- com_idx 가져오기 -->
+   <select id="getComId">
+      SELECT   COM_IDX
+      FROM   POST_TB P
+            JOIN USER_TB U ON P.USER_IDX = U.USER_IDX
+            JOIN COMPANY_TB C ON U.USER_IDX= C.USER_IDX 
+      WHERE   P.POST_IDX = #{arg0}
+   </select>
+
 </mapper>

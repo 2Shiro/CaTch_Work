@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>자유게시판</title>
+<title>홈 게시판</title>
 <link rel="stylesheet" href="/css/common.css" />
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/browser-scss@1.0.3/dist/browser-scss.min.js"></script>
@@ -35,10 +35,10 @@
 	<%@include file="/WEB-INF/include/header.jsp"%>
 
 	<%@include file="/WEB-INF/include/nav.jsp"%>
-	<h2>자유게시글 수정</h2>
+	<h2>홈페이지 게시글 수정</h2>
 
-		<form action="/Board/Update" method="post">
-			<input type="hidden" name="board_idx" value="${vo.board_idx }">
+		<form action="/Board/UpdateHBoard" method="post">
+			<input type="hidden" name="hboard_idx" value="${vo.hboard_idx}" >
 			<div class="input-group mb-3">
  				 <span class="input-group-text" id="basic-addon1">제  목</span>
   			 <input type="text" class="form-control" name="title"  placeholder="" aria-label="Username" aria-describedby="basic-addon1" value="${vo.title}">
@@ -53,7 +53,7 @@
 			</div>
 			<div>&nbsp;</div>
 						<button class="btn btn-outline-primary" >작성완료</button>
-						<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board'">목록가기</button>
+						<button type="button" class="btn btn-outline-primary" onclick="/Board/HomeBoard?nowpage=1">목록가기</button>
 		</form>
 					<%@include file="/WEB-INF/include/footer.jsp"%>
 </body>
