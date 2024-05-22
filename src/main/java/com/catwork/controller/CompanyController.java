@@ -270,7 +270,7 @@ public class CompanyController {
 		UserVo vo = userMapper.getUserInfoById(user_idx);
 		
 		//평점 가져오기
-		int rate = companyMapper.getMyRate(user_idx);
+		int rate = companyMapper.getMyRate(cvo.getCom_idx());
 		
 		//특정 기업 공고 리스트 가져오기
 		List<PostVo> postList = companyMapper.getMyPost(user_idx);

@@ -44,6 +44,16 @@
 	/* 버튼 스타일 조정 */
 	padding: 0.375rem 0.75rem; /* Bootstrap에서의 기본 버튼 패딩을 유지 */
 }
+
+/* 기본 카드 스타일 */
+.card {
+    transition: transform 0.3s ease; /* 부드러운 변환 효과를 위해 추가 */
+}
+
+/* 마우스 오버 시 카드 확대 */
+a:hover .card {
+    transform: scale(1.05); /* 1.05배 확대 */
+}
 </style>
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
@@ -133,7 +143,7 @@
 				<div class="d-flex flex-wrap ms-3">
 					<c:forEach var="mainPageList" items="${mainPageList}">
 						<div class="cardinterval me-5 my-3">
-							<a href="/Company/Viewpost?post_idx=${mainPageList.post_idx}&com_idx=${mainPageList.com_idx}">
+							<a href="/Company/Viewpost?post_idx=${mainPageList.post_idx}">
 								<div class="card" style="width: 20rem; height: 300px;">
 									<c:if test="${usertype.type == 2}">
 										<div class="bookmark-icon"
@@ -243,11 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
         xhr.send();
     });
 });
-
-
-
-
-
 
 function toggleBookmark(event, post_idx) {
     event.preventDefault(); // 링크 기본 동작 방지

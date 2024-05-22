@@ -28,6 +28,7 @@
       text-align : center;
    }
 </style>
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
          <div class="main" >        

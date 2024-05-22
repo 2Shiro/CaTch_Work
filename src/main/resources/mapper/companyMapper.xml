@@ -72,6 +72,7 @@
 	            CAREER,
 	            GOWORK || ' ~ ' || GOHOME	GO,
 	            JOBTYPE,
+	            DEPARTMENT,
 	            SALARY,
 	            TO_CHAR(DEADLINE, 'YY/MM/DD') AS DEADLINE,
 	            INTRO,
@@ -359,4 +360,5 @@
             JOIN COMPANY_TB C ON U.USER_IDX= C.USER_IDX 
       WHERE   P.POST_IDX = #{arg0}
    </select>
+
 </mapper>
