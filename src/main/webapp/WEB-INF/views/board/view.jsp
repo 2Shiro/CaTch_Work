@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>자유게시판</title>
+<link rel="stylesheet" href="/css/common.css" />
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/browser-scss@1.0.3/dist/browser-scss.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -79,11 +80,9 @@
 <link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
-	    <div class="main" >        
-            <a href="/">
-                 <img alt="Logo" src="/img/logo.png" style="width:250px;">
-             </a><br><br><br>          
-      </div>
+	<%@include file="/WEB-INF/include/header.jsp"%>
+
+	<%@include file="/WEB-INF/include/nav.jsp"%>
 			<form class="content">
 			<div><h3>${vo.title}</h3></div>
 			<div style="text-align:right;"><h4>${vo.id}</h4></div>
@@ -120,7 +119,7 @@
 			  </form>
 			  <!-- 댓글 목록 -->
 			  <div class="comment-list">
-			   		<table>
+			   		<table style="border:none;">
 			   			<tr>
 			   				<td colspan="3"><h3>댓글</h3></td>
 			   			</tr>
@@ -189,6 +188,7 @@
 						    </div>
 						  </div>
 						</div>
+									<%@include file="/WEB-INF/include/footer.jsp"%>
 <script>
 		const goCommentUpdateEls = document.getElementsByName('goCommentUpdate');
 		let messagetextEl = document.getElementById('message-text');
