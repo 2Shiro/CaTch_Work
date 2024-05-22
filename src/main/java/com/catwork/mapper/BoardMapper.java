@@ -10,6 +10,7 @@ import com.catwork.domain.CBoardVo;
 import com.catwork.domain.FaqVo;
 import com.catwork.domain.HBoardVo;
 import com.catwork.domain.HcommentVo;
+import com.catwork.domain.ResumeVo;
 
 @Mapper
 public interface BoardMapper {
@@ -34,7 +35,7 @@ public interface BoardMapper {
 
 	void updateboard(BoardVo boardVo);
 
-	void deleteboard(BoardVo vo);
+	void deleteboard(int board_idx);
 
 	void cwrite(CBoardVo vo);
 
@@ -64,4 +65,29 @@ public interface BoardMapper {
 
 	HBoardVo gethboard(HBoardVo hBoardVo);
 
+	void updatehboard(HBoardVo vo);
+
+	void updatecboard(CBoardVo vo);
+
+	int countresult(List<BoardVo> resultList);
+
+	List<BoardVo> getresultList(String keyword);
+
+	List<BoardVo> getResultListPaging(int offset, int pageSize);
+
+	List<BoardVo> getResultListPagingSearch(int offset, int pageSize, String keyword);
+
+	List<HBoardVo> getSearchHBoardList(String keyword);
+
+	List<HBoardVo> getHResultListPagingSearch(int offset, int pageSize, String keyword);
+
+	List<HBoardVo> getResultHListPaging(int offset, int pageSize);
+
+	List<CBoardVo> getcresultList(String keyword);
+
+	List<CBoardVo> getCResultListPagingSearch(int offset, int pageSize, String keyword);
+
+	void deletecboard(int cboard_idx);
+
+	void deletehboard(int hboard_idx);
 }

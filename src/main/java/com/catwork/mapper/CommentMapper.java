@@ -33,4 +33,14 @@ public interface CommentMapper {
 
 	List<HcommentVo> gethcommentList(int hboard_idx);
 
+	void addhcomment(HcommentVo vo);
+
+	void updateHcomment(HcommentVo vo);
+
+	void updateCComment(CcommentVo vo);
+
+	void deleteCComment(CcommentVo vo);
+
+	void deleteHComment(HcommentVo vo);
+
 }

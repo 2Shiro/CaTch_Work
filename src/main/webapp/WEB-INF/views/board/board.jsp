@@ -85,6 +85,7 @@ p{
 div.left { width: 50%;float: left; box-sizing: border-box; background: #ff0; }    
 div.right { width: 50%; float: right; box-sizing: border-box;  background: #0ff; }*/
 </style>
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
 	<script
