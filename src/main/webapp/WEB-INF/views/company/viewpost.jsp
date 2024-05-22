@@ -330,7 +330,7 @@
 				</div>
 			</c:if>
 			<c:if test="${usertype.type == 0}">
-				<a href="/" id="btn-list" class="btn btn-outline-danger mx-3">삭제</a>
+				<a href="/DeletePost?post_idx=${postvo.post_idx}" id="btn-list" class="btn btn-outline-danger mx-3">삭제</a>
 				<a href="/" id="btn-list" class="btn btn-outline-secondary mx-3">메인으로</a>
 			</c:if>
 			<c:if test="${usertype.type eq null}">

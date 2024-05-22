@@ -294,5 +294,19 @@ public class HomeController {
 		
 		return mv;
 	}
+	
+	@RequestMapping("/DeletePost")
+	public ModelAndView deletepost(PostVo postvo) {
+
+		System.out.println(postvo.getPost_idx());
+		userMapper.deletePost(postvo);
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("redirect:/");
+		
+		return mv;
+	}
+	
 }
 
