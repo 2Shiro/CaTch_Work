@@ -16,8 +16,12 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 		        .excludePathPatterns("/","/LoginForm","/logout",
 		        					 "/Person/Login","/Person/JoinForm","/Person/Join",
 		        					 "/Company/Login","/Company/JoinForm","/Company/Join",
-		        		             "/Board",
+		        		             "/Board/PersonBoard*","/Board/View*",
+		        		             "/Board/CompanyBoard*","/Board/CView*",
+		        		             "/Board/HomeBoard*","/Board/HView*",
+		        		             "/Board/PersonBoard?nowpage=1",
 		        		             "/CheckId","/FAQ",
+		        		             "/Board/*",
 		        		             "/log*","/css/**", "/img/**", "/js/**"
 		        		             );
 			

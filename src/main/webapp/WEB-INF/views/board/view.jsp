@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>자유게시판</title>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/browser-scss@1.0.3/dist/browser-scss.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -76,6 +76,7 @@
 				 		}
 	}
 </style>
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
 	    <div class="main" >        
@@ -90,10 +91,20 @@
 			</form>	
 			<div>&nbsp;</div>
 			<div style="text-align:center;">
-				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/WriteForm'">글 작성</button>
-				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateForm?board_idx=${vo.board_idx}'">수정</button>
-				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/Delete?board_idx=${vo.board_idx}">삭제</button>
-				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board?nowpage=1'">목록</button>
+				<c:choose>
+					<c:when test="${ usertype.type eq 0 }">
+						<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateForm?board_idx=${vo.board_idx}'">수정</button>
+						<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/DeleteBoard?board_idx=${vo.board_idx}'">삭제</button>
+					</c:when>
+					<c:when test="${ vo.user_idx == usertype.user_idx }">
+						<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateForm?board_idx=${vo.board_idx}'">수정</button>
+						<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/DeleteBoard?board_idx=${vo.board_idx}'">삭제</button>
+					</c:when>
+				</c:choose>	
+						
+<%-- 				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateForm?board_idx=${vo.board_idx}'">수정</button> --%>
+<%-- 				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/DeleteBoard?board_idx=${vo.board_idx}'">삭제</button> --%>
+				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/PersonBoard?nowpage=1'">목록</button>
 			</div>
 			
 			<div class="comment-section">
@@ -120,13 +131,33 @@
 					   				<td style="text-align:right">${co.created}</td>
 					   			</tr>
 			   					<tr>
-			   						<td colspan="3" style="text-align:right;">
-			   							<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" name="goCommentUpdate">
-			   								<input type="hidden" id="bcomment_idx" name="bcomment_idx" value="${co.bcomment_idx}">
-			   								<input type="hidden" id="bcontent" name="content" value="${co.content}">
-			   								수정
-			   							</button>
-			   							<a class="btn btn-outline-danger" href="/Board/DeleteComment?bcomment_idx=${co.bcomment_idx}&board_idx=${vo.board_idx}">삭제</a>
+			   						<td colspan="3" style="text-align:right;">	   						
+   										<c:choose>
+												<c:when test="${ usertype.type eq 0 }">
+													<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" name="goCommentUpdate">
+					   								<input type="hidden" id="bcomment_idx" name="bcomment_idx" value="${co.bcomment_idx}">
+					   								<input type="hidden" id="bcontent" name="content" value="${co.content}">
+					   								수정
+					   							</button>
+   												<a class="btn btn-outline-danger" href="/Board/DeleteComment?bcomment_idx=${co.bcomment_idx}&board_idx=${vo.board_idx}">삭제</a>
+												</c:when>
+												<c:when test="${ co.user_idx == usertype.user_idx }">
+													<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" name="goCommentUpdate">
+					   								<input type="hidden" id="bcomment_idx" name="bcomment_idx" value="${co.bcomment_idx}">
+					   								<input type="hidden" id="bcontent" name="content" value="${co.content}">
+					   								수정
+					   							</button>
+					   							<a class="btn btn-outline-danger" href="/Board/DeleteComment?bcomment_idx=${co.bcomment_idx}&board_idx=${vo.board_idx}">삭제</a>
+												</c:when>
+											</c:choose>	
+			   						
+			   						
+<!-- 			   							<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" name="goCommentUpdate"> -->
+<%-- 			   								<input type="hidden" id="bcomment_idx" name="bcomment_idx" value="${co.bcomment_idx}"> --%>
+<%-- 			   								<input type="hidden" id="bcontent" name="content" value="${co.content}"> --%>
+<!-- 			   								수정 -->
+<!-- 			   							</button> -->
+<%-- 			   							<a class="btn btn-outline-danger" href="/Board/DeleteComment?bcomment_idx=${co.bcomment_idx}&board_idx=${vo.board_idx}">삭제</a> --%>
 			   						</td>
 			   					</tr>		   				
 			  				</c:forEach>
@@ -141,7 +172,7 @@
 						        <h5 class="modal-title" id="exampleModalLabel">댓글 수정</h5>
 						        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						      </div>
-						        <form action="/Board/UpdateComment?bcomment_idx={bvo.bcomment_idx}">
+						        <form action="/Board/UpdateComment" method="POST">
 						      <div class="modal-body">
 						          <div class="mb-3">
 						          <input type="hidden" id="thisidx" name="bcomment_idx">

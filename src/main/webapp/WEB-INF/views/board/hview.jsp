@@ -4,10 +4,11 @@
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
-<title>기업게시판</title>
+<title>홈 게시판</title>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/browser-scss@1.0.3/dist/browser-scss.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="icon" href="/img/CaTchWorkFavicon.png">
 <style>
 	.main{text-align:center;}
 	 h2{ text-align:center; }
@@ -31,7 +32,6 @@
   padding: 20px;
   background-color: #f5f5f5;
   border-radius: 5px;
-
 }
 
 .comment-form {
@@ -76,13 +76,7 @@
 				 		height: 50px;
 				 		}
 	}
-	
-	.commentdiv {
-	 	 margin: 0 auto;
-	}
-
 </style>
-<link rel="icon" href="/img/CaTchWorkFavicon.png">
 </head>
 <body>
 	    <div class="main" >        
@@ -90,7 +84,6 @@
                  <img alt="Logo" src="/img/logo.png" style="width:250px;">
              </a><br><br><br>          
       </div>
-      
 			<form class="content">
 			<div><h3>${vo.title}</h3></div>
 			<div style="text-align:right;"><h4>${vo.id}</h4></div>
@@ -99,27 +92,28 @@
 			<div>&nbsp;</div>
 			<div style="text-align:center;">
 				<c:choose>
-					<c:when test="${usertype.type eq 0}">
-							<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateCForm?cboard_idx=${vo.cboard_idx}'">수정</button>
-							<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/DeleteCBoard?cboard_idx=${vo.cboard_idx}'">삭제</button>
+					<c:when test="${ usertype.type eq 0 }">
+						<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateHForm?hboard_idx=${vo.hboard_idx}'">수정</button>
+						<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/DeleteHBoard?hboard_idx=${vo.hboard_idx}'">삭제</button>
 					</c:when>
-					<c:when test="${vo.user_idx == usertype.user_idx}">
-							<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateCForm?cboard_idx=${vo.cboard_idx}'">수정</button>
-							<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/DeleteCBoard?cboard_idx=${vo.cboard_idx}'">삭제</button>							
+					<c:when test="${ vo.user_idx == usertype.user_idx }">
+						<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateHForm?hboard_idx=${vo.hboard_idx}'">수정</button>
+						<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/DeleteHBoard?hboard_idx=${vo.hboard_idx}'">삭제</button>
 					</c:when>
 				</c:choose>
-
-<%-- 				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateCForm?cboard_idx=${vo.cboard_idx}'">수정</button> --%>
-<%-- 				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/DeleteCBoard?cboard_idx=${vo.cboard_idx}'">삭제</button> --%>
-				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/CompanyBoard?nowpage=1'">목록</button>
+				
+					
+<%-- 				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/UpdateHForm?hboard_idx=${vo.hboard_idx}'">수정</button> --%>
+<%-- 				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/DeleteHBoard?hboard_idx=${vo.hboard_idx}'">삭제</button> --%>
+				<button type="button" class="btn btn-outline-primary" onclick="location.href='/Board/HomeBoard?nowpage=1'">목록</button>
 			</div>
-		<div class="commentdiv">
+			
 			<div class="comment-section">
 			  <h3>댓글</h3>
 				<!-- 댓글 추가 -->
-			  <form action="/Board/AddCComment" method="post">
+			  <form action="/Board/AddHComment" method="post">
 				  <div class="comment-form">
-				  	<input type="hidden" name="cboard_idx" value="${ vo.cboard_idx }">
+				  	<input type="hidden" name="hboard_idx" value="${ vo.hboard_idx }">
 				  	<input type="hidden" name="id" value="${ sessionScope.login.id }">
 				  	<input type="hidden" name="user_idx" value="${ vo.user_idx }">
 				    <textarea id="comment-input" name="content" placeholder="댓글을 입력하세요."></textarea>
@@ -141,32 +135,24 @@
 			   					<tr>
 			   						<td colspan="3" style="text-align:right;">
    										<c:choose>
-												<c:when test="${ usertype.type eq 0 }">			   							   						
+												<c:when test="${ usertype.type eq 0 }">			   									   						
 					   							<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" name="goCommentUpdate">
-					   								<input type="hidden" id="ccomment_idx" name="ccomment_idx" value="${co.ccomment_idx}">
-					   								<input type="hidden" id="ccontent" name="content" value="${co.content}">
+					   								<input type="hidden" id="hcomment_idx" name="hcomment_idx" value="${co.hcomment_idx}">
+					   								<input type="hidden" id="hcontent" name="content" value="${co.content}">
 					   								수정
 					   							</button>
-					   							<a class="btn btn-outline-danger" href="/Board/DeleteCComment?ccomment_idx=${co.ccomment_idx}&cboard_idx=${vo.cboard_idx}">삭제</a>
-												</c:when>
-												<c:when test="${ co.user_idx == usertype.user_idx }">
+					   							<a class="btn btn-outline-danger" href="/Board/DeleteHComment?hcomment_idx=${co.hcomment_idx}&hboard_idx=${vo.hboard_idx}">삭제</a>
+					   						</c:when>
+			   								<c:when test="${ co.user_idx == usertype.user_idx }">
 					   							<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" name="goCommentUpdate">
-					   								<input type="hidden" id="ccomment_idx" name="ccomment_idx" value="${co.ccomment_idx}">
-					   								<input type="hidden" id="ccontent" name="content" value="${co.content}">
+					   								<input type="hidden" id="hcomment_idx" name="hcomment_idx" value="${co.hcomment_idx}">
+					   								<input type="hidden" id="hcontent" name="content" value="${co.content}">
 					   								수정
 					   							</button>
-					   							<a class="btn btn-outline-danger" href="/Board/DeleteCComment?ccomment_idx=${co.ccomment_idx}&cboard_idx=${vo.cboard_idx}">삭제</a>
-												</c:when>
-											</c:choose>
-<!-- 			   							<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" name="goCommentUpdate"> -->
-<%-- 			   								<input type="hidden" id="ccomment_idx" name="ccomment_idx" value="${co.ccomment_idx}"> --%>
-<%-- 			   								<input type="hidden" id="ccontent" name="content" value="${co.content}"> --%>
-<!-- 			   								수정 -->
-<!-- 			   							</button> -->
-<%-- 			   							<a class="btn btn-outline-danger" href="/Board/DeleteCComment?ccomment_idx=${co.ccomment_idx}&cboard_idx=${vo.cboard_idx}">삭제</a> --%>
-			   						
-			   						
-			   						
+					   							<a class="btn btn-outline-danger" href="/Board/DeleteHComment?hcomment_idx=${co.hcomment_idx}&hboard_idx=${vo.hboard_idx}">삭제</a>
+			   								</c:when>
+			   							</c:choose>
+			   							
 			   						</td>
 			   					</tr>		   				
 			  				</c:forEach>
@@ -181,11 +167,11 @@
 						        <h5 class="modal-title" id="exampleModalLabel">댓글 수정</h5>
 						        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						      </div>
-						        <form action="/Board/UpdateCComment" method="post">
+						        <form action="/Board/UpdateHComment" method="post">
 						      <div class="modal-body">
 						          <div class="mb-3">
-						          <input type="hidden" id="thisidx" name="ccomment_idx">
-						          <input type="hidden" id="commentboard_idx" name="cboard_idx" value="${ vo.cboard_idx }">
+						          <input type="hidden" id="thisidx" name="hcomment_idx">
+						          <input type="hidden" id="commentboard_idx" name="hboard_idx" value="${ vo.hboard_idx }">
 						            <textarea class="form-control" id="message-text" name="content"></textarea>
 						          </div>	        
 						      </div>
@@ -197,7 +183,6 @@
 						    </div>
 						  </div>
 						</div>
-					</div>
 <script>
 		const goCommentUpdateEls = document.getElementsByName('goCommentUpdate');
 		let messagetextEl = document.getElementById('message-text');
@@ -205,16 +190,13 @@
 		
 		goCommentUpdateEls.forEach((button) => {
 		    button.addEventListener('click', (event) => {
+	    			const hcomment_idx = button.querySelector('#hcomment_idx').value;
 		    	//alert('asfwes')
-		    	const ccomment_idx = button.querySelector('#ccomment_idx').value;
-		    	//alert(ccomment_idx);
-		    	const ccontent = button.querySelector('#ccontent').value;
-	    		//alert(ccontent)
-		    		
+		    		const hcontent = button.querySelector('#hcontent').value;
 		    		messagetextEl.value = ''
-		    		messagetextEl.value += ccontent
+		    		messagetextEl.value += hcontent
 		    		thisidxEl.value = ''
-		    		thisidxEl.value += ccomment_idx
+		    		thisidxEl.value += hcomment_idx
 		    });
 		});
 </script>																		
