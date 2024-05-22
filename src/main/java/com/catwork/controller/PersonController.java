@@ -46,6 +46,8 @@ import com.catwork.mapper.ResumeMapper;
 import com.catwork.mapper.UserMapper;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -106,20 +108,20 @@ public class PersonController {
 				pagingVo.setPage(resumeNowpage);
 				//pagingVo.setPage(personNowpage);
 				//pagingVo.setPage(nowpage);
-				pagingVo.setPageSize(3);
-				pagingVo.setRecordSize(3);
+				pagingVo.setPageSize(4);
+				pagingVo.setRecordSize(4);
 
 				PagingVo pagingVo1 = new PagingVo();
 				//pagingVo1.setPage(nowpage);
 				pagingVo1.setPage(applyNowpage);
-				pagingVo1.setPageSize(2);
-				pagingVo1.setRecordSize(2);
+				pagingVo1.setPageSize(4);
+				pagingVo1.setRecordSize(4);
 				
 				PagingVo pagingVo2 = new PagingVo();
 				//pagingVo2.setPage(nowpage);
 				pagingVo2.setPage(bookmarkNowpage);
-				pagingVo2.setPageSize(2);
-				pagingVo2.setRecordSize(2);
+				pagingVo2.setPageSize(4);
+				pagingVo2.setRecordSize(4);
 				
 				PagingVo pagingVo3 = new PagingVo();
 				//pagingVo2.setPage(nowpage);
@@ -214,8 +216,8 @@ public class PersonController {
 		pagingVo.setPage(resumeNowpage);
 		//pagingVo.setPage(personNowpage);
 		//pagingVo.setPage(nowpage);
-		pagingVo.setPageSize(3);
-		pagingVo.setRecordSize(3);
+		pagingVo.setPageSize(4);
+		pagingVo.setRecordSize(4);
 		
 		Pagination pagination = new Pagination(count, pagingVo);
 		pagingVo.setPagination(pagination);
@@ -262,8 +264,8 @@ public class PersonController {
 				PagingVo pagingVo1 = new PagingVo();
 				//pagingVo1.setPage(nowpage);
 				pagingVo1.setPage(applyNowpage);
-				pagingVo1.setPageSize(2);
-				pagingVo1.setRecordSize(2);
+				pagingVo1.setPageSize(4);
+				pagingVo1.setRecordSize(4);
 
 				Pagination pagination1 = new Pagination(count1, pagingVo1);
 				pagingVo1.setPagination(pagination1);
@@ -314,8 +316,8 @@ public class PersonController {
 						PagingVo pagingVo2 = new PagingVo();
 						//pagingVo2.setPage(nowpage);
 						pagingVo2.setPage(bookmarkNowpage);
-						pagingVo2.setPageSize(2);
-						pagingVo2.setRecordSize(2);
+						pagingVo2.setPageSize(4);
+						pagingVo2.setRecordSize(4);
 
 
 						Pagination pagination2 = new Pagination(count2, pagingVo2);
@@ -513,7 +515,9 @@ public class PersonController {
 	}
 
 	@GetMapping("/Resume/View")
-	public ModelAndView resumeView(ResumeVo resumeVo,Resume_SkillVo resumeSkillVo) {
+	public ModelAndView resumeView(ResumeVo resumeVo,Resume_SkillVo resumeSkillVo, @SessionAttribute("login") UserVo userVo) {
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		UserVo usertype = userMapper.getUserInfoById(user_idx);		
 		
 		ResumeVo vo = resumeMapper.getView(resumeVo);
 		
@@ -522,12 +526,15 @@ public class PersonController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("vo", vo);
 		mv.addObject("skillList", skillList);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("/person/resume_View");
 		return mv;
 	}
 
 	@GetMapping("/Resume/UpdateForm")
-	public ModelAndView resumeUpdateForm(ResumeVo resumeVo,SkillVo skillVo) {
+	public ModelAndView resumeUpdateForm(ResumeVo resumeVo,SkillVo skillVo, @SessionAttribute("login") UserVo userVo) {
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		UserVo usertype = userMapper.getUserInfoById(user_idx);	
 		
 		List<SkillVo> skillList = resumeMapper.getSkillList(skillVo);
 		//List<Resume_SkillVo> reskillList = resumeMapper.getReskillList(resume_SkillVo);
@@ -541,6 +548,7 @@ public class PersonController {
 		//mv.addObject("reskillList",reskillList);
 		mv.addObject("skillList",skillList);
 		mv.addObject("vo",vo);
+		mv.addObject("usertype", usertype);
 		mv.setViewName("/person/resume_Update");
 		
 		return mv;
@@ -675,12 +683,25 @@ public class PersonController {
 	}
 	
 	@GetMapping("/Resume/GetrecommendList")
-	public ModelAndView resumeRecommendList(RecommendPostVo recommendPostVo, ResumeVo resumeVo, @RequestParam(value = "nowpage") int nowpage) {
+	public ModelAndView resumeRecommendList(@SessionAttribute("login") UserVo userVo,RecommendPostVo recommendPostVo, ResumeVo resumeVo, @RequestParam(value = "rNowpage") int rNowpage,
+			@RequestParam(value="query", defaultValue = "none") String query) {
+		
+		int user_idx = userMapper.getUser_idx(userVo.getId());
+		UserVo usertype = userMapper.getUserInfoById(user_idx);
+		
+    	System.out.println("/Recommend/Search"+query);
+		
 	    ResumeVo vo = resumeMapper.getResumeDetailView(resumeVo);
 	    List<RecommendPostVo> postList = resumeMapper.getPostList(recommendPostVo);
-
+	    int count = 0;
+		if(query.equals("none")) {
+			 count = resumeMapper.countRecommensPostList(resumeVo.getResume_idx());
+		} else {
+			 count = resumeMapper.countRecommendQueryPostList(resumeVo.getResume_idx(),query);
+		}
 	    // 이력서 리스트 페이징
-	    int count = resumeMapper.countRecommensPostList(resumeVo.getResume_idx());
+	   // int count = resumeMapper.countRecommensPostList(resumeVo.getResume_idx());
+	    //int count = resumeMapper.countRecommendQueryPostList(resumeVo.getResume_idx(),query);
 
 	    PagingResponse<RecommendPostVo> response;
 	    if (count < 1) {
@@ -688,9 +709,9 @@ public class PersonController {
 	    } 
 	        // 페이징을 위한 초기 설정값
 	        PagingVo pagingVo = new PagingVo();
-	        pagingVo.setPage(nowpage);
-	        pagingVo.setPageSize(1);
-	        pagingVo.setRecordSize(1);
+	        pagingVo.setPage(rNowpage);
+	        pagingVo.setPageSize(4);
+	        pagingVo.setRecordSize(4);
 
 	        // Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
 	        Pagination pagination = new Pagination(count, pagingVo);
@@ -701,15 +722,26 @@ public class PersonController {
 	        int pageSize = pagingVo.getPageSize();
 	        System.out.println(pageSize);
 
-	        List<RecommendPostVo> pagingList = resumeMapper.getPostListPaging(resumeVo.getResume_idx(),offset, pageSize);
+	        //List<RecommendPostVo> pagingList = resumeMapper.getPostListQueryPaging(resumeVo.getResume_idx(),offset, pageSize,query);
+	        List<RecommendPostVo> pagingList = new ArrayList<>();
+			if(query.equals("none")) {
+				pagingList = resumeMapper.getPostListPaging(resumeVo.getResume_idx(),offset, pageSize);
+			} else {
+				pagingList =  resumeMapper.getPostListQueryPaging(resumeVo.getResume_idx(),offset, pageSize,query);
+			}
+			
 	        response = new PagingResponse<>(pagingList, pagination);
+	        
+	        System.out.println("response:"+response.getList());
 
 	    ModelAndView mv = new ModelAndView();
 	    mv.addObject("response", response);
 	    mv.addObject("pagingVo", pagingVo);
-	    mv.addObject("nowpage", nowpage);
+	    mv.addObject("rNowpage", rNowpage);
 	    mv.addObject("vo", vo);
 	    mv.addObject("postList", postList);
+	    mv.addObject("usertype", usertype);
+	    mv.addObject("query", query);
 	    mv.setViewName("/person/recommendPost");
 	    return mv;
 	}
@@ -847,5 +879,57 @@ public class PersonController {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("북마크 업데이트 실패");
 	        }
 	    }
+	    @RequestMapping("/Recommend/Search")
+	    public ModelAndView recommendPostSearch(@RequestParam(value="query") String query, RecommendPostVo recommendPostVo, ResumeVo resumeVo
+	    		,@RequestParam(value = "nowpage") int nowpage,@RequestParam(value = "resume_idx") int resume_idx) {
+	    	
+	    	
+	    	
+	    	System.out.println("/Recommend/Search"+resume_idx);
+	    	System.out.println("/Recommend/Search"+query);
+	    	System.out.println("/Recommend/Search"+nowpage);
+	    	
+	    	List<RecommendPostVo> postList = resumeMapper.getPostList(recommendPostVo);
+
+	 	    // 이력서 리스트 페이징
+	 	    int count = resumeMapper.countRecommensPostList(resumeVo.getResume_idx());
+
+	 	    PagingResponse<RecommendPostVo> response;
+	 	    if (count < 1) {
+	 	        response = new PagingResponse<>(Collections.emptyList(), null);
+	 	    } 
+	 	        // 페이징을 위한 초기 설정값
+	 	        PagingVo pagingVo = new PagingVo();
+	 	        pagingVo.setPage(nowpage);
+	 	        pagingVo.setPageSize(1);
+	 	        pagingVo.setRecordSize(1);
+
+	 	        // Pagination 객체를 생성해서 페이지 정보 계산 후 `Dto 타입의 객체인 params에 계산된 페이지 정보 저장
+	 	        Pagination pagination = new Pagination(count, pagingVo);
+	 	        pagingVo.setPagination(pagination);
+
+	 	        int offset = pagingVo.getOffset();
+	 	        System.out.println(offset);
+	 	        int pageSize = pagingVo.getPageSize();
+	 	        System.out.println(pageSize);
+
+	 	        List<RecommendPostVo> pagingList = resumeMapper.getPostListQueryPaging(resumeVo.getResume_idx(),offset, pageSize,query);
+	 	        response = new PagingResponse<>(pagingList, pagination);
+	    	
+	    	
+	    	
+	    	ModelAndView mv = new ModelAndView();
+		    mv.addObject("response", response);
+		    mv.addObject("pagingVo", pagingVo);
+		    mv.addObject("nowpage", nowpage);
+		    //mv.addObject("vo", vo);
+		    mv.addObject("postList", postList);
+		    //mv.addObject("usertype", usertype);
+		    mv.setViewName("/person/recommendPost?query="+query+"nowpage="+nowpage);
+	    	
+	    	return mv;
+	    	
+	    }
+
 
 }

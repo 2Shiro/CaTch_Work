@@ -186,7 +186,6 @@ public class HomeController {
 	    return mv;
 	}
 
-
 	@RequestMapping("/LoginForm")
 	public String plogin() {
 		return "login";

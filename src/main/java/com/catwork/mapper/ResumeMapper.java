@@ -127,6 +127,15 @@ public interface ResumeMapper {
 
 	List<Resume_SkillVo> getSkillListById(int resume_idx);
 
+	List<RecommendPostVo> getPostListQueryPaging(int resume_idx, int offset, int pageSize, String query);
+
+	int countRecommensQueryPostList(int resume_idx, String query);
+
+
+	List<RecommendPostVo> getPostListQueryPaging(int resume_idx, int offset, int pageSize);
+
+	int countRecommendQueryPostList(int resume_idx, String query);
+
 
 
 
