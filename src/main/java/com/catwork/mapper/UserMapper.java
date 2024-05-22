@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.catwork.domain.PostVo;
 import com.catwork.domain.UserListVo;
 import com.catwork.domain.UserVo;
 
@@ -35,4 +36,6 @@ public interface UserMapper {
 	int getUser_idx(String id);
 
 	List<UserVo> getAllUser();
+
+	void deletePost(PostVo postvo);
 }

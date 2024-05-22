@@ -80,4 +80,10 @@
 					 EMAIL
 		FROM USER_TB
 	</select>
+	
+	<!-- 관리자 공고 삭제 -->
+	<delete id="deletePost">
+		DELETE POST_TB WHERE POST_IDX = #{post_idx}
+	</delete>
+	
 </mapper>
