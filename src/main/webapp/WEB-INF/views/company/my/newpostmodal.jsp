@@ -60,9 +60,9 @@
 								</div>
 								<div class="col-md-8 d-flex">
 									<input class="form-control" type="time" name="gowork" 
-										id="gowork" required> <input
+										id="gowork" value="09:00" required> <input
 										class="form-control ms-3" type="time" name="gohome"
-										id="gohome" required>
+										id="gohome" value="18:00" required>
 								</div>
 							</div>
 						</div>
