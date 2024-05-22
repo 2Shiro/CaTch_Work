@@ -49,11 +49,7 @@
 						<button class="btn btn-outline-primary" style="width: 110px; margin-right: 9px;" type="submit">검색</button>
 				</form>
 				<table class="table">
-					<tr>
-						<td colspan="5" style="text-align: right">
-							<button type="button" class="btn btn-outline-primary"
-								onclick="location.href='/Board/CWriteForm'">글 작성하기</button>
-						</td>
+					<tr><td colspan="5"><div>&nbsp;</div></td>
 					</tr>
 					<tr>
 						<td>번호</td>
@@ -77,6 +73,10 @@
 				<div class="d-flex justify-content-center paging-bottom-container">
 					<%@include file="/WEB-INF/pagination/cboardPaging.jsp"%>
 				</div>
+						<div colspan="5" style="text-align: right">
+							<button type="button" class="btn btn-outline-primary"
+								onclick="location.href='/Board/CWriteForm'">글 작성하기</button>
+						</div>
 				</div>
 			</div>
 </body>
