@@ -32,6 +32,11 @@
           <a class="nav-link" href="/MyPage?nowpage=1">개인페이지</a>
         </li>
         </c:if>
+        <c:if test="${usertype.type == 0 || usertype.type == 1 || usertype.type == 2}">
+        <li class="nav-item">
+          <a class="nav-link" href="/Board/PersonBoard?nowpage=1">커뮤니티</a>
+        </li>
+        </c:if>
       </ul>
     </div>
   </div>

@@ -109,7 +109,12 @@ public class CompanyController {
 		//List<ResumeVo> resumeList = companyMapper.getResumeList();
 		
 		//이력서 목록 가져오기
-		List<ResumeVo> resumeList = companyMapper.getResumeList();
+		List<ResumeVo> resumeList = new ArrayList<ResumeVo>();
+		if(usertype.getType() == 0 ) {
+			resumeList = companyMapper.getResumeList();
+		} else {
+			resumeList = companyMapper.getResumeListOpen();
+		}
 		
 		//System.out.println("searchword" + searchword);
 		
@@ -148,7 +153,8 @@ public class CompanyController {
 		
 		//검색어 별 count
 		if(searchword.equals("none")) {
-			count = companyMapper.countResumeList(resumeList);
+			//count = companyMapper.countResumeList(resumeList);
+			count = resumeList.size();
 		} else {
 			for(int i = 0; i < resumeListInfo.size(); i++) {
 				for(int j = 0; j < resumeListInfo.get(i).getSkillList().size(); j++) {
@@ -168,8 +174,8 @@ public class CompanyController {
 		// 페이징을 위한 초기 설정값
 		PagingVo pagingVo = new PagingVo();
 		pagingVo.setPage(nowpage);
-		pagingVo.setPageSize(3);
-		pagingVo.setRecordSize(3);//
+		pagingVo.setPageSize(5);
+		pagingVo.setRecordSize(5);//
 
 		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
 		Pagination pagination = new Pagination(count, pagingVo);
@@ -180,10 +186,18 @@ public class CompanyController {
 
 		List<ResumeVo> pagingList = new ArrayList<>();
 		
-		if(searchword.equals("none")) {
-			pagingList = companyMapper.getResumeListPaging(offset, pageSize);
+		if(usertype.getType() == 0 ) {
+			if(searchword.equals("none")) {
+				pagingList = companyMapper.getResumeListPaging(offset, pageSize);
+			} else {
+				pagingList = companyMapper.getResumeListPagingSearch(offset, pageSize, searchword);
+			}
 		} else {
-			pagingList = companyMapper.getResumeListPagingSearch(offset, pageSize, searchword);
+			if(searchword.equals("none")) {
+				pagingList = companyMapper.getResumeListPagingOpen(offset, pageSize);
+			} else {
+				pagingList = companyMapper.getResumeListPagingSearchOpen(offset, pageSize, searchword);
+			}
 		}
 		
 		response = new PagingResponse<>(pagingList, pagination);
@@ -267,10 +281,12 @@ public class CompanyController {
 		
 		//회원 정보 가져오기(현재는 특정 회원 고정)
 		CompanyVo cvo = companyMapper.getCompanyById(user_idx);
+		
+		
 		UserVo vo = userMapper.getUserInfoById(user_idx);
 		
 		//평점 가져오기
-		int rate = companyMapper.getMyRate(user_idx);
+		int rate = companyMapper.getMyRate(cvo.getCom_idx());
 		
 		//특정 기업 공고 리스트 가져오기
 		List<PostVo> postList = companyMapper.getMyPost(user_idx);

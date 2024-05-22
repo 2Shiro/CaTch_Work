@@ -187,7 +187,7 @@ FROM (
 		VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},2)		
 		INTO person_tb (per_idx,user_idx,name,phone,zip_code,address,social_num,created)
 		VALUES
-		((SELECT MAX(NVL(per_idx,0)+1) FROM PERSON_TB),(SELECT MAX(NVL(user_idx,0)) FROM user_tb),
+		((SELECT MAX(NVL(per_idx,0)+1) FROM PERSON_TB),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
 			#{name},#{phone},#{zip_code},#{address},#{social_num},sysdate)
 		SELECT *
 		FROM DUAL

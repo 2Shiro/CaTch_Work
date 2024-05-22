@@ -118,19 +118,7 @@ hr {
     		 </table> 
     		 </div>  
    		</form>
-   		<!-- 네이버 로그인 버튼 노출 영역 -->
-  <div id="naver_id_login"></div>
-  <!-- //네이버 로그인 버튼 노출 영역 -->
-  <script type="text/javascript">
-  	var naver_id_login = new naver_id_login("XQu51X2C208MnglyYyEj", "http://localhost:9086/");
-  	var state = naver_id_login.getUniqState();
-  	naver_id_login.setButton("white", 2,40);
-  	naver_id_login.setDomain("http://localhost:9086/");
-  	naver_id_login.setState(state);
-  	naver_id_login.setPopup();
-  	naver_id_login.init_naver_id_login();
-  </script>
-		</div>
+</div>
 		
 		<!-- 기업회원 -->
 		<div class="tab-pane fade mt-5" id="myreview" role="tabpanel"
