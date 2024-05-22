@@ -13,12 +13,19 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<style>
+.bookmark-icons {
+    width: 20px;
+    height: 10px;
+}
+</style>
 </head>
 <body>
 
     <div class="tab-pane fade active show" id="bookmark" role="tabpanel" aria-labelledby="bookmark-tab">
 	<div class="container">
 	<div id="personbookmark">
+	<div>&nbsp;</div>
 	<div>&nbsp;</div>
 		<h2>내가 북마크한 공고</h2>
 		<div>&nbsp;</div>
@@ -46,7 +53,9 @@
 					        <td>${bo.mphone}</td>
 					        <td class="td8">
 					        	<input type="hidden" value="${bo.book_idx}">
-					            <img class="bookmark-icon" src="/img/fillmoew.png" alt="북마크 아이콘">
+					           <img src="/img/fillmoew.png"
+                                      class="bookmark-icons" alt="북마크"
+                                       style="width: 24px; height: 24px;">
 					        </td>
 					    </tr>
 
@@ -62,58 +71,85 @@
     </div>
  
  <script>
-
  $(document).ready(function() {
-     let deletedRows = []; // 삭제된 행을 기록하는 배열
+	    let deletedRows = []; // 삭제된 행을 기록하는 배열
+	    let bookmarkNowpage = parseInt($('#pagination').data('current-page')) || 1; // 현재 페이지 변수 추가
 
-     // 클릭 이벤트를 상위 요소에 등록하여 중첩 방지
-     $('.mybookmark .table-group-divider').on('click', '.bookmark-icon', function(event) {
-         const clickedElement = $(this);
-         const bookmarkValue = clickedElement.closest('.td8').find('[type=hidden]').val();
-         
-         const url = '/Bookmark/Delete?book_idx=' + bookmarkValue;
+	    function loadBookmarks(page) {
+	        if (page !== undefined) {
+	            bookmarkNowpage = page;
+	        }
 
-         $.ajax({
-             url: url,
-             method: 'DELETE',
-             success: function(deletedData) {
-                 const deletedRowNum = deletedData.row_num;
+	        console.log('북마크 현재 페이지:', bookmarkNowpage);
 
-                 // 삭제된 요소의 인덱스를 기록
-                 deletedRows.push(deletedRowNum);
+	        $.getJSON('/Bookmark/List2', { bookmarkNowpage: bookmarkNowpage }, function(bookmarkList) {
+	            const tableDivider = $('.mybookmark .table-group-divider');
+	            tableDivider.empty();
+	            $.each(bookmarkList, function(index, bo) {
+	                // 삭제된 요소가 아닌 경우에만 추가
+	                if (!deletedRows.includes(bo.row_num)) {
+	                    let html = '<tr data-row-num="' + bo.row_num + '">';
+	                    html += '<th scope="row">' + bo.row_num + '</th>';
+	                    html += '<td class="td2"><a href="/Post?post_idx=' + bo.post_idx + '">' + bo.title + '</a></td>';
+	                    html += '<td>' + bo.salary + '</td>';
+	                    html += '<td>' + bo.career + '</td>';
+	                    html += '<td>' + bo.mphone + '</td>';
+	                    html += '<td class="td8">';
+	                    html += '<input type="hidden" value="' + bo.book_idx + '">';
+	                    html += '<img src="/img/fillmoew.png" class="bookmark-icons" alt="북마크" style="width: 24px; height: 24px;">';
+	                    html += '</td>';
+	                    html += '</tr>';
 
-                 // 화면에서 삭제된 데이터를 제외하고 나머지 데이터를 다시 그림
-                 $.getJSON('/Bookmark/List', function(bookmarkList) {
-                     const tableDivider = $('.bookmark .table-group-divider');
-                     tableDivider.empty();
+	                    tableDivider.append(html);
+	                }
+	            });
+	        });
+	    }
 
-                     $.each(bookmarkList, function(index, bo) {
-                         // 삭제된 요소가 아닌 경우에만 추가
-                         if (!deletedRows.includes(bo.row_num)) {
-                             let html = '<tr data-row-num="' + bo.row_num + '">';
-                             html += '<th scope="row">'+bo.row_num+'</th>';
-                             html += '<td class="td2"><a href="/Post?post_idx='+bo.post_idx+'">'+bo.title+'</a></td>';
-                             html += '<td>'+bo.salary+'</td>';
-                             html += '<td>'+bo.career+'</td>';
-                             html += '<td>'+bo.mphone+'</td>';
-                             html += '<td class="td8">';
-                             html += '<input type="hidden" value="'+bo.book_idx+'">';
-                             html += '<img class="bookmark-icon" src="/img/fillmoew.png" alt="북마크 아이콘">';
-                             html += '</td>';
-                             html += '</tr>';
+	    // 초기 로딩 - 첫 페이지 로드 시에만 실행
+	    //loadBookmarks(bookmarkNowpage);
 
-                             tableDivider.append(html);
-                         }
-                     });
-                 });
-             },
-             error: function(error) {
-                 console.error('Error:', error);
-             }
-         });
-     });
- });
- 
+	    // 북마크 탭 클릭 이벤트 핸들러
+	    $('#bookmark-tab').on('click', function(e) {
+	        e.preventDefault();
+	        loadBookmarks(bookmarkNowpage); // 현재 페이지로 북마크 목록 로드
+	    });
+
+	    // 페이지 이동 버튼 클릭 이벤트 핸들러
+	    $('.pagination').on('click', '.page-link', function(e) {
+	        e.preventDefault();
+	        let page = $(this).data('page'); // 클릭된 페이지 번호로 업데이트
+	        bookmarkNowpage = page; // 현재 페이지 번호를 업데이트
+	        loadBookmarks(page); // 북마크 목록 다시 로드
+	    });
+
+	    // 북마크 아이콘 클릭 이벤트
+	    $('.mybookmark .table-group-divider').on('click', '.bookmark-icons', function(event) {
+	        const clickedElement = $(this);
+	        const bookmarkValue = clickedElement.closest('.td8').find('[type=hidden]').val();
+	        const url = '/Bookmark/Delete?book_idx=' + bookmarkValue;
+
+	        $.ajax({
+	            url: url,
+	            method: 'DELETE',
+	            success: function(deletedData) {
+	                const deletedRowNum = deletedData.row_num;
+
+	                // 삭제된 요소의 인덱스를 기록
+	                deletedRows.push(deletedRowNum);
+
+	                // DOM에서 해당 행을 제거
+	                clickedElement.closest('tr').remove();
+
+	                // 삭제 후 현재 페이지의 북마크 목록 다시 로드
+	                loadBookmarks(bookmarkNowpage);
+	            },
+	            error: function(error) {
+	                console.error('Error:', error);
+	            }
+	        });
+	    });
+	});
  </script>
  
  </body>

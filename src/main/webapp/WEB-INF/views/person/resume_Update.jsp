@@ -133,8 +133,8 @@
                 </div>
             </div>
             <div class="">
-                <button type="submit" id="info-update" name="info-update" class="btn btn-primary">확인</button>
-                <button type="button" id="info-delete" class="btn btn-danger">삭제</button>
+                <button type="submit" id="goUpdate" name="info-update" class="btn btn-primary">확인</button>
+                <button type="button" id="goDelete" class="btn btn-danger">삭제</button>
                 <a type="button" class="btn btn-secondary" href="javascript:window.history.back();">뒤로</a>
             </div>
         </section>
@@ -148,18 +148,26 @@
 	
 	<%@include file="/WEB-INF/include/footer.jsp" %>
 <script> 
-// 	const goUpdateEl = document.querySelector('#goUpdate')
-// 	goUpdateEl.addEventListener('click',()=>{
-// 		alert('수정되었습니다');
-// 		location.href='/Resume/Update?resume_idx=${vo.resume_idx}';
-	
-// 	})
-	const goDeleteEl = document.querySelector('#goDelete')
-	goDeleteEl.addEventListener('click',()=>{
-		alert('삭제되었습니다');
-		location.href='/Resume/Delete?resume_idx=${vo.resume_idx}';
+	const goUpdateEl = document.querySelector('#goUpdate')
+	goUpdateEl.addEventListener('click',()=>{
+		alert('수정되었습니다');
+		//location.href='/Resume/Update?resume_idx=${vo.resume_idx}';
 	
 	})
+const goDeleteEl = document.querySelector('#goDelete');
+goDeleteEl.addEventListener('click', () => {
+    // 사용자에게 삭제 여부를 물어봄
+    const isConfirmed = confirm('정말 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+        // 사용자가 확인하면 삭제 처리 진행
+        alert('삭제되었습니다');
+        location.href = '/Resume/Delete?resume_idx=${vo.resume_idx}';
+    } else {
+        // 사용자가 취소하면 아무 동작도 하지 않음
+        //alert('삭제가 취소되었습니다');
+    }
+});
 	
 	
 </script>	

@@ -18,6 +18,7 @@ import com.catwork.domain.PersonVo;
 import com.catwork.domain.PostSkillVo;
 import com.catwork.domain.PostVo;
 import com.catwork.domain.ResumeVo;
+import com.catwork.domain.SearchResponseVo;
 import com.catwork.domain.SkillVo;
 import com.catwork.domain.UserListVo;
 import com.catwork.domain.UserVo;
@@ -26,6 +27,7 @@ import com.catwork.mapper.PersonMapper;
 import com.catwork.mapper.ResumeMapper;
 import com.catwork.mapper.UserMapper;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,27 +50,36 @@ public class HomeController {
 
 	// 메인화면
 	@RequestMapping("/")
-	public ModelAndView main(@SessionAttribute("login") UserVo userVo) {
-		//회원 정보 세션 가져오기
-		int user_idx = userMapper.getUser_idx(userVo.getId());
+	public ModelAndView main(HttpServletRequest request) {
+	    HttpSession session = request.getSession(false); // 세션이 없으면 null 반환
+	    UserVo userVo = (session != null) ? (UserVo) session.getAttribute("login") : null;
 
-		UserVo usertype = userMapper.getUserInfoById(user_idx);
-		
+	    ModelAndView mv = new ModelAndView();
+
 	    List<MainPageVo> mainPageList = new ArrayList<>();
 	    List<PostVo> postList = companyMapper.getmainpostList();
 
-	    // 사용자의 북마크 정보를 조회하는 로직 추가 (가정)
-	    List<Integer> bookmarkedPostIds = personMapper.getBookmarked(user_idx);
+	    List<Integer> bookmarkedPostIds = new ArrayList<>();
+	    UserVo usertype = null;
+
+	    if (userVo != null) {
+	        int user_idx = userMapper.getUser_idx(userVo.getId());
+	        usertype = userMapper.getUserInfoById(user_idx);
+
+	        if (usertype != null && usertype.getId() != null) {
+	            // 로그인한 사용자의 북마크 정보를 조회
+	            bookmarkedPostIds = personMapper.getBookmarked(user_idx);
+	        }
+	    }
 
 	    for (PostVo post : postList) {
 	        CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
-	        boolean isBookmarked = bookmarkedPostIds.contains(post.getPost_idx()); // 북마크 여부 확인
+	        boolean isBookmarked = bookmarkedPostIds.contains(post.getPost_idx());
 	        MainPageVo mainPageVo = new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getCom_idx(), company.getLogo(), company.getName(),
-	                post.getTitle(), post.getDeadline(), isBookmarked); // 북마크 여부를 포함하여 객체 생성
+	                post.getTitle(), post.getDeadline(), isBookmarked);
 	        mainPageList.add(mainPageVo);
 	    }
 
-	    ModelAndView mv = new ModelAndView();
 	    mv.addObject("postList", postList);
 	    mv.addObject("mainPageList", mainPageList);
 	    mv.addObject("usertype", usertype);
@@ -79,73 +90,102 @@ public class HomeController {
 	// 검색 기능 - AJAX 호출
 	@RequestMapping("/Search")
 	@ResponseBody
-	public ResponseEntity<List<MainPageVo>> search(
+	public ResponseEntity<SearchResponseVo> search(
 	        @RequestParam(value="keyword", required=false, defaultValue="") String keyword,
 	        @RequestParam(value="department", required=false, defaultValue="") String department,
 	        @RequestParam(value="region", required=false, defaultValue="") String region,
 	        @RequestParam(value="career", required=false, defaultValue="") String career,
-	        @RequestParam(value="jobtype", required=false, defaultValue="") String jobtype) {
+	        @RequestParam(value="jobtype", required=false, defaultValue="") String jobtype,
+	        HttpServletRequest request) {
 	    
-	    int user_idx = 1; // 사용자 ID를 임시로 설정
+	    HttpSession session = request.getSession();
+	    UserVo userVo = (UserVo) session.getAttribute("login");
+	    
+	    int user_idx = -1;
+	    UserVo usertype = null;
+	    List<Integer> bookmarkedPostIds = new ArrayList<>();
+
+	    if (userVo != null) {
+	        user_idx = userMapper.getUser_idx(userVo.getId());
+	        usertype = userMapper.getUserInfoById(user_idx);
+	        if (usertype.getId() != null) {
+	            bookmarkedPostIds = personMapper.getBookmarked(user_idx);
+	        }
+	    }
+	    
 	    List<MainPageVo> searchResults = new ArrayList<>();
-
-	    // 사용자의 북마크 정보를 조회하는 로직 추가 (가정)
-	    List<Integer> bookmarkedPostIds = personMapper.getBookmarked(user_idx);
-
 	    List<PostVo> searchedPosts = companyMapper.searchPosts(keyword, department, region, career, jobtype);
 
 	    for (PostVo post : searchedPosts) {
 	        CompanyVo company = companyMapper.getCompanyById(post.getUser_idx());
-	        boolean isBookmarked = bookmarkedPostIds.contains(post.getPost_idx()); // 북마크 여부 확인
+	        boolean isBookmarked = userVo != null && bookmarkedPostIds.contains(post.getPost_idx());
 	        MainPageVo mainPageVo = new MainPageVo(post.getPost_idx(), post.getUser_idx(), company.getCom_idx(), company.getLogo(), company.getName(),
-	                post.getTitle(), post.getDeadline(), isBookmarked); // 북마크 여부를 포함하여 객체 생성
+	                post.getTitle(), post.getDeadline(), isBookmarked);
 	        searchResults.add(mainPageVo);
 	    }
-	    return ResponseEntity.ok(searchResults); // 검색 결과를 JSON 형태로 반환
+	    
+	    SearchResponseVo responsevo = new SearchResponseVo();
+	    if (usertype != null) {
+	        responsevo.setUsertype(usertype.getType());
+	    }
+	    responsevo.setSearchResults(searchResults);
+
+	    return ResponseEntity.ok(responsevo);
 	}
 
     
-    
 	@RequestMapping("/Company/Viewpost")
-	public ModelAndView viewpost(@RequestParam("post_idx") int post_idx, @RequestParam("com_idx") int com_idx, PostVo postidx) {
-	    // POST_TB 에서 해당 공고 찾기
+	public ModelAndView viewpost(@RequestParam("post_idx") int post_idx, HttpServletRequest request) {
+	    HttpSession session = request.getSession(false); // 세션이 없으면 null 반환
+	    UserVo userVo = (session != null) ? (UserVo) session.getAttribute("login") : null;
+	    
+	    int user_idx = (userVo != null) ? userMapper.getUser_idx(userVo.getId()) : -1;
+	    
+	    UserVo usertype = (user_idx != -1) ? userMapper.getUserInfoById(user_idx) : null;
+	    
 	    PostVo postvo = companyMapper.getViewPost(post_idx);
+	    CompanyVo comidvo = companyMapper.getComId(post_idx);
 	    
-	    // CompanyVo 객체 생성 및 데이터 설정
-	    CompanyVo companyvo = companyMapper.getCompanyByComId(com_idx); // com_idx로 회사 정보를 가져옴
+	    CompanyVo companyvo = companyMapper.getCompanyByComId(comidvo.getCom_idx());
 	    
-		//특정 공고의 스킬 가져오기
-		//List<PostSkillVo> postSkills = companyMapper.getPostSkills(postidx);
-		List<PostSkillVo> postSkills = companyMapper.getPostSkills(postidx.getPost_idx());
-		
-		//스킬 이름 가져오기
-		List<SkillVo> skill = new ArrayList<SkillVo>();
-		for(int i = 0; i < postSkills.size(); i++) {
-			SkillVo skillname = companyMapper.getSkillName(postSkills.get(i).getSkill_idx());
-			skill.add(skillname);
-		}
+	    // 평점 가져오기
+	    int rate = companyMapper.getMyRate(companyvo.getCom_idx());
+	    
+	    List<PostSkillVo> postSkills = companyMapper.getPostSkills(postvo.getPost_idx());
+	    List<SkillVo> skill = new ArrayList<SkillVo>();
+	    for (int i = 0; i < postSkills.size(); i++) {
+	        SkillVo skillname = companyMapper.getSkillName(postSkills.get(i).getSkill_idx());
+	        skill.add(skillname);
+	    }
 	    
 	    ModelAndView mv = new ModelAndView();
 	    
-	    // 예시로 사용자 ID를 직접 지정. 실제로는 인증 정보에서 사용자 ID를 가져와야 함.
-	    int user_idx = 1; // 수정해야함
+	    boolean isBookmarked = false;
+	    boolean alreadyApplied = false;
+	    List<ResumeVo> resumevo = new ArrayList<>();
 	    
-	    // 북마크 여부 확인
-	    boolean isBookmarked = personMapper.isBookmarked(user_idx, post_idx);
-
-	    // 이력서 목록을 가져옴
-	    List<ResumeVo> resumevo = resumeMapper.getResumesByUserId(user_idx);
-
+	    if (userVo != null && usertype != null) {
+	        alreadyApplied = personMapper.checkIfAlreadyApplied(user_idx, post_idx);
+	        if (usertype.getId() != null && usertype.getType() == 2) {
+	            isBookmarked = personMapper.isBookmarked(user_idx, post_idx);
+	            resumevo = resumeMapper.getResumesByUserId(user_idx);
+	        }
+	    }
+	    
 	    mv.addObject("user_idx", user_idx);
-	    mv.addObject("isBookmarked", isBookmarked); // 북마크 여부 추가
+	    mv.addObject("isBookmarked", isBookmarked);
+	    mv.addObject("alreadyApplied", alreadyApplied);
 	    mv.addObject("skill", skill);
+	    mv.addObject("rate", rate);
 	    mv.addObject("resumevo", resumevo);
 	    mv.addObject("postvo", postvo);
 	    mv.addObject("companyvo", companyvo);
+	    mv.addObject("usertype", usertype);
 	    
 	    mv.setViewName("/company/viewpost");
 	    return mv;
 	}
+
 
 	@RequestMapping("/LoginForm")
 	public String plogin() {
@@ -201,6 +241,7 @@ public class HomeController {
 												comuser.getCtype(), comuser.getBdate()));
 				} else if (allUserList.get(i).getType() == 2) {
 					UserVo user = userMapper.getUserInfoById(allUserList.get(i).getUser_idx()); 
+					System.out.println("user: " + user);
 					PersonVo peruser = personMapper.getPersonDetail(allUserList.get(i).getUser_idx());
 					userList.add(new UserListVo(user.getUser_idx(), user.getId(), user.getPwd(), 
 												user.getType(), user.getEmail(),
@@ -253,5 +294,19 @@ public class HomeController {
 		
 		return mv;
 	}
+	
+	@RequestMapping("/DeletePost")
+	public ModelAndView deletepost(PostVo postvo) {
+
+		System.out.println(postvo.getPost_idx());
+		userMapper.deletePost(postvo);
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("redirect:/");
+		
+		return mv;
+	}
+	
 }
 
