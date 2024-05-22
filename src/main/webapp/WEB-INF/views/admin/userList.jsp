@@ -69,12 +69,12 @@
 											${userList.created}
                   </td>
                   <td>
-											<a type="button" class="btn btn-sm btn-danger" href="/Delete?user_idx=${userList.user_idx}">삭제</a>
+											<button id="deletebtn" class="btn btn-sm btn-danger" type="button" name="${userList.user_idx}">삭제</button>
                   </td>
                 </tr>
              </c:forEach>
              <c:if test="${empty userList}">
-								<td colspan="4" class="justify-content-center">결과가 없습니다.</td>
+								<td colspan="5" class="justify-content-center">결과가 없습니다.</td>
              </c:if>
            </tbody>
          </table>
@@ -82,7 +82,25 @@
       </form>
    </div>
    
-   <%@include file="/WEB-INF/include/footer.jsp" %>
- 
+   <%@include file="/WEB-INF/include/footer.jsp" %> 
+
+<script>
+	const deleteEl = document.querySelectorAll("#deletebtn")
+	
+	deleteEl.forEach(btn => {
+	    btn.addEventListener('click', (e) => {
+	        const isConfirmed = confirm('정말로 삭제하시겠습니까?')
+	        const user_idx = e.target.name
+	        
+	        if (isConfirmed) {
+	            alert('삭제처리 되었습니다.')
+	            location.href = '/Delete?user_idx=' + user_idx
+	        } else {
+	            
+	        }
+	    })
+	});
+</script>
+
 </body>
 </html>

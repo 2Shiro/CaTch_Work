@@ -230,7 +230,9 @@ public class HomeController {
 			if(originword.equals("none")) {
 				if(allUserList.get(i).getType() == 1) { //기업 회원
 					UserVo user = userMapper.getUserInfoById(allUserList.get(i).getUser_idx()); 
+					//System.out.println("user" + user);
 					CompanyVo comuser = companyMapper.getCompanyById(allUserList.get(i).getUser_idx());
+					//System.out.println("comuser" + comuser);
 					userList.add(new UserListVo(user.getUser_idx(), user.getId(), user.getPwd(), 
 												user.getType(), user.getEmail(),
 												comuser.getName(), comuser.getCreated(),
@@ -240,8 +242,13 @@ public class HomeController {
 												comuser.getCtype(), comuser.getBdate()));
 				} else if (allUserList.get(i).getType() == 2) {
 					UserVo user = userMapper.getUserInfoById(allUserList.get(i).getUser_idx()); 
-					System.out.println("user: " + user);
+
+					//System.out.println("user" + user);
+
+					//System.out.println("user: " + user);
+
 					PersonVo peruser = personMapper.getPersonDetail(allUserList.get(i).getUser_idx());
+					//System.out.println("peruser" + peruser);
 					userList.add(new UserListVo(user.getUser_idx(), user.getId(), user.getPwd(), 
 												user.getType(), user.getEmail(),
 												peruser.getName(), peruser.getCreated(),

@@ -21,11 +21,27 @@
    <%@include file="/WEB-INF/views/company/resume/resumeForm.jsp" %>
    <div class="container">
    	<c:if test="${usertype.type == 0}">
-		  <a type="button" class="btn btn-danger" href="/ResumeList/Delete?resume_idx=${vo.resume_idx}">삭제</a>
+		  <button id="deletebtn" type="button" class="btn btn-danger">삭제</button>
    	</c:if>
 	  <a type="button" class="btn btn-secondary" href="javascript:window.history.back();">뒤로</a>
    </div>
    
    <%@include file="/WEB-INF/include/footer.jsp" %>
+
+<script>
+   const deleteEl = document.querySelector("#deletebtn")
+   const resume_idx = document.querySelector('#resume_idx')
+	
+	deleteEl.addEventListener('click', (e) => {
+	        const isConfirmed = confirm('정말로 삭제하시겠습니까?')
+	        
+	        if (isConfirmed) {
+	            alert('삭제처리 되었습니다.')
+	            location.href = '/Person/Resume/Delete?resume_idx=' + resume_idx
+	        } else {
+	            
+	        }
+	});
+</script>
 </body>
 </html>

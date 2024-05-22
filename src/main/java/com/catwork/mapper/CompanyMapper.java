@@ -93,6 +93,12 @@ public interface CompanyMapper {
 	List<PostVo> getPostListPaging(int offset, int pageSize, int user_idx);
 	
 	int getMyRate(int user_idx);
+	
+	List<ResumeVo> getResumeListOpen();
+	
+	List<ResumeVo> getResumeListPagingOpen(int offset, int pageSize);
+	
+	List<ResumeVo> getResumeListPagingSearchOpen(int offset, int pageSize, String searchword);
 
 	CompanyVo getComId(int post_idx);
 }
