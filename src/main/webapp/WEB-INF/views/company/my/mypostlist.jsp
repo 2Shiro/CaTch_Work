@@ -40,7 +40,7 @@
 		      
         </div>
        		<script> 
-       		alert('dd')
+       		//alert('dd')
     		const pagingEls = document.querySelectorAll('#postListPage')
    		
     		const userinfotab = document.getElementById('userinfo-tab')
@@ -60,7 +60,7 @@
  						$("#myreview").addClass("show active");
 			    	
  			    	const href = e.target.href
- 			    	alert(href)
+ 			    	//alert(href)
  			    	//document.load(href)
  			    	$('#mypostList').load(href)
  			    })
