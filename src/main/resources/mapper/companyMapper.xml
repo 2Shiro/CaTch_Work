@@ -33,6 +33,7 @@
 	            END AS DEADLINE,
 	            TO_CHAR(SYSDATE, 'YY/MM/DD') AS TODAY,
 	            P.DEPARTMENT,
+	            C.NAME,
 	            SUBSTR(C.ADDRESS, 1, 2) AS REGION,
 	            CASE 
 	                WHEN P.CAREER LIKE '%년이상%' THEN '경력'
@@ -40,11 +41,11 @@
 	            END AS CAREER,
 	            P.JOBTYPE
 	    FROM    POST_TB P
-	    JOIN    COMPANY_TB C ON P.USER_IDX = C.USER_IDX
+	    		JOIN COMPANY_TB C ON P.USER_IDX = C.USER_IDX
 	    WHERE   TO_CHAR(P.DEADLINE, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
 	            <if test="keyword != null and keyword != ''">
-	                AND P.TITLE LIKE '%' || #{keyword} || '%'
-	            </if>
+				    AND (P.TITLE LIKE '%' || #{keyword} || '%' OR C.NAME LIKE '%' || #{keyword} || '%')
+				</if>
 	            <if test="department != null and department != ''">
 	                AND P.DEPARTMENT = #{department}
 	            </if>
@@ -100,7 +101,7 @@
 		SELECT SKILL_IDX, NAME FROM SKILL_TB WHERE SKILL_IDX = #{skill_idx}
 	</select>
 	
-	<!-- USER_IDX로 기업 회원 디테일 정보 가져오기, 현재는 9로 고정 -->
+	<!-- USER_IDX로 기업 회원 디테일 정보 가져오기 -->
 	<select id="getCompanyById">
 		SELECT	COM_IDX,
 				USER_IDX,
