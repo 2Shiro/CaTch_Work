@@ -66,8 +66,8 @@ a:hover .card {
 		<div id="PostCard">
 			<div class="grand_banner_wrap mx-5">
 				<h2 class="header ms-3">채용 공고</h2>
-				<div class="row my-3 ms-3">
-					<div class="col">
+				<div class="row my-3 ms-3 justify-content-center">
+					<div class="col-auto">
 						<div class="input-group">
 							<div class="mcontainer">
 								<div class="selects">
@@ -132,7 +132,7 @@ a:hover .card {
 								<!-- 검색창 -->
 								<div class="search ms-5">
 									<input type="text" name="keyword" class="form-control"
-										id="keyword">
+										id="keyword" placeholder="회사명 or 공고제목">
 									<button type="submit" class="btn btn-outline-secondary"
 										id="btn_search">찾기</button>
 								</div>
@@ -140,7 +140,7 @@ a:hover .card {
 						</div>
 					</div>
 				</div>
-				<div class="d-flex flex-wrap ms-3">
+				<div class="d-flex flex-wrap ms-3 justify-content-center">
 					<c:forEach var="mainPageList" items="${mainPageList}">
 						<div class="cardinterval me-5 my-3">
 							<a href="/Company/Viewpost?post_idx=${mainPageList.post_idx}">
