@@ -64,7 +64,7 @@
  
  $(document).ready(function() {
 	    $('#goWrite').on('click', function() {
-			alert('dd')
+			//alert('dd')
 	        location.href = '/MyPage/Resume/WriteForm';
 	    });
 	});
