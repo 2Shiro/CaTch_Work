@@ -541,6 +541,8 @@ public class CompanyController {
 			//개인 회원 정보 가져오기
 			PersonVo person = personMapper.getPersonDetail(resume.getUser_idx());
 			
+			//System.out.println("person: " + person);
+			
 			//상태를 한글로 가져오기
 			String state = "";
 			if(applyList.get(i).getState() == 0) {
@@ -610,7 +612,7 @@ public class CompanyController {
 		for(int i = 0; i < resumeList.size(); i++) {		
 			//개인 회원 정보 가져오기
 			PersonVo person = personMapper.getPersonDetail(resumeList.get(i).getUser_idx());
-			//System.out.println("person: " + person);
+			System.out.println("person: " + person);
 			
 			//기술 스택 가져오기
 			//System.out.println("resumeList.get(i).skill_idx: " + resumeList.get(i).getSkill_idx());

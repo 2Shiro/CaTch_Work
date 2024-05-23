@@ -124,7 +124,7 @@
 		    
 		    fetch(url, param)
 		    .then(response => {
-		    		alert(state)
+		    		//alert(state)
 		    		//alert(url)
 		        const msg = (response.ok) ? "평가가 등록되었습니다." : "평가 등록에 실패하였습니다."
 		        alert(msg)
