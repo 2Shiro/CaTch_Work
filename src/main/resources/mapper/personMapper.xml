@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.catwork.mapper.PersonMapper">  
+<select id="getPersonInfo">
+	SELECT
+		U.ID,
+		U.PWD,
+		U.EMAIL,
+		U.TYPE, 
+		P.PER_IDX,
+		P.USER_IDX,
+		P.NAME,
+		P.PHONE,
+		P.ZIP_CODE,
+		P.ADDRESS,
+		P.SOCIAL_NUM,
+		P.CREATED
+	FROM PERSON_TB P
+    JOIN USER_TB U
+    ON P.USER_IDX = U.USER_IDX
+    WHERE U.ID = #{arg1}
+
+</select>
+
+<select id="getPwd">
+	SELECT 
+		PWD,
+		EMAIL
+		
+	FROM USER_TB
+	WHERE  USER_IDX = #{arg0} 	
+
+</select>
+<update id="updateMyInfo">
+	UPDATE USER_TB 
+		SET 
+			PWD = #{pwd},
+			EMAIL = #{email}	
+			
+	WHERE  ID=#{id}	
+
+</update>
+<update id="updateMyInfo2">
+	UPDATE PERSON_TB 
+		SET 
+			PHONE=#{phone},
+			ZIP_CODE=#{zip_code},
+			ADDRESS=#{address}
+
+	WHERE  USER_IDX=#{user_idx}
+
+</update>
+
+<delete id="personDelete">
+	DELETE FROM USER_TB
+	WHERE  USER_IDX=#{user_idx}
+
+</delete>
+
+
+
+<select id="getResumeList">
+	SELECT 
+	    ROW_NUMBER() OVER (ORDER BY RESUME_IDX) AS NUM,
+	    RESUME_IDX,
+	    USER_IDX,
+	    TITLE,
+	    IMAGE,
+	    LINK,
+	    INTRO,
+	    CREATED,
+	    TYPE
+	FROM RESUME_TB
+	WHERE USER_IDX=(
+	    SELECT USER_IDX
+	    FROM   USER_TB U
+	    WHERE U.ID=#{arg1})
+
+
+</select>
+
+
+<select id="getApplyList">
+SELECT *
+FROM (
+    SELECT 
+        A.APPLY_IDX,
+        A.RESUME_IDX,
+        A.POST_IDX,
+        A.STATE,
+        A.CREATED,
+        U.USER_IDX,
+        P.TITLE,
+        P.CAREER,
+        P.GOWORK,
+        P.GOHOME,
+        P.SALARY,
+        P.DEADLINE,
+        P.MANAGER,
+        P.MPHONE,
+        ROW_NUMBER() OVER (ORDER BY A.APPLY_IDX) AS ROW_NUM
+    FROM APPLY_TB A 
+    JOIN RESUME_TB R ON A.RESUME_IDX = R.RESUME_IDX 
+    JOIN USER_TB U ON R.USER_IDX = U.USER_IDX
+    JOIN POST_TB P ON A.POST_IDX = P.POST_IDX
+    WHERE U.USER_IDX = #{arg1}
+)
+
+</select>
+
+
+<select id="getBookmarkList">
+   SELECT 
+        B.BOOK_IDX,
+        B.USER_IDX,
+        B.POST_IDX,
+        B.BOOKMARK,
+        P.TITLE,
+        P.CAREER,
+        P.SALARY,
+        P.DEADLINE,
+        P.MANAGER,
+        P.MPHONE,
+        P.CREATED,
+        ROW_NUMBER() OVER (ORDER BY P.CREATED DESC) AS row_num
+    FROM BOOKMARK_TB B 
+    JOIN POST_TB P ON B.POST_IDX = P.POST_IDX
+    JOIN USER_TB U ON B.USER_IDX = U.USER_IDX
+    WHERE U.USER_IDX = #{arg1}
+
+
+
+</select>
+
+	<!-- 개인회원 테이블에서 특정 회원 정보 가져오기 -->
+	<select id="getPersonDetail">
+		SELECT PER_IDX, USER_IDX, NAME, PHONE, ZIP_CODE, ADDRESS, SOCIAL_NUM, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM PERSON_TB WHERE USER_IDX = #{user_idx}
+	</select>
+	
+	<!-- 특정 이력서 스킬 idx 얻기 -->
+	<select id="getResumeSkill">
+		SELECT RESKILL_IDX, RESUME_IDX, SKILL_IDX FROM RESUME_SKILL_TB WHERE RESUME_IDX = #{resume_idx}
+	</select>
+
+	<!-- resume_idx로 특정 이력서 정보 가져오기 -->
+	<select id="getResume">
+		SELECT RESUME_IDX, USER_IDX, TITLE, IMAGE, LINK, INTRO, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, TYPE FROM RESUME_TB WHERE RESUME_IDX = #{resume_idx}
+	</select>
+	
+	<!-- 이력서 스킬 테이블 전체 가져오기 -->
+	<select id="getResumeSkillAll">
+		SELECT RESKILL_IDX, RESUME_IDX, SKILL_IDX FROM RESUME_SKILL_TB
+	</select>
+	
+	<!-- 이력서 지원하기 관련 쿼리문 -->
+	<!-- 이력서 Idx 모두 가져오기 -->
+	<select id="getResumeIdxList">
+		SELECT RESUME_IDX FROM RESUME_TB
+	</select>
+	
+	<!-- 구직자가 지원하기 (수정해야함) -->
+	<insert id="insertProposal">
+	    INSERT INTO APPLY_TB ( APPLY_IDX, RESUME_IDX,
+	    POST_IDX, STATE )
+	    VALUES  ( ( SELECT NVL( MAX( APPLY_IDX ), 0 ) + 1 FROM APPLY_TB ),
+	            #{resume_idx},
+	            #{post_idx},
+	            0 )
+	</insert>
+	<!-- 사용자가 이미 지원했는지 확인 -->
+    <select id="checkIfAlreadyApplied" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 'true' ELSE 'false' END
+        FROM APPLY_TB
+        WHERE RESUME_IDX IN (
+		    SELECT RESUME_IDX
+		    FROM RESUME_TB
+		    WHERE USER_IDX = #{user_idx}
+		)
+        AND POST_IDX = #{post_idx}
+    </select>
+    
+   <insert id="insert">      
+      INSERT ALL
+      INTO user_tb (user_idx,id, pwd ,email,type)
+      VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},2)      
+      INTO person_tb (per_idx,user_idx,name,phone,zip_code,address,social_num,created)
+      VALUES
+      ((SELECT MAX(NVL(per_idx,0)+1) FROM PERSON_TB),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
+         #{name},#{phone},#{zip_code},#{address},#{social_num},sysdate)
+      SELECT *
+      FROM DUAL
+   </insert>
+	
+	<select id="getUser_idx">
+		SELECT USER_IDX FROM USER_TB WHERE ID = #{id}
+	</select>
+
+	<!-- 북마크 등록 시 중복 방지 -->
+	<insert id="addBookmark">
+	    <!-- 동일한 USER_IDX와 POST_IDX를 가진 데이터가 없는 경우에만 북마크 추가 -->
+	    INSERT INTO BOOKMARK_TB ( BOOK_IDX, USER_IDX, POST_IDX, BOOKMARK )
+	    SELECT ( SELECT NVL( MAX( BOOK_IDX ), 0 ) + 1 FROM BOOKMARK_TB ),
+	           #{arg0},
+	           #{arg1},
+	           1
+	    FROM DUAL
+	    WHERE NOT EXISTS (
+	        SELECT 1 FROM BOOKMARK_TB
+	        WHERE USER_IDX = #{arg0} AND POST_IDX = #{arg1}
+	    )
+	</insert>
+	
+	<!-- 북마크 삭제 -->
+	<delete id="removeBookmark">
+	    DELETE FROM BOOKMARK_TB
+	    WHERE USER_IDX = #{arg0}
+	    AND POST_IDX = #{arg1}
+	</delete>
+    
+	<!-- 사용자의 북마크한 게시글 ID 목록을 반환 -->
+	<select id="getBookmarked" resultType="int">
+	    SELECT POST_IDX
+	    FROM BOOKMARK_TB
+	    WHERE USER_IDX = #{arg0}
+	</select>
+    
+	<!-- 사용자가 특정 게시글을 북마크했는지 확인 -->
+	<select id="isBookmarked" resultType="boolean">
+	    SELECT COUNT(*)
+	    FROM BOOKMARK_TB
+	    WHERE USER_IDX = #{user_idx} AND POST_IDX = #{post_idx}
+	</select>
+</mapper>

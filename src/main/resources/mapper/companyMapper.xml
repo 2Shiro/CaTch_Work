@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.catwork.mapper.CompanyMapper"> 
+
+	<!-- 전체 공고 가져오기 -->
+	<!-- 마감지난 건 안뜨고 마감기한 낮은 순으로 정렬됨 -->
+	<select id="getmainpostList">
+		SELECT	POST_IDX,
+				USER_IDX,
+				TITLE,
+				TRUNC(DEADLINE) - TRUNC(SYSDATE) AS DEADLINE_ORDER,
+				CASE 
+					WHEN TRUNC(DEADLINE) - TRUNC(SYSDATE) = 0 THEN 'D-Day'
+					ELSE 'D-' || TO_CHAR(TRUNC(DEADLINE) - TRUNC(SYSDATE))
+				END AS DEADLINE,
+				TO_CHAR(SYSDATE, 'YY/MM/DD')
+		FROM	POST_TB
+		WHERE	TO_CHAR(DEADLINE, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+		ORDER BY DEADLINE_ORDER
+	</select>
+	
+	<!-- 검색 공고 가져오기 -->
+	<!-- 마감지난 건 안뜨고 마감기한 낮은 순으로 정렬됨 -->
+	<select id="searchPosts" resultType="com.catwork.domain.PostVo">
+	    SELECT  P.POST_IDX,
+	            P.USER_IDX,
+	            P.TITLE,
+	            TRUNC(P.DEADLINE) - TRUNC(SYSDATE) AS DEADLINE_ORDER,
+	            CASE 
+	                WHEN TRUNC(P.DEADLINE) - TRUNC(SYSDATE) = 0 THEN 'D-Day'
+	                ELSE 'D-' || TO_CHAR(TRUNC(P.DEADLINE) - TRUNC(SYSDATE))
+	            END AS DEADLINE,
+	            TO_CHAR(SYSDATE, 'YY/MM/DD') AS TODAY,
+	            P.DEPARTMENT,
+	            C.NAME,
+	            SUBSTR(C.ADDRESS, 1, 2) AS REGION,
+	            CASE 
+	                WHEN P.CAREER LIKE '%년이상%' THEN '경력'
+	                ELSE P.CAREER
+	            END AS CAREER,
+	            P.JOBTYPE
+	    FROM    POST_TB P
+	    		JOIN COMPANY_TB C ON P.USER_IDX = C.USER_IDX
+	    WHERE   TO_CHAR(P.DEADLINE, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+	            <if test="keyword != null and keyword != ''">
+				    AND (P.TITLE LIKE '%' || #{keyword} || '%' OR C.NAME LIKE '%' || #{keyword} || '%')
+				</if>
+	            <if test="department != null and department != ''">
+	                AND P.DEPARTMENT = #{department}
+	            </if>
+	            <if test="region != null and region != ''">
+	                AND SUBSTR(C.ADDRESS, 1, 2) = #{region}
+	            </if>
+	            <if test="career != null and career != ''">
+	                AND (
+	                    (#{career} = '경력' AND P.CAREER LIKE '%년이상%')
+	                    OR (#{career} = '신입' AND P.CAREER = '신입')
+	                    OR (#{career} = '무관' AND (P.CAREER LIKE '%년이상%' OR P.CAREER = '신입' OR P.CAREER = '무관'))
+	                )
+	            </if>
+	            <if test="jobtype != null and jobtype != ''">
+	                AND P.JOBTYPE = #{jobtype}
+	            </if>
+	    ORDER BY DEADLINE_ORDER
+	</select>
+	
+	<!-- 공고 상세보기 -->
+	<select id="getViewPost" parameterType="int" resultType="com.catwork.domain.PostVo">
+	    SELECT  POST_IDX,
+	            USER_IDX,
+	            TITLE,
+	            CAREER,
+	            GOWORK || ' ~ ' || GOHOME	GO,
+	            JOBTYPE,
+	            DEPARTMENT,
+	            SALARY,
+	            TO_CHAR(DEADLINE, 'YY/MM/DD') AS DEADLINE,
+	            INTRO,
+	            EXPLAIN,
+	            MANAGER,
+	            MPHONE,
+	            CREATED
+	    FROM    POST_TB
+	    WHERE   POST_IDX = #{post_idx}
+	</select>
+	
+	<!-- 이력서 리스트 가져오기 -->
+	<select id="getResumeList">
+		SELECT RESUME_IDX, USER_IDX, TITLE, IMAGE, LINK, INTRO, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, TYPE FROM RESUME_TB
+		ORDER BY RESUME_IDX DESC
+	</select>
+	<select id="getResumeListOpen">
+		SELECT RESUME_IDX, USER_IDX, TITLE, IMAGE, LINK, INTRO, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, TYPE FROM RESUME_TB
+		WHERE TYPE = 1
+		ORDER BY RESUME_IDX DESC
+	</select>
+
+	<!-- 기술 이름 가져오기 -->
+	<select id="getSkillName">
+		SELECT SKILL_IDX, NAME FROM SKILL_TB WHERE SKILL_IDX = #{skill_idx}
+	</select>
+	
+	<!-- USER_IDX로 기업 회원 디테일 정보 가져오기 -->
+	<select id="getCompanyById">
+		SELECT	COM_IDX,
+				USER_IDX,
+				NAME,
+				LOGO,
+				CNUM,
+				REPRESENTATIVE,
+				ZIP_CODE,
+				ADDRESS,
+				CTYPE, TO_CHAR(BDATE, 'YYYY-MM-DD') BDATE,
+				TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED
+		FROM	COMPANY_TB
+		WHERE	USER_IDX = #{user_idx}
+	</select>
+	
+	<!-- COM_IDX로 기업 회원 디테일 정보 가져오기 -->
+	<select id="getCompanyByComId">
+		SELECT	COM_IDX,
+				USER_IDX,
+				NAME,
+				LOGO,
+				CNUM,
+				REPRESENTATIVE,
+				ZIP_CODE,
+				ADDRESS,
+				CTYPE, TO_CHAR(BDATE, 'YYYY-MM-DD') BDATE,
+				TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED
+		FROM	COMPANY_TB
+		WHERE	COM_IDX = #{com_idx}
+	</select>
+	
+	<!-- user_idx로 기업 회원 공고 리스트 가져오기, 현재는 전부가져옴 -->
+	<select id="getMyPost">
+		SELECT POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, TO_CHAR(DEADLINE, 'YYYY-MM-DD') DEADLINE, INTRO, EXPLAIN, MANAGER, MPHONE, 
+		TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, JOBTYPE, DEPARTMENT FROM POST_TB
+		WHERE USER_IDX = #{arg0}
+	</select>
+	
+	<!-- 페이징 특정 공고 리스트 -->
+	<select id="countPostList">
+		SELECT COUNT(*) AS CNT FROM POST_TB
+	</select>
+	<select id="getPostListPaging">
+		SELECT 
+		    POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, 
+		    TO_CHAR(DEADLINE, 'YYYY-MM-DD') DEADLINE, INTRO, EXPLAIN, 
+		    MANAGER, MPHONE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, 
+		    JOBTYPE, DEPARTMENT
+		FROM 
+		    POST_TB
+		WHERE USER_IDX = #{arg2}
+		ORDER BY
+		    DEADLINE
+		OFFSET #{arg0} ROWS FETCH NEXT #{arg1}
+		ROWS ONLY
+	</select>
+	
+	<!-- 스킬 테이블 가져오기 -->
+	<select id="getSkills">
+		SELECT SKILL_IDX, NAME FROM SKILL_TB
+	</select>
+	
+	<!-- post_idx 맥스값 -->
+	<select id="selectpostidxmax" resultType="int">
+		SELECT
+		NVL(MAX(POST_IDX),0) + 1 FROM POST_TB
+	</select>
+
+	
+	
+	<!-- post insert -->
+	<insert id="insertpost"
+		parameterType="com.catwork.domain.PostVo">
+		INSERT INTO POST_TB
+		(POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, DEADLINE, 
+		 INTRO, EXPLAIN, MANAGER, MPHONE, JOBTYPE, DEPARTMENT)
+		VALUES
+		((SELECT NVL(MAX(POST_IDX),0) + 1 FROM POST_TB), ${user_idx},
+		#{title}, #{career}, #{gowork}, #{gohome}, #{salary},
+		#{deadline}, #{intro}, #{explain},
+		#{manager}, #{mphone}, #{jobtype}, #{department})
+	</insert>
+	
+	<!-- post skill insert -->
+	<insert id="insertskills"
+		parameterType="com.catwork.domain.PostSkillVo">
+		INSERT INTO POST_SKILL_TB (POSKILL_IDX, POST_IDX, SKILL_IDX)
+		VALUES ((SELECT NVL(MAX(POSKILL_IDX), 0) + 1 FROM POST_SKILL_TB), #{post_idx},
+		#{skill_idx})
+	</insert>
+	
+	<!-- 공고 하나의 정보 가져오기 -->
+	<select id="getPostDetail">
+		SELECT POST_IDX, USER_IDX, TITLE, CAREER, GOWORK, GOHOME, SALARY, TO_CHAR(DEADLINE, 'YYYY-MM-DD') DEADLINE, INTRO, EXPLAIN, MANAGER, MPHONE, 
+		TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED, JOBTYPE, DEPARTMENT FROM POST_TB WHERE POST_IDX = #{post_idx}
+	</select>
+	
+	<!-- 공고 하나의 스킬 가져오기 -->
+	<select id="getPostSkills">
+		SELECT POSKILL_IDX, POST_IDX, SKILL_IDX FROM POST_SKILL_TB WHERE POST_IDX = #{post_idx}
+	</select>
+	
+	<!-- 특정 공고의 지원 현황 리스트 가져오기 -->
+	<select id="getParticipateList">
+		SELECT APPLY_IDX, RESUME_IDX, POST_IDX, STATE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM APPLY_TB WHERE POST_IDX = #{post_idx}
+	</select>
+	
+	<!-- 특정 지원 현황 하나 가져오기 -->
+	<select id="getApply">
+		SELECT APPLY_IDX, RESUME_IDX, POST_IDX, STATE, TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED FROM APPLY_TB WHERE APPLY_IDX = #{apply_idx}
+	</select>
+	
+	<!-- 페이징 이력서 리스트  -->
+	<select id="countResumeList" resultType="int">
+		SELECT COUNT(*) AS CNT FROM RESUME_TB
+	</select>
+	<select id="getResumeListPaging" resultType="com.catwork.domain.ResumeVo">
+		SELECT 
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX) AS SKILLS
+		FROM 
+		    resume_tb r
+		JOIN 
+		    person_tb p ON r.user_idx = p.user_idx
+		LEFT JOIN 
+		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
+		LEFT JOIN 
+		    skill_tb s ON rs.skill_idx = s.skill_idx
+		GROUP BY
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME
+		ORDER BY
+		    r.RESUME_IDX
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+		ROWS ONLY
+	</select>
+	<select id="getResumeListPagingSearch">
+		SELECT 
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX) AS SKILLS
+		FROM 
+		    resume_tb r
+		JOIN 
+		    person_tb p ON r.user_idx = p.user_idx
+		LEFT JOIN 
+		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
+		LEFT JOIN 
+		    skill_tb s ON rs.skill_idx = s.skill_idx
+		GROUP BY
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME
+		HAVING REPLACE(UPPER(LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX)), ' ', '') LIKE '%' || REPLACE(UPPER(#{arg2}), ' ', '') || '%'
+		ORDER BY
+		    r.RESUME_IDX
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+		ROWS ONLY
+	</select>
+	
+	<select id="getResumeListPagingOpen">
+		SELECT 
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    R.TYPE,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX) AS SKILLS
+		FROM 
+		    resume_tb r
+		JOIN 
+		    person_tb p ON r.user_idx = p.user_idx
+		LEFT JOIN 
+		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
+		LEFT JOIN 
+		    skill_tb s ON rs.skill_idx = s.skill_idx
+		WHERE R.TYPE = 1
+		GROUP BY
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    R.TYPE
+		ORDER BY
+		    r.RESUME_IDX
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+		ROWS ONLY
+	</select>
+	<select id="getResumeListPagingSearchOpen">
+		SELECT 
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    R.TYPE,
+		    LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX) AS SKILLS
+		FROM 
+		    resume_tb r
+		JOIN 
+		    person_tb p ON r.user_idx = p.user_idx
+		LEFT JOIN 
+		    resume_skill_tb rs ON r.resume_idx = rs.resume_idx
+		LEFT JOIN 
+		    skill_tb s ON rs.skill_idx = s.skill_idx
+		WHERE R.TYPE = 1
+		GROUP BY
+		    r.RESUME_IDX,
+		    R.TITLE,
+		    P.NAME,
+		    R.TYPE
+		HAVING REPLACE(UPPER(LISTAGG(S.NAME, ', ') WITHIN GROUP (ORDER BY S.SKILL_IDX)), ' ', '') LIKE '%' || REPLACE(UPPER(#{arg2}), ' ', '') || '%'
+		ORDER BY
+		    r.RESUME_IDX
+		OFFSET #{ arg0 } ROWS FETCH NEXT #{ arg1}
+		ROWS ONLY
+	</select>
+	
+	<!-- state 부분 추가 -->
+	<insert id="insertState">
+		INSERT INTO STATE_TB (STATE_IDX, RESUME_IDX, APPLY_IDX, SCORE, COMMENTS, USER_IDX)
+		VALUES((SELECT (NVL(MAX(STATE_IDX),0) + 1) STATE_IDX FROM STATE_TB), #{resume_idx}, #{apply_idx},
+						#{score}, #{comments}, #{user_idx})
+	</insert>
+	
+	<!-- 모든 스킬 가져오기 -->
+	<select id="getAllSKills">
+		SELECT SKILL_IDX, NAME FROM SKILL_TB
+	</select>
+	
+	<!-- 공고 수정하기 -->
+	<update id="updatePost">
+		UPDATE POST_TB
+		SET 
+			TITLE = #{title},
+			CAREER = #{career},
+			GOWORK = #{gowork},
+			GOHOME = #{gohome},
+			SALARY = #{salary},
+			DEADLINE = #{deadline},
+			INTRO = #{intro},
+			EXPLAIN = #{explain},
+			MANAGER = #{manager},
+			MPHONE = #{mphone},
+			JOBTYPE = #{jobtype},
+			DEPARTMENT = #{department}
+		WHERE POST_IDX = #{post_idx}
+	</update>
+	
+	<!-- 스킬 다 삭제 -->
+	<delete id="deletepostskills">
+		DELETE FROM POST_SKILL_TB WHERE POST_IDX = #{post_idx}
+	</delete>
+	
+	<!-- insertState시 apply의 state 바꾸기 -->
+	<update id="insertApplyState">
+		UPDATE APPLY_TB
+		SET STATE = #{state}
+		WHERE APPLY_IDX = #{apply_idx}
+	</update>
+	
+	<!-- state table 데이터 가져오기 -->
+	<select id="getState">
+		SELECT STATE_IDX, RESUME_IDX, APPLY_IDX, SCORE, COMMENTS, USER_IDX
+		FROM STATE_TB WHERE APPLY_IDX = #{apply_idx}
+	</select>
+	
+	<!-- 공고 삭제 -->
+	<delete id="deletePost">
+		DELETE FROM POST_TB WHERE POST_IDX = #{post_idx}
+	</delete>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="updateInfo">
+		UPDATE COMPANY_TB
+		SET NAME = #{name},
+		    LOGO = #{logo},
+		    CNUM = #{cnum},
+		    REPRESENTATIVE = #{representative},
+		    ZIP_CODE = #{zip_code},
+		    ADDRESS = #{address},
+		    CTYPE = #{ctype},
+		    BDATE = #{bdate}
+		WHERE USER_IDX = #{user_idx}
+	</update>
+	
+	<!-- 디비에서 주소 가져오기 -->
+	<select id="getAddress">
+		SELECT ADDRESS FROM COMPANY_TB WHERE USER_IDX = #{user_idx}
+	</select>
+	
+      <!-- 기업회원 가입 -->
+   <insert id="insert">      
+      INSERT ALL
+      INTO user_tb (user_idx,id, pwd ,email,type)
+      VALUES((SELECT MAX(NVL(user_idx,0)+1) FROM USER_TB),#{id},#{pwd},#{email},1)      
+      INTO company_tb (com_idx,user_idx,type,name,logo,cnum,representative,zip_code,address,ctype,bdate,created)
+      VALUES
+      ((SELECT MAX(NVL(com_idx,0)+1) FROM company_tb),(SELECT MAX(NVL(user_idx,0))+1 FROM user_tb),
+         1,#{name}, '/', #{cnum}, #{representative},#{zip_code},#{address},#{ctype},#{bdate},sysdate)
+      SELECT *
+      FROM DUAL
+   </insert>
+	
+	<!-- 평점 가져오기 -->
+	<select id="getMyRate">
+		SELECT CAST(COALESCE(AVG(RATING), 0) AS INT) AS AVERAGE_RATING
+		FROM RATE_TB 
+		WHERE COM_IDX = #{arg0}
+	</select>
+	
+	   <!-- com_idx 가져오기 -->
+   <select id="getComId">
+      SELECT   COM_IDX
+      FROM   POST_TB P
+            JOIN USER_TB U ON P.USER_IDX = U.USER_IDX
+            JOIN COMPANY_TB C ON U.USER_IDX= C.USER_IDX 
+      WHERE   P.POST_IDX = #{arg0}
+   </select>
+
+</mapper>
